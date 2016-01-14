@@ -293,7 +293,21 @@ class Sheet:
                     raise ValueError(self._file + ' does not have a ' +
                                      Sheet.header[i])
                 i += 1
-            # STOP VALIDATION HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            
+            # Stop validation and mapping
+            # Boarding (on)
+            if str(entry[0]).lower() in st.Stop.obj_map:
+                on = st.Stop.obj_map[str(entry[0]).lower()]._stop_id
+            else:
+                raise ValueError('Stop ' + str(entry[0]) + ' from file ' +
+                                 str(self._file) + ' is not recognized.')
+            # Deboarding (Off)
+            if str(entry[3]).lower() in st.Stop.obj_map:
+                off = st.Stop.obj_map[str(entry[3]).lower()]._stop_id
+            else:
+                raise ValueError('Stop ' + str(entry[3]) + ' from file ' +
+                                 str(self._file) + ' is not recognized.')
+            
             # Set record
             record = Record(self._year, self._month, self._day, self._sheet,
                             entry[0][0], self._driver, self._schedule,
