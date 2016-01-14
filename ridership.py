@@ -1,55 +1,46 @@
 
+import configparser
 import csv
 import datetime
 import os
 import re
+import sys
 import xlsxwriter
+
+import multiprocessing as mp
 
 """
 Closed Classes----------------------------------------------------------
 """
+class PathSetter:
 
-class Stop:
+    def set_pythonpath(directory='', subdirectory=''):
+        if directory:
+            directory = PathSetter.find_path(directory)
+            if subdirectory:
+                if directory[-1] != '/' and subdirectory[0] != '/':
+                    directory += '/'
+                directory += subdirectory
+        else:
+            directory = os.getcwd()
+        sys.path.append(directory)
+        return True
 
-    objects = {}
-
-    def __init__(self, ID, name, delay):
-        self._ID = ID
-        self._name = name
-        self._delay = delay
-        self._entry = {}
-        self._exit = {}
-
-
-class Route:
-
-    objects = {}
-
-    def __init__(self, name, depart, reverse, ):
-        self._name = name
-        self._stops = {}
-
-
-class Driver:
-
-    objects = {}
-
-    def __init__(self, name):
-        self._name = name
-        self._stops = {}
-
-
-class Vehicle:
-
-    objects = {}
-
-    def __init__(self, license_plate):
-        self._license_plate = license_plate
-        self._records = {}
-        
+    def find_path(directory):
+        match = re.search('/|\\' + str(directory), os.getcwd())
+        if not match:
+            raise IOError(str(directory) + 'is not in current working ' +
+                          'directory')
+        return os.getcwd()[:match.span()[0]] + '/' + directory
 
 """
-Main Data---------------------------------------------------------------
+GO Transit Imports------------------------------------------------------
+"""
+PathSetter.set_pythonpath()
+import stops as st
+
+"""
+Main Classes------------------------------------------------------------
 """
 class System:
 
@@ -58,19 +49,111 @@ class System:
     baseline = 19.4000
     final = 83.3333
     increment = (final - baseline) / abs(finish - begin).days
-    
+    go_transit_path = PathSetter.find_path('go_transit')
+
 class Sheet:
 
     objects = {}
-    
+    structure = {}
+    sheet_names = {}
+    rewrite = {}
     version_1 = datetime.date(2015, 8, 31)
     version_2 = datetime.date(2015, 9, 8)
+    version_3 = datetime.date(2015, 11, 1)
+    header = ['Boarding', 'Time', 'Count', 'Destination']
+    pvn = '3' # standard previous version number for files
 
     def __init__(self, file):
         self._file = file
-        self._version = '0'
+        self._pvn = Sheet.pvn
+        self._start_shift = ''
+        self._time_key = 0
         self._records = {}
+        self._entries = []
+        self._temp = {}
         Sheet.objects[(self._file)] = self
+
+    @staticmethod
+    def process():
+        Sheet.load_config()
+        # obj_list = []
+        for dirpath, dirnames, filenames in os.walk(System.go_transit_path
+                                                    + '/data'):
+            for filename in [f for f in filenames if re.search(
+                '\d{6}_S\d', f)]:
+                obj = Sheet((str(dirpath) + '/' + str(filename)))
+                obj.read_sheet()
+        """
+        # This section is not working, it is attempting to multithread the
+        # reading of the datasheets but has pickling problems due to the use
+        # of objects.
+        pool = mp.Pool()
+        results = pool.map_async(Sheet.read_sheet, obj_list)
+        """
+        Sheet.write_sheets()
+        return True
+
+    @staticmethod
+    def load_config():
+        config = configparser.ConfigParser()
+        config.read('sheet.ini')
+        Sheet.standard = config['STANDARD']
+        Sheet.metadata = config['METADATA']
+        Sheet.override = config['OVERRIDE']
+        Sheet.delete = config['DELETE']
+        Sheet.order = {int(k):v for k,v in config['ORDER'].items()}
+        Sheet.index = int(config['INDEX']['sheet'])
+        if 'version' in Sheet.override:
+            Sheet.pvn = Sheet.override['version']
+        Sheet.obs_map = {}
+        for meta in Sheet.metadata:
+            prev_list = re.split(',', Sheet.metadata[meta])
+            for prev in prev_list:
+                Sheet.obs_map[prev] = meta
+        return True
+
+    @staticmethod
+    def write_sheets():
+        # Define sheet names
+        chars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+        for date in Sheet.structure:
+            for schedule in Sheet.structure[date]:
+                i = 0
+                for time in sorted(Sheet.structure[date][schedule].keys()):
+                    if time == 0:
+                        print('Please examine the time for', date,
+                              'for all sheets with a schedule of', schedule)
+                    Sheet.sheet_names[(date[0], date[1], date[2], schedule,
+                                       time)] = 'S' + str(schedule) + chars[i]
+                    i += 1
+
+        # Write each sheet to file
+        for obj in Sheet.rewrite:
+            obj._sheet = Sheet.sheet_names[(obj._year, obj._month, obj._day,
+                                            obj._schedule, obj._time_key)]
+            writer = obj.set_writer()
+            writer.writerow(['METADATA'])
+            obj._meta_L[Sheet.index][1] = obj._sheet
+            for row in obj._meta_L:
+                writer.writerow(row)
+            writer.writerow([])
+            writer.writerow(['DATA'])
+            writer.writerow(['Boarding', 'Time', 'Count', 'Destination'])
+            for entry in obj._entries:
+                writer.writerow(entry)
+        return True
+
+    def set_writer(self):
+        date = datetime.datetime(int(self._year), int(self._month),
+                                 int(self._day))
+        directory = (System.go_transit_path + '/formatted/' +
+            date.strftime('%Y_%m') + '/' + date.strftime('%y%m%d'))
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        writer = csv.writer(open(directory + '/' + date.strftime('%y%m%d') +
+            '_' + self._sheet + '.csv', 'w', newline=''), delimiter=',',
+            quotechar='|')
+        return writer
 
     def read_sheet(self):
         reader = csv.reader(open(self._file, 'r', newline=''),
@@ -79,12 +162,11 @@ class Sheet:
         columns = False
         data = False
         direction = '1'
-        meta_vars = []
-        column_vars = []
+        meta_D = {}
         for row in reader:
             # <Handle Types>
             # Blank row handle
-            if not row:
+            if not re.sub(' ', '', ''.join(row)):
                 continue
             # Metadata boolean handle
             elif row[0] == 'METADATA':
@@ -99,254 +181,215 @@ class Sheet:
             elif row[0] == 'DATA':
                 data = True
                 columns = False
-                self.check_metadata()
+                meta = False
                 continue
             # </Handle Types>
-            #
+            
             # Metadata
             if meta == True:
+                # Handle metadata category
+                cur_meta = str(row[0]).lower()
+                if cur_meta not in Sheet.standard:
+                    if cur_meta in Sheet.obs_map:
+                        cur_meta = Sheet.obs_map[cur_meta]
+                    elif cur_meta not in Sheet.delete:
+                        print(cur_meta + ' in ' + str(self._file) +
+                              ' cannot be mapped.')
+                # Handle metadata value
+                cur_value = str(row[1])
+                if cur_meta in Sheet.override:
+                    if cur_meta == 'version':
+                        self._pvn = cur_value
+                    cur_value = Sheet.override[cur_meta]
+                # Add meta category, value to meta_D and Sheet object
+                if cur_meta not in Sheet.delete:
+                    meta_D[cur_meta] = cur_value
                 try:
-                    exec('self._' + str(row[0]).lower() + '=\'' + str(row[1]) +
-                         '\'')
+                    exec('self._' + cur_meta + '=\'' + cur_value + '\'')
                 except:
-                    raise ValueError('Metadata error in ' + str(self._file))
-            # Columns
+                    raise ValueError('Metadata error in ' + cur_value)
+            
+            # Columns (for older versions)
             if columns == True:
                 i = 3
                 while i < len(row):
                     exec('self._' + str(row[0]).lower() + '_' + str(i) +'=\'' +
                          str(row[i]) + '\'')
+                    if (not self._start_shift and not self._time_key and
+                        row[0].lower() != 'start'):
+                        try:
+                            self._time_key = int(re.sub(':', '', row[i]))
+                        except:
+                            pass
                     i += 1
+                        
             # Data
             if data == True:
-                if int(self._version) == 3:
-                    self.process_version_3(row)
-                elif int(self._version) == 2 or int(self._version) == 1:
-                    direction = self.process_version_1_and_2(row, direction)
-                """
-                except:
+                # Version 3
+                if self._pvn == '3':
+                    if row != Sheet.header:
+                        self._entries.append(row)
+                # Versions 1 and 2
+                elif self._pvn == '2' or self._pvn == '1':
+                    direction = self.set_1_and_2_records(row, direction)
+                # If there is an unrecognized Version value alert the user
+                else:
                     raise ValueError('Version not recognized for ' +
                                      str(self._file))
-                """
+        
+        # Add sheet to the general sheet structure
+        if not (self._year, self._month, self._day) in Sheet.structure:
+            Sheet.structure[(self._year, self._month, self._day)] = {}
+        if self._schedule not in Sheet.structure[(self._year, self._month,
+                                                  self._day)]:
+            Sheet.structure[(self._year, self._month, self._day)][
+                self._schedule] = {}
+        if self._start_shift:
+            Sheet.structure[(self._year, self._month, self._day)][
+                self._schedule][int(re.sub(':', '', self._start_shift))] = True
+            self._time_key = int(re.sub(':', '', self._start_shift))
+        else:
+            Sheet.structure[(self._year, self._month, self._day)][
+                self._schedule][self._time_key] = True
+        
+        # If no data, alert user just in case of error
+        if data == False:
+            print(self._file, 'does not contain any data.')
+        # Convert on/off records to single records
+        if self._pvn == '2' or self._pvn == '1':
+            self.upversion_1_and_2()
+        # Final metadata check -- for completeness
+        for category in Sheet.standard:
+            if category not in meta_D:
+                meta_D[category] = Sheet.standard[category]
+                exec('self._' + category + '=' + Sheet.standard[category])
+        # Actually process record using the latest version methodology
+        self.set_records()
+
+        # Rewrite files of lower versions
+        if self._pvn == '2' or self._pvn == '1' or self._pvn == '3':
+            # Convert metadata Dictionary to ordered List
+            self._meta_L = []
+            for index in sorted(Sheet.order.keys()):
+                if Sheet.order[index] in meta_D:
+                    self._meta_L.append([Sheet.order[index].title(),
+                                         meta_D[Sheet.order[index]]])
+            # Send to have file rewritten
+            Sheet.rewrite[self] = True
+        return True
+
+    def set_records(self):
+        for entry in self._entries:
+            # General record validation
+            if entry == Sheet.header:
+                continue
+            if entry[2] == '0':
+                continue
+            if not re.sub(' ', '', ''.join(str(x) for x in entry)):
+                continue
+            i = 0
+            while i < len(entry):
+                if not entry[i]:
+                    raise ValueError(self._file + ' does not have a ' +
+                                     Sheet.header[i])
+                i += 1
+            # STOP VALIDATION HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            # Set record
+            record = Record(self._year, self._month, self._day, self._sheet,
+                            entry[0][0], self._driver, self._schedule,
+                            entry[1], '', entry[0], 'On', entry[2])
+            self._records[(entry[1], 'On', entry[1])] = record
+            record = Record(self._year, self._month, self._day, self._sheet,
+                            entry[3][0], self._driver, self._schedule,
+                            entry[1], '', entry[3], 'Off', entry[2])
+            self._records[(entry[3], 'Off', entry[1])] = record
+        return True
+
+    def set_1_and_2_records(self, row, direction):
+        if row[0] == 'Return':
+            direction = '2'
+            return direction
+        i = 3
+        while i < len(row):
+            if re.sub(' ', '', row[i]):
+                # Set time base
+                # Version 2 time
+                if self._pvn == '2':
+                    if direction == '1':
+                        time = eval('self._depart_' +
+                            self._direction_2[-2:].lower() + '_' + str(i))
+                        if (i == 3 and self._start_3 == '1J' and not
+                            self._depart_mh_3):
+                            if self._schedule == '3':
+                                time = '640'
+                    elif direction == '2':
+                        time = eval('self._depart_' +
+                            self._direction_1[-2:].lower() + '_' + str(i))
+                        if (i == 3 and self._start_3 == '1J' and not
+                            self._depart_wz_3):
+                            if self._schedule == '2':
+                                time = '650'
+                            elif self._schedule == '3':
+                                time = '710'
+                # Version 1 time
+                elif self._pvn == '1':
+                    time = eval('self._time_' + str(i))
+                # Modify time to actual stop
+                time = re.sub(':', '', time)
+                dt = datetime.datetime(int(self._year), int(self._month),
+                    int(self._day), int(time[:-2]), int(time[-2:]))
+                if self._version == '1' and direction == '2':
+                    dt = dt + datetime.timedelta(0, 60 * 30)
+                time = dt + datetime.timedelta(0, 60 * int(eval(
+                    'st.Stop.obj_map[row[1].lower()]._historic_time_' +
+                    str(direction))))
+                # Add (time, on|off) to temp with [stop, count]
+                self._temp[(time.strftime('%H%M'), row[2])] = [row[1],
+                                                               int(row[i])]
+            i += 1
+        return direction
+
+    def upversion_1_and_2(self):
+        stack = {}
+        cur_key = 0
+        new_key = 0
+        final = {}
+        # record is (time, on|off)
+        for entry in sorted(self._temp.keys()):
+            if entry[1] == 'On':
+                # stack is [on_stop, time, count]
+                stack[new_key] = [self._temp[entry][0], entry[0],
+                                  self._temp[entry][1]]
+                new_key += 1
+            elif entry[1] == 'Off':
+                # final is (on_stop, time, count, off_stop) = True
+                count = self._temp[entry][1]
+                while count > 0:
+                    if stack[cur_key][2] > count:
+                        final[(stack[cur_key][0], stack[cur_key][1], count,
+                               self._temp[entry][0])] = True
+                        stack[cur_key][2] -= count
+                        count = 0
+                    else:
+                        final[(stack[cur_key][0], stack[cur_key][1],
+                            stack[cur_key][2], self._temp[entry][0])
+                            ] = True
+                        count -= stack[cur_key][2]
+                        del stack[cur_key]
+                        cur_key += 1
+        for entry in sorted(final.keys(), key=lambda x:x[1]):
+            self._entries.append(list(entry))
         return True
 
     def check_metadata(self):
         # Update! Make values dependent on version
         values = ['sheet', 'version', 'driver', 'year', 'month', 'day',
-                  'vehicle', 'mileage_start', 'mileage_end', 'mileage_total']
+                  'schedule', 'mileage_start', 'mileage_end', 'mileage_total']
         for value in values:
             try:
                 eval('self._' + value)
             except:
                 raise AttributeError(self._file + ' is missing ' + value)
-        return True
-
-    def process_version_3(self, row):
-        if row[0] == 'Boarding':
-            return False
-        if row[2] == '0':
-            return False
-        if not re.sub(' ', '', ''.join(row)):
-            return False
-        # STOP VALIDATION HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-        if not row[0]:
-            raise ValueError(self._file + ' does not have a boarding')
-        if not row[1]:
-            raise ValueError(self._file + ' does not have a time')
-        if not row[2]:
-            raise ValueError(self._file + ' does not have a count')
-        if not row[3]:
-            raise ValueError(self._file + ' does not have a deboarding')
-        record = Record(self._year, self._month, self._day, self._sheet,
-                        row[0][0], self._driver, self._vehicle, row[1],
-                        '', row[0], 'On', row[2])
-        self._records[(row[1], 'On', row[1])] = record
-        record = Record(self._year, self._month, self._day, self._sheet,
-                        row[3][0], self._driver, self._vehicle, row[1],
-                        '', row[3], 'Off', row[2])
-        self._records[(row[3], 'Off', row[1])] = record
-        return True
-
-    def process_version_1_and_2(self, row, direction):
-        if row[0] == 'Return':
-            direction = '2'
-            return direction
-        entry = 'On'
-        if row[2] == 'Off':
-            entry = 'Off'
-        i = 3
-        while i < len(row):
-            if re.sub(' ', '', row[i]):
-                try:
-                    # Set direction
-                    if direction == '1':
-                        direct = self._direction_1
-                    else:
-                        direct = self._direction_2
-                    # Set time
-                    if eval('self._version') == '2':
-                        time = eval('self._depart_' + self._direction_1[-2:
-                                    ].lower() + '_' + str(i))
-                        if not time:
-                            time = eval('self._depart_' + self._direction_2[-2:
-                                        ].lower() + '_' + str(i))
-                    elif eval('self._version') == '1':
-                        time = eval('self._time_' + str(i))
-                    else:
-                        raise ValueError('Version ' + str(eval(
-                            'self._version')) + 'does not exist')
-                    record = Record(self._year, self._month, self._day,
-                                    self._sheet, self._route, self._driver,
-                                    self._vehicle, time, direct, row[1], entry,
-                                    row[i])
-                    self._records[(row[1], entry, time)] = record
-                except:
-                    raise ValueError('Columns do not match the number of ' +
-                                     'data columns in: ' + str(self._file) +
-                                     '; with the row that begins with: ' +
-                                     str(', '.join(row[0:3])) + '; at  index: '
-                                     + str(i))
-            i += 1
-        return direction
-
-    def change_value(self, from_value, to_value):
-        # This is used to typically change metadata feature values
-        sheet_data = []
-        # Read in rows
-        reader = csv.reader(open(self._file, 'r', newline=''),
-                            delimiter=',', quotechar='|')
-        for row in reader:
-            new_row = []
-            for entry in row:
-                # If entry equals value to change, change it by appending
-                if entry == from_value:
-                    new_row.append(to_value)
-                # Otherwise add the value as it was
-                else:
-                    new_row.append(entry)
-            sheet_data.append(new_row)
-        # Write final rows
-        writer = csv.writer(open(self._file, 'w', newline=''),
-                            delimiter=',', quotechar='|')
-        for row in sheet_data:
-            writer.writerow(row)
-        return True
-
-    def change_metadata(self, from_feature, to_feature, prev, value='',
-                        overwrite=False):
-        sheet_data = []
-        # Read in rows
-        reader = csv.reader(open(self._file, 'r', newline=''),
-                            delimiter=',', quotechar='|')
-        i = 0
-        index = {}
-        features = {}
-        for row in reader:
-            index[i] = (row[0], row[1:])
-            features[row[0]] = i
-            i += 1
-        match = False
-        for feat in from_feature:
-            if feat in features:
-                if match == True:
-                    print('More than one from feature discovered for ' +
-                          str(to_feature) + ', only last value will be kept')
-                match = True
-                # If in wrong location change index
-                if features[prev] != features[feat] - 1:
-                    index[features[prev] + 0.5] = index[features[feat]]
-                    del index[features[feat]]
-                    features[feat] = features[prev] + 0.5
-                # Set to_feature index as current from_feature index
-                features[to_feature] = features[feat]
-                # Revise index values to reflect to_feature name
-                if not overwrite:
-                    index[features[to_feature]] = (to_feature,
-                                                   index[features[feat]][1])
-                else:
-                    index[features[to_feature]] = (to_feature, value)
-                del features[feat]
-        # If no matches found, add value
-        try:
-            if not match and to_feature not in features:
-                index[(features[prev] + 0.5)] = (to_feature, value)
-                features[to_feature] = (features[prev] + 0.5)
-        except:
-            print('Could not change metadata for ' + str(self._file))
-        # Write final rows
-        writer = csv.writer(open(self._file, 'w', newline=''),
-                            delimiter=',', quotechar='|')
-        for entry in sorted(index.keys()):
-            if not isinstance(index[entry][1], list):
-                writer.writerow([index[entry][0]] + [index[entry][1]])
-            else:
-                writer.writerow([index[entry][0]] + index[entry][1])
-        return True
-
-    def add_metadata(self, feature, value, prev):
-        sheet_data = []
-        # Read in rows
-        reader = csv.reader(open(self._file, 'r', newline=''),
-                            delimiter=',', quotechar='|')
-        for row in reader:
-            sheet_data.append(row)
-            # If previous entry matches prev, add feature and value
-            if row[0] == prev:
-                sheet_data.append([feature, value])
-        # Write final rows
-        writer = csv.writer(open(self._file, 'w', newline=''),
-                            delimiter=',', quotechar='|')
-        for row in sheet_data:
-            writer.writerow(row)
-        return True
-
-    def delete_metadata(self, feature):
-        sheet_data = []
-        # Read in rows
-        reader = csv.reader(open(self._file, 'r', newline=''),
-                            delimiter=',', quotechar='|')
-        for row in reader:
-            # If the row feature is not equal to the feature, add to data
-            if row[0] != feature:
-                sheet_data.append(row)
-        # Write final rows
-        writer = csv.writer(open(self._file, 'w', newline=''),
-                            delimiter=',', quotechar='|')
-        for row in sheet_data:
-            writer.writerow(row)
-        return True
-
-    def add_data(self, feature, prev):
-        sheet_data = []
-        # Read in rows
-        reader = csv.reader(open(self._file, 'r', newline=''),
-                            delimiter=',', quotechar='|')
-        for row in reader:
-            sheet_data.append(row)
-            # If previous entry matches prev, add feature and value
-            if row[0:len(prev)] == prev:
-                sheet_data.append(feature)
-        # Write final rows
-        writer = csv.writer(open(self._file, 'w', newline=''),
-                            delimiter=',', quotechar='|')
-        for row in sheet_data:
-            writer.writerow(row)
-        return True
-
-    def delete_data(self, feature):
-        sheet_data = []
-        # Read in rows
-        reader = csv.reader(open(self._file, 'r', newline=''),
-                            delimiter=',', quotechar='|')
-        for row in reader:
-            # If the row feature is not equal to the feature, add to data
-            if row != feature:
-                sheet_data.append(row)
-        # Write final rows
-        writer = csv.writer(open(self._file, 'w', newline=''),
-                            delimiter=',', quotechar='|')
-        for row in sheet_data:
-            writer.writerow(row)
         return True
                             
 class Record:
@@ -377,7 +420,7 @@ class Record:
         try:
             self._count = int(count)
         except:
-            print(year, month, day, sheet, stop)
+            print(year, month, day, sheet, stop, count)
         Day.add_count(self._date, self._dow, self._week, self._count)
         self._ID = hex(Record.ID_generator)
         Record.ID_generator += 1
@@ -436,14 +479,14 @@ class Week:
 
     @staticmethod
     def publish():
-        if not os.path.exists('Reports/Weekly'):
-            os.mkdir('Reports/Weekly')
-        if not os.path.exists('Reports/Weekly/CSV'):
-            os.mkdir('Reports/Weekly/CSV')
+        if not os.path.exists(System.go_transit_path +
+                              '/reports/ridership/weekly/excel'):
+            os.makedirs(System.go_transit_path +
+                        '/reports/ridership/weekly/excel')
         for week in sorted(Week.objects.keys()):
             # Open workbook and worksheet
-            workbook = xlsxwriter.Workbook('Reports/Weekly/CSV/' + str(week) +
-                                           '.xlsx')
+            workbook = xlsxwriter.Workbook(System.go_transit_path +
+                '/reports/ridership/weekly/excel/' + str(week) + '.xlsx')
             worksheet = workbook.add_worksheet('Ridership')
             chart = workbook.add_chart({'type': 'column'})
             # Set week object and averages
@@ -527,14 +570,14 @@ class Month:
 
     @staticmethod
     def publish():
-        if not os.path.exists('Reports/Monthly'):
-            os.mkdir('Reports/Monthly')
-        if not os.path.exists('Reports/Monthly/CSV'):
-            os.mkdir('Reports/Monthly/CSV')
+        if not os.path.exists(System.go_transit_path +
+                              '/reports/ridership/monthly/excel'):
+            os.makedirs(System.go_transit_path +
+                        '/reports/ridership/monthly/excel')
         for month in sorted(Month.objects.keys()):
-            writer = csv.writer(
-                open('Reports/Monthly/CSV/' + str(month) + '.csv', 'w',
-                    newline=''), delimiter=',', quotechar='|')
+            writer = csv.writer(open(System.go_transit_path +
+                '/reports/ridership/monthly/excel/' + str(month) + '.csv', 'w',
+                newline=''), delimiter=',', quotechar='|')
             obj = Month.objects[month]
             for date in sorted(obj._days.keys()):
                 writer.writerow([Week.convert_a[int(obj._days[date]._dow)],
@@ -648,11 +691,11 @@ class Report:
     def generate(features, start=datetime.date(2015, 8, 31),
                 end=datetime.date.today()):
         data = Report._prepare(features, start, end)
-        if not os.path.isdir('reports'):
-            os.makedirs('reports')
-        writer = csv.writer(open('reports/Ridership_' + '_'.join(features
-                                 ).title() + '.csv', 'w', newline=''),
-                            delimiter=',', quotechar='|')
+        if not os.path.isdir(System.go_transit_path + '/reports/ridership'):
+            os.makedirs(System.go_transit_path + '/reports/ridership')
+        writer = csv.writer(open(System.go_transit_path +
+            '/reports/ridership/Ridership_' + '_'.join(features).title() +
+            '.csv', 'w', newline=''), delimiter=',', quotechar='|')
         Report._recurse_data(data, features, writer)
         return True
 
@@ -680,31 +723,7 @@ class Report:
 """
 User Interface----------------------------------------------------------
 """
-def sheet_cleanup(regex):
-    for dirpath, dirnames, filenames in os.walk("."):
-        for filename in [f for f in filenames if re.search(regex, f)]:
-            reader = csv.reader(open((str(dirpath) + '/' + str(filename))[2:],
-                                     'r', newline=''),
-                                delimiter=',', quotechar='|')
-            writer = csv.writer(open(dirpath + '/' + filename[5:7] +
-                filename[0:4] + '_S' + filename[8] + '.csv', 'w', newline=''),
-                                delimiter=',', quotechar='|')
-            for row in reader:
-                writer.writerow(row)
-    return True
-
-#sheet_cleanup('^\d{7}S\d.csv$')
-#print('Finished cleaning sheets')
-    
-for dirpath, dirnames, filenames in os.walk("."):
-    for filename in [f for f in filenames if re.search('\d{6}_S\d',
-                                                       f)]:
-        obj = Sheet((str(dirpath) + '/' + str(filename)))
-        #obj = Sheet((str(dirpath) + '/' + str(filename))[2:])
-        obj.change_metadata(['Car wash', 'car wash', 'Car_wash'],
-                            'Car_Wash', 'Fuel_Cost', value=0, overwrite=False)
-        obj.read_sheet()
-
+Sheet.process()
 
 start = datetime.date(2015, 8, 31)
 end = datetime.date(2016, 12, 31)
@@ -718,3 +737,4 @@ Report.generate(['year', 'month', 'day', 'route'], start=start, end=end)
 Report.generate(['year', 'month', 'stop', 'entry'], start=start, end=end)
 Report.generate(['year', 'month', 'day', 'stop', 'entry'], start=start, end=end)
 #Report.publish_mileage()
+
