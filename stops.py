@@ -95,5 +95,44 @@ class Stop:
         for stop in stops[1:]:
             Stop(stop)
         return True
+
+class Inventory:
+
+    objects = {}
+
+    def __init__(self, file):
+        self._file = file
+        self._records = {}
+        Inventory.objects[self._file] = self
+
+    @staticmethod
+    def process():
+        for dirpath, dirnames, filenames in os.walk(System.go_transit_path
+                                                    + '/data/stops'):
+            for filename in [f for f in filenames if re.search(
+                'stop_inventory', f)]:
+                obj = Inventory((str(dirpath) + '/' + str(filename)))
+                obj.read_inventory()
+        return True
+
+    def read_inventory(self):
+        reader = csv.reader(open(self._file, 'r', newline=''),
+                            delimiter=',', quotechar='|')
+        self._year = int(self._file[-10:-8]) + 2000
+        self._month = int(self._file[-8:-6])
+        self._day = int(self._file[-6:-4])
+        records = []
+        for row in reader:
+            records.append(row)
+        self._header = records[0]
+        for line in records[1:]:
+            self._records[line[0]] = {}
+            i = 1
+            while i < len(line):
+                self._records[line[0]][self._header[i]] = line[i]
+                i += 1
+        return True
+    
     
 Stop.process()
+Inventory.process()

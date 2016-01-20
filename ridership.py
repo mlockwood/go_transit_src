@@ -71,7 +71,7 @@ class Sheet:
         self._records = {}
         self._entries = []
         self._temp = {}
-        Sheet.objects[(self._file)] = self
+        Sheet.objects[self._file] = self
 
     @staticmethod
     def process():
@@ -188,7 +188,7 @@ class Sheet:
             # Metadata
             if meta == True:
                 # Handle metadata category
-                cur_meta = str(row[0]).lower()
+                cur_meta = re.sub(' ', '', str(row[0]).lower())
                 if cur_meta not in Sheet.standard:
                     if cur_meta in Sheet.obs_map:
                         cur_meta = Sheet.obs_map[cur_meta]
@@ -297,26 +297,26 @@ class Sheet:
             # Stop validation and mapping
             # Boarding (on)
             if str(entry[0]).lower() in st.Stop.obj_map:
-                on = st.Stop.obj_map[str(entry[0]).lower()]._stop_id
+                on = str(st.Stop.obj_map[str(entry[0]).lower()]._stop_id)
             else:
                 raise ValueError('Stop ' + str(entry[0]) + ' from file ' +
                                  str(self._file) + ' is not recognized.')
             # Deboarding (Off)
             if str(entry[3]).lower() in st.Stop.obj_map:
-                off = st.Stop.obj_map[str(entry[3]).lower()]._stop_id
+                off = str(st.Stop.obj_map[str(entry[3]).lower()]._stop_id)
             else:
                 raise ValueError('Stop ' + str(entry[3]) + ' from file ' +
                                  str(self._file) + ' is not recognized.')
             
             # Set record
             record = Record(self._year, self._month, self._day, self._sheet,
-                            entry[0][0], self._driver, self._schedule,
-                            entry[1], '', entry[0], 'On', entry[2])
-            self._records[(entry[1], 'On', entry[1])] = record
+                            on[0], self._driver, self._schedule,
+                            entry[1], '', on, 'On', entry[2])
+            self._records[(on, 'On', entry[1])] = record
             record = Record(self._year, self._month, self._day, self._sheet,
-                            entry[3][0], self._driver, self._schedule,
-                            entry[1], '', entry[3], 'Off', entry[2])
-            self._records[(entry[3], 'Off', entry[1])] = record
+                            off[0], self._driver, self._schedule,
+                            entry[1], '', off, 'Off', entry[2])
+            self._records[(off, 'Off', entry[1])] = record
         return True
 
     def set_1_and_2_records(self, row, direction):
@@ -749,6 +749,6 @@ Report.generate(['week', 'route'], start=start, end=end)
 Report.generate(['week', 'stop', 'entry'], start=start, end=end)
 Report.generate(['year', 'month', 'day', 'route'], start=start, end=end)
 Report.generate(['year', 'month', 'stop', 'entry'], start=start, end=end)
-Report.generate(['year', 'month', 'day', 'stop', 'entry'], start=start, end=end)
+Report.generate(['year', 'month', 'day', 'stop', 'entry', 'sheet'], start=start, end=end)
 #Report.publish_mileage()
 
