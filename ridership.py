@@ -310,13 +310,9 @@ class Sheet:
             
             # Set record
             record = Record(self._year, self._month, self._day, self._sheet,
-                            on[0], self._driver, self._schedule,
-                            entry[1], '', on, 'On', entry[2])
-            self._records[(on, 'On', entry[1])] = record
-            record = Record(self._year, self._month, self._day, self._sheet,
-                            off[0], self._driver, self._schedule,
-                            entry[1], '', off, 'Off', entry[2])
-            self._records[(off, 'Off', entry[1])] = record
+                            on[0], self._driver, self._schedule, self._license,
+                            entry[1], on, off, entry[2])
+            self._records[(on, entry[1], off)] = record
         return True
 
     def set_1_and_2_records(self, row, direction):
@@ -410,35 +406,88 @@ class Record:
 
     objects = {}
     ID_generator = 1
+    matrix_header = ['ID', 'Year', 'Month', 'Day', 'Weekday', 'Sheet',
+                     'Route', 'Driver', 'Schedule', 'License', 'Time',
+                     'On_Stop', 'Off_Stop', 'Count']
+    matrix = [matrix_header]
 
-    def __init__(self, year, month, day, sheet, route, driver, vehicle, time,
-                 direction, stop, entry, count):
+    def __init__(self, year, month, day, sheet, route, driver, schedule,
+                 veh_license, time, on_stop, off_stop, count):
+        # Default values
         self._year = int(year)
         self._month = int(month)
         self._day = int(day)
         self._sheet = sheet
         self._route = route
         self._driver = driver
+        self._schedule = schedule
+        self._license = veh_license
+        self._on_stop = on_stop
+        self._off_stop = off_stop
+        # Processing functions
+        self.set_date()
+        self.set_time(time)
+        self.set_count(count)
+        self.set_id()
+        self.append_record()
+        # Add record to the date it pertains
+        Day.add_count(self._date, self._dow, self._week, self._count)
+
+    def set_date(self):
+        self._datestr = (str(self._year) + '/' + str(self._month) + '/' +
+                         str(self._day))
+        self._date = datetime.date(self._year, self._month, self._day)
+        self._week = (str(self._date.isocalendar()[0]) + '_' +
+                      str(self._date.isocalendar()[1]))
+        self._dow = str(self._date.isocalendar()[2])
+        return True
+
+    def set_time(self, time):
         time = re.sub(':', '', time)
         try:
             self._time = str(int(time[:-2])) + ':' + str(time[-2:])
         except:
-            print(year, month, day, sheet, stop)
-        self._direction = direction
-        self._stop = stop
-        self._entry = entry
-        self._date = datetime.date(int(year), int(month), int(day))
-        self._week = (str(self._date.isocalendar()[0]) + '_' +
-                      str(self._date.isocalendar()[1]))
-        self._dow = str(self._date.isocalendar()[2])
+            self.raise_error()
+        return True
+
+    def set_count(self, count):
         try:
             self._count = int(count)
         except:
-            print(year, month, day, sheet, stop, count)
-        Day.add_count(self._date, self._dow, self._week, self._count)
+            self.raise_error()
+        return True
+
+    def set_id(self):
         self._ID = hex(Record.ID_generator)
         Record.ID_generator += 1
         Record.objects[self._ID] = self
+        return True
+
+    def append_record(self):
+        Record.matrix.append([self._ID, self._year, self._month, self._day,
+                              self._dow, self._sheet, self._route,
+                              self._driver, self._schedule, self._license,
+                              self._time, self._on_stop, self._off_stop,
+                              self._count])
+        return True
+
+    def raise_error(self):
+        raise ValueError('There was a problem with one of the values for ' +
+                         self._file + '. Consult the records with ' +
+                         self._on_stop + ' as the boarding and ' +
+                         self._off_stop + ' as the deboarding.')
+        return True
+
+    @staticmethod
+    def publish_matrix():
+        if not os.path.exists(System.go_transit_path + '/reports/ridership'):
+            os.makedirs(System.go_transit_path + '/reports/ridership')
+        writer = csv.writer(open(System.go_transit_path +
+            '/reports/ridership/records' +
+            '.csv', 'w', newline=''), delimiter=',', quotechar='|')
+        for row in Record.matrix:
+            writer.writerow(row)
+        return True
 
 class Day:
 
@@ -463,7 +512,7 @@ class Day:
     def add_count(date, dow, week, count):
         if (date.year, date.month, date.day) not in Day.objects:
             Day(date.year, date.month, date.day, date, week, dow)
-        Day.objects[(date.year, date.month, date.day)]._count += (count / 2.0)
+        Day.objects[(date.year, date.month, date.day)]._count += count
         return True
 
     def set_week(self):
@@ -634,28 +683,14 @@ class Report:
                 i += 1
             # Process the counts of the last feature
             try:
-                # If entry is a feature add the full object count
-                if 'entry' in features:
-                    exec(DS + '[\'' + eval('obj._' + features[-1]) + '\']=' +
-                         DS + '.get(\'' + eval('obj._' + features[-1]) +
-                         '\', 0) + obj._count')
-                # If entry is not a feature add half the object count
-                else:
-                    exec(DS + '[\'' + eval('obj._' + features[-1]) + '\']=' +
-                         DS + '.get(\'' + eval('obj._' + features[-1]) +
-                         '\', 0) + (obj._count / 2.0)')
+                exec(DS + '[\'' + eval('obj._' + features[-1]) + '\']=' + DS +
+                     '.get(\'' + eval('obj._' + features[-1]) +
+                     '\', 0) + obj._count')
             # Except if boolean
             except TypeError:
-                # If entry is a feature add the full object count
-                if 'entry' in features:
-                    exec(DS + '[' + str(eval('obj._' + features[-1])) + ']=' +
-                         DS + '.get(' + str(eval('obj._' + features[-1])) +
-                         ', 0) + obj._count')
-                # If entry is not a feature add half the object count
-                else:
-                    exec(DS + '[' + str(eval('obj._' + features[-1])) + ']=' +
-                         DS + '.get(' + str(eval('obj._' + features[-1])) +
-                         ', 0) + (obj._count / 2.0)')
+                exec(DS + '[' + str(eval('obj._' + features[-1])) + ']=' + DS +
+                     '.get(' + str(eval('obj._' + features[-1])) +
+                     ', 0) + obj._count')
         return data
 
     @staticmethod
@@ -715,6 +750,8 @@ class Report:
 
     @staticmethod
     def publish():
+        # Records
+        Record.publish_matrix()
         # Weekly
         Week.publish()
         # Monthly
@@ -743,12 +780,15 @@ start = datetime.date(2015, 8, 31)
 end = datetime.date(2016, 12, 31)
 
 Report.publish()
-Report.generate(['stop', 'entry'], start=start, end=end)
-Report.generate(['dow', 'stop', 'entry'], start=start, end=end)
+#Report.generate(['stop', 'entry'], start=start, end=end)
+#Report.generate(['dow', 'stop', 'entry'], start=start, end=end)
 Report.generate(['week', 'route'], start=start, end=end)
-Report.generate(['week', 'stop', 'entry'], start=start, end=end)
+Report.generate(['week', 'dow'], start=start, end=end)
+#Report.generate(['week', 'stop', 'entry'], start=start, end=end)
 Report.generate(['year', 'month', 'day', 'route'], start=start, end=end)
-Report.generate(['year', 'month', 'stop', 'entry'], start=start, end=end)
-Report.generate(['year', 'month', 'day', 'stop', 'entry', 'sheet'], start=start, end=end)
+#Report.generate(['year', 'month', 'stop', 'entry'], start=start, end=end)
+#Report.generate(['year', 'month', 'day', 'stop', 'entry', 'sheet'],
+#start=start, end=end)
+Report.generate(['on_stop', 'off_stop'], start=start, end=end)
 #Report.publish_mileage()
 
