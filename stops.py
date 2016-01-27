@@ -50,50 +50,89 @@ class System:
     go_transit_path = PathSetter.find_path('go_transit')
 
 class Stop:
-    
+
     objects = {}
     obj_map = {}
+    header = {}
+
+    def __init__(self, stop_id):
+        self._stop_id = stop_id
+        Stop.objects[stop_id] = self
+
+    @staticmethod
+    def map_objects():
+        for stop in Stop.objects:
+            obj = Stop.objects[stop]
+            Stop.obj_map[str(obj._stop_id)] = obj
+            if obj._name:
+                Stop.obj_map[obj._name] = obj
+            if obj._codename:
+                Stop.obj_map[str(obj._codename)] = obj
+            if obj._historic:
+                Stop.obj_map[obj._historic] = obj
+
+class Point:
+    
+    objects = {}
     header = {}
 
     def __init__(self, data):
         i = 0
         while i < len(data):
             try:
-                exec('self._' + str(Stop.header[i]).lower() + '=' +
+                exec('self._' + str(Point.header[i]).lower() + '=' +
                      str(data[i]).lower())
-                if isinstance(eval('self._' + str(Stop.header[i]).lower()),
+                if isinstance(eval('self._' + str(Point.header[i]).lower()),
                               complex):
-                    exec('self._' + str(Stop.header[i]).lower() + '=\'' +
+                    exec('self._' + str(Point.header[i]).lower() + '=\'' +
                          str(data[i]).lower() + '\'')
             except:
-                exec('self._' + str(Stop.header[i]).lower() + '=\'' +
+                exec('self._' + str(Point.header[i]).lower() + '=\'' +
                      str(data[i]).lower() + '\'')
             i += 1
-        Stop.objects[self._stop_id] = self
-        Stop.obj_map[str(self._stop_id)] = self
-        if self._name:
-            Stop.obj_map[self._name] = self
-        if self._codename:
-            Stop.obj_map[str(self._codename)] = self
-        if self._historic:
-            Stop.obj_map[self._historic] = self
+        Point.objects[(str(self._stop_id), str(self._gps_ref))] = self
 
     @staticmethod
     def process():
         reader = csv.reader(open(System.go_transit_path +
             '/data/stops/stops.csv', 'r', newline=''), delimiter=',',
             quotechar='|')
-        stops = []
+        points = []
         for row in reader:
-            stops.append(row)
+            points.append(row)
+        
         # Set header
         i = 0
-        while i < len(stops[0]):
-            Stop.header[i] = stops[0][i]
+        while i < len(points[0]):
+            Point.header[i] = points[0][i]
             i += 1
+            
         # Initialize all other rows as objects
-        for stop in stops[1:]:
-            Stop(stop)
+        stops = {}
+        for data in points[1:]:
+            pt = Point(data)
+            if pt._stop_id not in stops:
+                stops[pt._stop_id] = {}
+            stops[pt._stop_id][pt] = True
+            
+        # Convert stop DS items to stop objects, will have a feature of data
+        # iff all points for the stop have the same value for that feature
+        for stop in stops:
+            obj = Stop(stop)
+            obj._points = stops[stop]
+            for feature in Point.header.values():
+                match = True
+                temp = 'none'
+                for pt in obj._points:
+                    if temp == 'none':
+                        temp = eval('pt._' + str(feature))
+                    elif eval('pt._' + str(feature)) != temp:
+                        match = False
+                if match == True:
+                    exec('obj._' + str(feature) + '= temp')
+
+        # Develop object map for stops
+        Stop.map_objects()
         return True
 
 class Inventory:
@@ -133,6 +172,5 @@ class Inventory:
                 i += 1
         return True
     
-    
-Stop.process()
+Point.process()
 Inventory.process()

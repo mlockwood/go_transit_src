@@ -38,6 +38,7 @@ GO Transit Imports------------------------------------------------------
 """
 PathSetter.set_pythonpath()
 import stops as st
+import report as rp
 
 """
 Main Classes------------------------------------------------------------
@@ -72,6 +73,18 @@ class Sheet:
         self._entries = []
         self._temp = {}
         Sheet.objects[self._file] = self
+
+    @staticmethod
+    def publish_mileage():
+        data = {}
+        for sheet in Sheet.objects:
+            obj = Sheet.objects[sheet]
+            data[(obj._year, obj._month, obj._day)] = data.get((obj._year,
+                                                                obj._month,
+                                                                obj._day), 0
+                                            ) + float(obj._mileage_total)
+        for key in sorted(data.keys()):
+            print(key, data[key])
 
     @staticmethod
     def process():
@@ -301,7 +314,7 @@ class Sheet:
             else:
                 raise ValueError('Stop ' + str(entry[0]) + ' from file ' +
                                  str(self._file) + ' is not recognized.')
-            # Deboarding (Off)
+            # Deboarding (off)
             if str(entry[3]).lower() in st.Stop.obj_map:
                 off = str(st.Stop.obj_map[str(entry[3]).lower()]._stop_id)
             else:
@@ -647,148 +660,34 @@ class Month:
                     date, obj._days[date]._count, obj._days[date]._average,
                     obj._days[date]._straight_line])
         return True
-
-class Report:
-
-    @staticmethod
-    def _prepare(features, start, end):
-        # If no features, return total only
-        if not features:
-            count = 0
-            for record in Record.objects:
-                count += Record.objects[record]._count
-            return {'Total': count}
-        # If features, produce variable data structure
-        data = {}
-        for record in Record.objects:
-            obj = Record.objects[record]
-            # If outside of the daterange, continue
-            if obj._date < start or obj._date > end:
-                continue
-            # If inside the daterange, process count information
-            i = 0
-            DS = 'data'
-            # Process all except the last feature
-            while i < (len(features) - 1):
-                try:
-                    if eval('obj._' + features[i]) not in eval(DS):
-                        exec(DS + '[\'' + eval('obj._' + features[i]) +
-                             '\']={}')
-                    DS += '[\'' + eval('obj._' + features[i]) + '\']'
-                except TypeError:
-                    if eval('obj._' + features[i]) not in eval(DS):
-                        exec(DS + '[' + str(eval('obj._' + features[i])) +
-                             ']={}')
-                    DS += '[' + str(eval('obj._' + features[i])) + ']'
-                i += 1
-            # Process the counts of the last feature
-            try:
-                exec(DS + '[\'' + eval('obj._' + features[-1]) + '\']=' + DS +
-                     '.get(\'' + eval('obj._' + features[-1]) +
-                     '\', 0) + obj._count')
-            # Except if boolean
-            except TypeError:
-                exec(DS + '[' + str(eval('obj._' + features[-1])) + ']=' + DS +
-                     '.get(' + str(eval('obj._' + features[-1])) +
-                     ', 0) + obj._count')
-        return data
-
-    @staticmethod
-    def _dict_to_matrix(data):
-        # Set outer and inner keys
-        outer_keys = sorted(data.keys())
-        inner_keys_D = {}
-        # Find all inner key values
-        for o_key in outer_keys:
-            for i_key in data[o_key]:
-                inner_keys_D[i_key] = True
-        inner_keys = sorted(inner_keys_D.keys())
-        # Set matrix
-        matrix = [[''] + inner_keys]
-        for o_key in outer_keys:
-            row = [o_key]
-            for i_key in inner_keys:
-                # If inner key is found for the outer key, set amount
-                if i_key in data[o_key]:
-                    row.append(data[o_key][i_key])
-                # Otherwise inner key DNE for outer key, set to 0
-                else:
-                    row.append(0)
-            matrix.append(row)
-        return matrix
-
-    @staticmethod
-    def _recurse_data(data, features, writer, prev=[], i=0,
-                      limit=2):
-        if i == (len(features) - limit):
-            matrix = Report._dict_to_matrix(data)
-            # Write title by previous values
-            writer.writerow(prev)
-            # Write matrix rows
-            for row in matrix:
-                writer.writerow(row)
-            # Write empty row
-            writer.writerow([])
-        else:
-            for key in sorted(data.keys()):
-                Report._recurse_data(data[key], features, writer, prev + [
-                                str(features[i]).title() + ': ' + str(key)],
-                                     i+1, limit=limit)
-        return True    
-
-    @staticmethod
-    def generate(features, start=datetime.date(2015, 8, 31),
-                end=datetime.date.today()):
-        data = Report._prepare(features, start, end)
-        if not os.path.isdir(System.go_transit_path + '/reports/ridership'):
-            os.makedirs(System.go_transit_path + '/reports/ridership')
-        writer = csv.writer(open(System.go_transit_path +
-            '/reports/ridership/Ridership_' + '_'.join(features).title() +
-            '.csv', 'w', newline=''), delimiter=',', quotechar='|')
-        Report._recurse_data(data, features, writer)
-        return True
-
-    @staticmethod
-    def publish():
-        # Records
-        Record.publish_matrix()
-        # Weekly
-        Week.publish()
-        # Monthly
-        Month.publish()
-        return True
-
-    @staticmethod
-    def publish_mileage():
-        data = {}
-        for sheet in Sheet.objects:
-            obj = Sheet.objects[sheet]
-            data[(obj._year, obj._month, obj._day)] = data.get((obj._year,
-                                                                obj._month,
-                                                                obj._day), 0
-                                            ) + float(obj._mileage_total)
-        for key in sorted(data.keys()):
-            print(key, data[key])
-        
-                        
+    
+def publish():
+    # Records
+    Record.publish_matrix()
+    # Weekly
+    Week.publish()
+    # Monthly
+    Month.publish()
+    return True
+                                
 """
 User Interface----------------------------------------------------------
 """
 Sheet.process()
 
-start = datetime.date(2015, 8, 31)
+start = datetime.date(2015, 11, 1)
 end = datetime.date(2016, 12, 31)
 
-Report.publish()
-#Report.generate(['stop', 'entry'], start=start, end=end)
-#Report.generate(['dow', 'stop', 'entry'], start=start, end=end)
-Report.generate(['week', 'route'], start=start, end=end)
-Report.generate(['week', 'dow'], start=start, end=end)
-#Report.generate(['week', 'stop', 'entry'], start=start, end=end)
-Report.generate(['year', 'month', 'day', 'route'], start=start, end=end)
-#Report.generate(['year', 'month', 'stop', 'entry'], start=start, end=end)
-#Report.generate(['year', 'month', 'day', 'stop', 'entry', 'sheet'],
-#start=start, end=end)
-Report.generate(['on_stop', 'off_stop'], start=start, end=end)
-#Report.publish_mileage()
+#publish()
+#Sheet.publish_mileage()
 
+rp.Report.path = System.go_transit_path + '/reports/ridership/'
+rp.Report.name = 'Ridership_'
+
+rp_obj = rp.Report(rp.convert_objects(Record.objects))
+
+rp_obj.generate(['week', 'route'], start=start, end=end)
+rp_obj.generate(['week', 'dow'], start=start, end=end)
+rp_obj.generate(['dow', 'on_stop', 'off_stop'], start=start, end=end)
+rp_obj.generate(['year', 'month', 'day', 'route'], start=start, end=end)
+rp_obj.generate(['on_stop', 'off_stop'], start=start, end=end)
