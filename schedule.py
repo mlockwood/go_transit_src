@@ -311,8 +311,9 @@ class Stop:
                     summation += cells[cell]
                 # Open workbook and worksheet
                 workbook = xlsxwriter.Workbook(System.go_transit_path +
-                    '/reports/schedules/timetables/' + str(stop) + str(ref) +
-                    '.xlsx')
+                    '/reports/schedules/timetables/' + str(stop) + '_' +
+                    re.sub(' |\-', '_', str(st.Stop.obj_map[stop]._name)
+                    ).title() + '_' + str(ref) + '.xlsx')
                 worksheet = workbook.add_worksheet('Timetable')
                 
                 # Set column widths
@@ -343,8 +344,8 @@ class Stop:
                 i = 0
                 for cell in sorted(cells.keys()):
                     worksheet.merge_range(eval('\'' + alphabet[i] + '2:' +
-                        alphabet[i + cells[cell] - 1] + '2\''), str(cell),
-                        bold_format)
+                        alphabet[i + cells[cell] - 1] + '2\''), 'Route ' +
+                        str(cell), bold_format)
                     i += cells[cell]
                 
                 # Write data
@@ -428,8 +429,8 @@ class Route:
             # Write data
             row = 3
             for stop in sorted(obj._records.keys()):
-                if Stop.objects[stop]._display == '0':
-                    continue
+                #if Stop.objects[stop]._display == '0':
+                #    continue
                 worksheet.write('A' + str(row), str(st.Stop.obj_map[str(stop
                     ).lower()]._name).title(), stop_format)
                 # Add first direction times
