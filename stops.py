@@ -173,4 +173,5 @@ class Inventory:
         return True
     
 Point.process()
-Inventory.process()
+if __name__ == '__main__':
+    Inventory.process()

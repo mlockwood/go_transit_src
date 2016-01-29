@@ -55,7 +55,7 @@ class System:
 class Sheet:
 
     objects = {}
-    header = ['Stop', 'Spread1', 'Spread2', 'GPS', 'Display']
+    header = ['Stop', 'Spread1', 'Spread2', 'Points', 'Display']
 
     def __init__(self, file):
         self._file = file
@@ -245,9 +245,11 @@ class Stop:
     @staticmethod
     def add_record(record):
         # Set and handle stop object
-        if record._stop not in Stop.objects:
-            Stop(record._stop, record._display)
-        obj = Stop.objects[record._stop]
+        stop = re.sub(' |\-', '_', str(st.Stop.obj_map[record._stop]._name)
+                      ).title()
+        if stop not in Stop.objects:
+            Stop(stop, record._display)
+        obj = Stop.objects[stop]
         # Add stop, direction, time
         if record._gps_ref not in obj._records:
             obj._records[record._gps_ref] = {}
@@ -279,7 +281,7 @@ class Stop:
     def prepare_table(D):
         cells = {}
         temp = []
-        for route in D:
+        for route in sorted(D.keys()):
             temp.append(Stop._stack_times(D[route], 15))
             cells[route] = len(temp[-1][0])
         i = 0
@@ -312,8 +314,7 @@ class Stop:
                 # Open workbook and worksheet
                 workbook = xlsxwriter.Workbook(System.go_transit_path +
                     '/reports/schedules/timetables/' + str(stop) + '_' +
-                    re.sub(' |\-', '_', str(st.Stop.obj_map[stop]._name)
-                    ).title() + '_' + str(ref) + '.xlsx')
+                    str(ref) + '.xlsx')
                 worksheet = workbook.add_worksheet('Timetable')
                 
                 # Set column widths
@@ -339,7 +340,7 @@ class Stop:
                 
                 # Write header
                 worksheet.merge_range(eval('\'A1:' + alphabet[summation - 1] +
-                    '1\''), 'Stop ' + str(stop), merge_format)
+                    '1\''), re.sub('_', ' ', str(stop)), merge_format)
                 # Write subheaders for each route
                 i = 0
                 for cell in sorted(cells.keys()):
