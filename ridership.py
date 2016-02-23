@@ -1,4 +1,20 @@
+#!/usr/bin/env python3.4
+# -*- coding: utf-8 -*-
 
+"""
+__authors__ = MichaelLockwood
+__projectclass__ = go
+__projectsubclass__ = transit
+__projectnumber__ = 11
+__projectname__ = ridership.py
+__date__ = February2015
+__credits__ = None
+__collaborators__ = None
+
+Explanation here.
+"""
+
+# Import packages
 import configparser
 import csv
 import datetime
@@ -37,20 +53,31 @@ class PathSetter:
 GO Transit Imports------------------------------------------------------
 """
 PathSetter.set_pythonpath()
-import stops as st
 import report as rp
+import stop as st
 
 """
 Main Classes------------------------------------------------------------
 """
 class System:
+    
+    @staticmethod
+    def load_config():
+        config = configparser.ConfigParser()
+        config.read('system.ini')
+        for var in config['DEFAULT']:
+            try:
+                exec('System.' + var + ' = ' + eval('\'' +
+                    eval('config[\'DEFAULT\'][\'' + var + '\']') + '\''))
+                if isinstance('System.' + var, complex):
+                    exec('System.' + var + ' = \'' + eval(
+                        'config[\'DEFAULT\'][\'' + var + '\']') + '\'')
+            except:
+                exec('System.' + var + ' = \'' + eval(
+                    'config[\'DEFAULT\'][\'' + var + '\']') + '\'')
+        return True
 
-    begin = datetime.date(2015, 8, 31)
-    finish = datetime.date(2016, 11, 30)
-    baseline = 19.4000
-    final = 83.3333
-    increment = (final - baseline) / abs(finish - begin).days
-    go_transit_path = PathSetter.find_path('go_transit')
+System.load_config()
 
 class Sheet:
 
@@ -90,8 +117,7 @@ class Sheet:
     def process():
         Sheet.load_config()
         # obj_list = []
-        for dirpath, dirnames, filenames in os.walk(System.go_transit_path
-                                                    + '/data'):
+        for dirpath, dirnames, filenames in os.walk(System.path + '/data'):
             for filename in [f for f in filenames if re.search(
                 '\d{6}_S\d', f)]:
                 obj = Sheet((str(dirpath) + '/' + str(filename)))
@@ -159,7 +185,7 @@ class Sheet:
     def set_writer(self):
         date = datetime.datetime(int(self._year), int(self._month),
                                  int(self._day))
-        directory = (System.go_transit_path + '/formatted/' +
+        directory = (System.path + '/reports/ridership/formatted/' +
             date.strftime('%Y_%m') + '/' + date.strftime('%y%m%d'))
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -272,6 +298,7 @@ class Sheet:
         if self._pvn == '2' or self._pvn == '1':
             self.upversion_1_and_2()
         # Final metadata check -- for completeness
+        self.validate()
         for category in Sheet.standard:
             if category not in meta_D:
                 meta_D[category] = Sheet.standard[category]
@@ -289,6 +316,19 @@ class Sheet:
                                          meta_D[Sheet.order[index]]])
             # Send to have file rewritten
             Sheet.rewrite[self] = True
+        return True
+
+    def validate(self):
+        match = re.search('\d{6}', self._file)
+        if not match:
+            print('Warning: naming convention error with file ', self._file)
+        f_year = int('20' + self._file[match.span()[0]:match.span()[0] + 2])
+        f_month = int(self._file[match.span()[0] + 2:match.span()[0] + 4])
+        f_day = int(self._file[match.span()[0] + 4:match.span()[0] + 6])
+        if (f_year, f_month, f_day) != (int(self._year), int(self._month),
+            int(self._day)):
+            print('Warning: year, month, day do not match contents for file ',
+                  self._file)
         return True
 
     def set_records(self):
@@ -493,9 +533,9 @@ class Record:
 
     @staticmethod
     def publish_matrix():
-        if not os.path.exists(System.go_transit_path + '/reports/ridership'):
-            os.makedirs(System.go_transit_path + '/reports/ridership')
-        writer = csv.writer(open(System.go_transit_path +
+        if not os.path.exists(System.path + '/reports/ridership'):
+            os.makedirs(System.path + '/reports/ridership')
+        writer = csv.writer(open(System.path +
             '/reports/ridership/records' +
             '.csv', 'w', newline=''), delimiter=',', quotechar='|')
         for row in Record.matrix:
@@ -535,7 +575,7 @@ class Day:
         return True
 
     def set_month(self):
-        month_key = str(self._year) + '_' + str(self._month)
+        month_key = str(self._year) + '_' + Month.convert_m[int(self._month)]
         if month_key not in Month.objects:
             Month(month_key)
         Month.objects[month_key]._days[self._date] = self
@@ -555,13 +595,11 @@ class Week:
 
     @staticmethod
     def publish():
-        if not os.path.exists(System.go_transit_path +
-                              '/reports/ridership/weekly/excel'):
-            os.makedirs(System.go_transit_path +
-                        '/reports/ridership/weekly/excel')
+        if not os.path.exists(System.path + '/reports/ridership/weekly/excel'):
+            os.makedirs(System.path + '/reports/ridership/weekly/excel')
         for week in sorted(Week.objects.keys()):
             # Open workbook and worksheet
-            workbook = xlsxwriter.Workbook(System.go_transit_path +
+            workbook = xlsxwriter.Workbook(System.path +
                 '/reports/ridership/weekly/excel/' + str(week) + '.xlsx')
             worksheet = workbook.add_worksheet('Ridership')
             chart = workbook.add_chart({'type': 'column'})
@@ -638,6 +676,8 @@ class Week:
 class Month:
 
     objects = {}
+    convert_m = {1: 'JAN', 2: 'FEB', 3: 'MAR', 4: 'APR', 5: 'MAY', 6: 'JUN',
+                 7: 'JUL', 8: 'AUG', 9: 'SEP', 10: 'OCT', 11: 'NOV', 12: 'DEC'}
 
     def __init__(self, month):
         self._month = month
@@ -646,12 +686,11 @@ class Month:
 
     @staticmethod
     def publish():
-        if not os.path.exists(System.go_transit_path +
+        if not os.path.exists(System.path +
                               '/reports/ridership/monthly/excel'):
-            os.makedirs(System.go_transit_path +
-                        '/reports/ridership/monthly/excel')
+            os.makedirs(System.path + '/reports/ridership/monthly/excel')
         for month in sorted(Month.objects.keys()):
-            writer = csv.writer(open(System.go_transit_path +
+            writer = csv.writer(open(System.path +
                 '/reports/ridership/monthly/excel/' + str(month) + '.csv', 'w',
                 newline=''), delimiter=',', quotechar='|')
             obj = Month.objects[month]
@@ -675,18 +714,20 @@ User Interface----------------------------------------------------------
 """
 Sheet.process()
 
-start = datetime.date(2015, 11, 1)
+start = datetime.date(2015, 8, 31)
 end = datetime.date(2016, 12, 31)
 
-#publish()
+publish()
+
 #Sheet.publish_mileage()
 
-rp.Report.path = System.go_transit_path + '/reports/ridership/'
+rp.Report.path = System.path + '/reports/ridership/'
 rp.Report.name = 'Ridership_'
 
 rp_obj = rp.Report(rp.convert_objects(Record.objects))
 
 rp_obj.generate(['week', 'route'], start=start, end=end)
+rp_obj.generate(['year', 'month', 'route'], start=start, end=end)
 rp_obj.generate(['week', 'dow'], start=start, end=end)
 rp_obj.generate(['dow', 'on_stop', 'off_stop'], start=start, end=end)
 rp_obj.generate(['year', 'month', 'day', 'route'], start=start, end=end)

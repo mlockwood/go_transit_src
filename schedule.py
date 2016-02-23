@@ -37,200 +37,31 @@ class PathSetter:
 GO Transit Imports------------------------------------------------------
 """
 PathSetter.set_pythonpath()
-import stops as st
-import report as rp
+import route as rt
+import stop as st
 
 """
 Main Classes------------------------------------------------------------
 """
 class System:
-
-    begin = datetime.date(2015, 8, 31)
-    finish = datetime.date(2016, 11, 30)
-    baseline = 19.4000
-    final = 83.3333
-    increment = (final - baseline) / abs(finish - begin).days
-    go_transit_path = PathSetter.find_path('go_transit')
-
-class Sheet:
-
-    objects = {}
-    header = ['Stop', 'Spread1', 'Spread2', 'Points', 'Display']
-
-    def __init__(self, file):
-        self._file = file
-        self._start_shift = ''
-        self._time_key = 0
-        self._records = {}
-        self._entries = []
-        self._temp = {}
-        Sheet.objects[self._file] = self
-
+    
     @staticmethod
-    def process():
-        for dirpath, dirnames, filenames in os.walk(System.go_transit_path
-                                                    + '/data/schedules/'):
-            for filename in [f for f in filenames if re.search(
-                'schedule_\d{6}', f)]:
-                obj = Sheet((str(dirpath) + '/' + str(filename)))
-                obj.read_sheet()
+    def load_config():
+        config = configparser.ConfigParser()
+        config.read('system.ini')
+        for var in config['DEFAULT']:
+            try:
+                exec('System.' + var + ' = ' + eval('\'' +
+                    eval('config[\'DEFAULT\'][\'' + var + '\']') + '\''))
+                if isinstance('System.' + var, complex):
+                    exec('System.' + var + ' = \'' + eval(
+                        'config[\'DEFAULT\'][\'' + var + '\']') + '\'')
+            except:
+                exec('System.' + var + ' = \'' + eval(
+                    'config[\'DEFAULT\'][\'' + var + '\']') + '\'')
         return True
 
-    def read_sheet(self):
-        reader = csv.reader(open(self._file, 'r', newline=''),
-                            delimiter=',', quotechar='|')
-        meta = False
-        data = False
-        direction = '1'
-        meta_D = {}
-        for row in reader:
-            # <Handle Types>
-            # Blank row handle
-            if not re.sub(' ', '', ''.join(row)):
-                continue
-            # Metadata boolean handle
-            elif row[0] == 'METADATA':
-                meta = True
-                continue
-            # Data boolean handle
-            elif row[0] == 'DATA':
-                data = True
-                meta = False
-                continue
-            # </Handle Types>
-            
-            # Metadata
-            if meta == True:
-                # Handle metadata category
-                cur_meta = re.sub(' ', '', str(row[0]).lower())
-                # Handle metadata value
-                cur_value = str(row[1]).lower()
-                # Add metadata to the sheet
-                if re.search('\[', cur_value):
-                    cur_value = re.sub('&', ',', cur_value)
-                    exec('self._' + cur_meta + '=' + cur_value)
-                else:
-                    try:
-                        exec('self._' + cur_meta + '=\'' + cur_value + '\'')
-                    except:
-                        raise ValueError('Metadata error in ' + cur_meta)
-                        
-            # Data
-            if data == True:
-                if row != Sheet.header:
-                    self._entries.append(row)
-
-        # If no data, alert user just in case of error
-        if data == False:
-            print(self._file, 'does not contain any data.')
-        # Actually process records
-        self._date = datetime.date(int(self._year), int(self._month),
-                                   int(self._day))
-        self.set_records()
-        return True
-
-    def set_records(self):
-        # Set daily start and end times
-        start = datetime.datetime(int(self._year), int(self._month),
-                                  int(self._day), int(self._start[:-2]),
-                                  int(self._start[-2:]))
-        end = datetime.datetime(int(self._year), int(self._month),
-                                int(self._day), int(self._end[:-2]),
-                                int(self._end[-2:]))
-
-        # Handle processing for each entry
-        for entry in self._entries:
-            # General record validation
-            if entry == Sheet.header:
-                continue
-            if not re.sub(' ', '', ''.join(str(x) for x in entry)):
-                continue
-            
-            # Stop validation and mapping=
-            if str(entry[0]).lower() in st.Stop.obj_map:
-                on = str(st.Stop.obj_map[str(entry[0]).lower()]._stop_id)
-            else:
-                raise ValueError('Stop ' + str(entry[0]) + ' from file ' +
-                                 str(self._file) + ' is not recognized.')
-
-            # GPS reference handling
-            gps_ref = re.split('&', entry[3])
-
-            # Process entries
-            self.process_entry(entry[0], entry[1], gps_ref[0],
-                               self._direction1, entry[4], start, end, '1')
-            self.process_entry(entry[0], entry[2], gps_ref[1],
-                               self._direction2, entry[4], start, end, '2')
-        return True
-
-    def process_entry(self, stop, spread, gps_ref, direction, display, base,
-                      end, seq):
-        if spread == 'n' or spread == 'd':
-            return False
-        # Base time is start + spread + offset
-        base = base + datetime.timedelta(0, 60 * (int(spread) +
-            eval('int(self._offset' + seq + ')')))
-        # If spread + offset >= headway then reduce base by headway time
-        if (int(spread) + eval('int(self._offset' + seq + ')') >=
-            int(self._headway)):
-            base = base - datetime.timedelta(0, 60 * int(self._headway))
-        # Add records until end time
-        while True:
-            if base < end:
-                Record(self._route, stop, gps_ref, direction,
-                       base.strftime('%H:%M'), display, self._date, self)
-            else:
-                break
-            base = base + datetime.timedelta(0, 60 * int(self._headway))
-        return True
-                            
-class Record:
-
-    objects = {}
-    ID_generator = 1
-    matrix_header = ['Route', 'Direction', 'Stop', 'Time', 'Display']
-    matrix = [matrix_header]
-
-    def __init__(self, route, stop, gps_ref, direction, time, display, date,
-                 sheet):
-        # Default values
-        self._route = route
-        self._stop = stop
-        self._gps_ref = gps_ref
-        self._direction = direction
-        self._time = time
-        self._display = display
-        self._date = date
-        self._count = 1
-        self._sheet = sheet
-        # Processing functions
-        self.set_id()
-        self.append_record()
-        # Add records
-        Stop.add_record(self)
-        Route.add_record(self)
-
-    def set_id(self):
-        self._ID = hex(Record.ID_generator)
-        Record.ID_generator += 1
-        Record.objects[self._ID] = self
-        return True
-
-    def append_record(self):
-        Record.matrix.append([self._route, self._direction, self._stop,
-                              self._time, self._display])
-        return True
-
-    @staticmethod
-    def publish_matrix():
-        if not os.path.exists(System.go_transit_path + '/reports/schedules'):
-            os.makedirs(System.go_transit_path + '/reports/schedules')
-        writer = csv.writer(open(System.go_transit_path +
-            '/reports/schedules/records' +
-            '.csv', 'w', newline=''), delimiter=',', quotechar='|')
-        for row in Record.matrix:
-            writer.writerow(row)
-        return True
+System.load_config()
 
 class Stop:
 
@@ -263,7 +94,7 @@ class Stop:
         i = 0
         b = []
         c = []
-        for entry in a:
+        for entry in sorted(a):
             if i < n:
                 c.append(entry)
                 i += 1
@@ -296,9 +127,9 @@ class Stop:
 
     @staticmethod
     def publish():
-        if not os.path.exists(System.go_transit_path +
+        if not os.path.exists(System.path +
                               '/reports/schedules/timetables'):
-            os.makedirs(System.go_transit_path +
+            os.makedirs(System.path +
                         '/reports/schedules/timetables')
         # Iterate through each stop
         for stop in sorted(Stop.objects.keys()):
@@ -312,7 +143,7 @@ class Stop:
                 for cell in cells:
                     summation += cells[cell]
                 # Open workbook and worksheet
-                workbook = xlsxwriter.Workbook(System.go_transit_path +
+                workbook = xlsxwriter.Workbook(System.path +
                     '/reports/schedules/timetables/' + str(stop) + '_' +
                     str(ref) + '.xlsx')
                 worksheet = workbook.add_worksheet('Timetable')
@@ -330,6 +161,7 @@ class Stop:
                 merge_format = workbook.add_format({'bold': True,
                                                     'align': 'center',
                                                     'fg_color': '#D7E4BC',
+                                                    'font_size': 18,
                                                     })
                 bold_format = workbook.add_format({'bold': True,
                                                    'align': 'center',
@@ -388,15 +220,15 @@ class Route:
 
     @staticmethod
     def publish():
-        if not os.path.exists(System.go_transit_path +
+        if not os.path.exists(System.path +
                               '/reports/schedules/routes'):
-            os.makedirs(System.go_transit_path +
+            os.makedirs(System.path +
                         '/reports/schedules/routes')
         for route in sorted(Route.objects.keys()):
             # Set object
             obj = Route.objects[route]
             # Open workbook and worksheet
-            workbook = xlsxwriter.Workbook(System.go_transit_path +
+            workbook = xlsxwriter.Workbook(System.path +
                 '/reports/schedules/routes/route' + str(route) + '.xlsx')
             worksheet = workbook.add_worksheet('Schedule')
             # Set column widths
@@ -452,27 +284,23 @@ class Route:
             workbook.close()
         return True
 
+def process():
+    # Load routes from route.py
+    for route in rt.Route.objects:
+        for record in rt.Route.objects[route]._records:
+            Stop.add_record(record)
+            Route.add_record(record)
+    return True
+
 def publish():
-    # Records
-    Record.publish_matrix()
     # Stop
     Stop.publish()
     # Route
     Route.publish()
+    return True
 
 """
 User Interface----------------------------------------------------------
 """
-Sheet.process()
+process()
 publish()
-
-start = datetime.date(2015, 11, 1)
-end = datetime.date(2016, 12, 31)
-
-rp.Report.path = System.go_transit_path + '/reports/schedules/'
-rp.Report.name = 'Schedule_'
-
-rp_obj = rp.Report(rp.convert_objects(Record.objects))
-
-
-rp_obj.generate(['route', 'stop', 'time', 'direction'], start=start, end=end)

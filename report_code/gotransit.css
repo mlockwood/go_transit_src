@@ -8,13 +8,13 @@ body {
 /* General Page Classes */
 .pageContent {
   position: absolute;
-  top: 300px;
+  top: 400px;
   margin: auto;
   overflow: scroll;
   width: 1100px;
   height: 980px;
-  #border-style: solid;
 }
+
 .pageOffset {
   position: relative;
   float: left;
@@ -150,18 +150,20 @@ body {
 /* Summary Classes */
 .summary{
 	padding: 0px 0px 0px 0px;
+	margin:0px 0px 0px 0px;
 	top: 175px;
 	position: absolute;
 	width: 1051px;
-	height: 110px;
+	height: 210px;
 	background-color: #ffffff;
-	opacity: 0.8;
+	opacity: 0.85;
 	text-align: center;
 	vertical-align: top;
 	color: #669900;
 }
 
 .summaryText{
+	padding: 0px 10px 0px 10px;
 	text-align: left;
 	color: #565a5c;
 }
@@ -174,7 +176,7 @@ body {
   width: 1051px;
   z-index: 81;
   background-color: #ffffff;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .insertName {

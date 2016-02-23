@@ -1,4 +1,5 @@
 
+import configparser
 import csv
 import datetime
 import os
@@ -42,12 +43,23 @@ Main Classes------------------------------------------------------------
 """
 class System:
 
-    begin = datetime.date(2015, 8, 31)
-    finish = datetime.date(2016, 11, 30)
-    baseline = 19.4000
-    final = 83.3333
-    increment = (final - baseline) / abs(finish - begin).days
-    go_transit_path = PathSetter.find_path('go_transit')
+    @staticmethod
+    def load_config():
+        config = configparser.ConfigParser()
+        config.read('system.ini')
+        for var in config['DEFAULT']:
+            try:
+                exec('System.' + var + ' = ' + eval('\'' +
+                    eval('config[\'DEFAULT\'][\'' + var + '\']') + '\''))
+                if isinstance('System.' + var, complex):
+                    exec('System.' + var + ' = \'' + eval(
+                        'config[\'DEFAULT\'][\'' + var + '\']') + '\'')
+            except:
+                exec('System.' + var + ' = \'' + eval(
+                    'config[\'DEFAULT\'][\'' + var + '\']') + '\'')
+        return True
+
+System.load_config()
 
 class Stop:
 
@@ -64,12 +76,17 @@ class Stop:
         for stop in Stop.objects:
             obj = Stop.objects[stop]
             Stop.obj_map[str(obj._stop_id)] = obj
-            if obj._name:
-                Stop.obj_map[obj._name] = obj
-            if obj._codename:
-                Stop.obj_map[str(obj._codename)] = obj
-            if obj._historic:
-                Stop.obj_map[obj._historic] = obj
+            try:
+                if obj._name:
+                    Stop.obj_map[obj._name] = obj
+                if obj._codename:
+                    Stop.obj_map[str(obj._codename)] = obj
+                if obj._historic:
+                    Stop.obj_map[obj._historic] = obj
+            except:
+                raise ValueError('The name, codename, or historic for stop ' +
+                                 str(stop) + ' does not match between points.')
+        return True
 
 class Point:
     
@@ -94,9 +111,8 @@ class Point:
 
     @staticmethod
     def process():
-        reader = csv.reader(open(System.go_transit_path +
-            '/data/stops/stops.csv', 'r', newline=''), delimiter=',',
-            quotechar='|')
+        reader = csv.reader(open(System.path + '/data/stops/stops.csv', 'r',
+                                 newline=''), delimiter=',', quotechar='|')
         points = []
         for row in reader:
             points.append(row)
@@ -146,7 +162,7 @@ class Inventory:
 
     @staticmethod
     def process():
-        for dirpath, dirnames, filenames in os.walk(System.go_transit_path
+        for dirpath, dirnames, filenames in os.walk(System.path
                                                     + '/data/stops'):
             for filename in [f for f in filenames if re.search(
                 'stop_inventory', f)]:

@@ -37,20 +37,30 @@ class PathSetter:
 GO Transit Imports------------------------------------------------------
 """
 PathSetter.set_pythonpath()
-import stops as st
-import report as rp
+import stop as st
 
 """
 Main Classes------------------------------------------------------------
 """
 class System:
+    
+    @staticmethod
+    def load_config():
+        config = configparser.ConfigParser()
+        config.read('system.ini')
+        for var in config['DEFAULT']:
+            try:
+                exec('System.' + var + ' = ' + eval('\'' +
+                    eval('config[\'DEFAULT\'][\'' + var + '\']') + '\''))
+                if isinstance('System.' + var, complex):
+                    exec('System.' + var + ' = \'' + eval(
+                        'config[\'DEFAULT\'][\'' + var + '\']') + '\'')
+            except:
+                exec('System.' + var + ' = \'' + eval(
+                    'config[\'DEFAULT\'][\'' + var + '\']') + '\'')
+        return True
 
-    begin = datetime.date(2015, 8, 31)
-    finish = datetime.date(2016, 11, 30)
-    baseline = 19.4000
-    final = 83.3333
-    increment = (final - baseline) / abs(finish - begin).days
-    go_transit_path = PathSetter.find_path('go_transit')
+System.load_config()
 
 class Route:
 
@@ -61,13 +71,16 @@ class Route:
         for attr in data:
             try:
                 exec('self.' + attr[0] + '=' + attr[1])
-                if isinstance(eval('self._' + attr[0], complex)):
+                if isinstance(eval('self.' + attr[0], complex)):
                     exec('self.' + attr[0] + '=\'' + attr[1] + '\'')
             except:
                 try:
                     exec('self.' + attr[0] + '=\'' + attr[1] + '\'')
                 except:
-                    self._date = attr[1]
+                    exec('self.' + attr[0] + '=[' + ','.join(
+                        str(i) for i in attr[1]) + ']')
+        self._date = datetime.date(int(self._year), int(self._month),
+                                   int(self._day))
         Route.objects[self._route] = self
 
 class Sheet:
@@ -87,10 +100,10 @@ class Sheet:
     @staticmethod
     def process():
         Sheet.load_config()
-        for dirpath, dirnames, filenames in os.walk(System.go_transit_path
-                                                    + '/data/schedules/'):
+        for dirpath, dirnames, filenames in os.walk(System.path
+                                                    + '/data/routes/'):
             for filename in [f for f in filenames if re.search(
-                'schedule_\d{6}', f)]:
+                'route\d\w*_\d{6}', f)]:
                 obj = Sheet((str(dirpath) + '/' + str(filename)))
                 obj.read_sheet()
         Sheet.sheet_to_route()
@@ -118,6 +131,10 @@ class Sheet:
                 routes[obj._route] = {}
             routes[obj._route][obj._date] = obj
 
+        # Preplanned ignore attributes dictionary
+        ignore = {'_date': True, '_entries': True, '_records': True,
+                  '_results': True, '_temp': True, '_time_key': True}
+
         # Select the routes which have a date matching Sheet.date
         for route in routes:
             for date in sorted(routes[route].keys(), reverse=True):
@@ -126,11 +143,12 @@ class Sheet:
                 if date <= Sheet.date:
                     data = []
                     for attr in dir(routes[route][date]):
-                        if attr[0:2] != '__' and attr != '_results':
+                        if (attr[0:2] != '__' and attr[0] == '_' and
+                            attr not in ignore):
                             data.append((attr, eval('routes[route][date].' +
                                                     attr)))
                     Route(data, routes[route][date])
-                    continue
+                    break
                     
 
     def read_sheet(self):
@@ -203,7 +221,7 @@ class Sheet:
             if not re.sub(' ', '', ''.join(str(x) for x in entry)):
                 continue
             
-            # Stop validation and mapping=
+            # Stop validation and mapping
             if str(entry[0]).lower() in st.Stop.obj_map:
                 on = str(st.Stop.obj_map[str(entry[0]).lower()]._stop_id)
             else:
@@ -278,10 +296,10 @@ class Record:
 
     @staticmethod
     def publish_matrix():
-        if not os.path.exists(System.go_transit_path + '/reports/schedules'):
-            os.makedirs(System.go_transit_path + '/reports/schedules')
-        writer = csv.writer(open(System.go_transit_path +
-            '/reports/schedules/records' +
+        if not os.path.exists(System.path + '/reports/routes'):
+            os.makedirs(System.path + '/reports/routes')
+        writer = csv.writer(open(System.path +
+            '/reports/routes/records' +
             '.csv', 'w', newline=''), delimiter=',', quotechar='|')
         for row in Record.matrix:
             writer.writerow(row)
