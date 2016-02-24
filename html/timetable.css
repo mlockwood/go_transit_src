@@ -1,19 +1,16 @@
 .main{
-	width: 800px;
+	text-align: center;
+	width: 850px;
 	height: 700px;
-}
-
-.mainWrapper{
-	width: 416px;
-	height: 700px;
-	margin: 0 auto;
 }
 
 .route{
-	width: 198px;
+	width: 200px;
 	height: 700px;
-	margin: 2px;
+	margin: 3px;
 	display: inline-block;
+	text-align: center;
+	/* border: 0.5px solid black; */
 }
 
 .imgHeader{
@@ -24,14 +21,19 @@
 }
 
 .dirHeader{
-	width: 198px;
+	width: 200px;
 	height: 24px;
-	/* border: 2px solid green; */
 	margin-top: 5px;
 	text-align: center;
 	font-size: 18px;
 	color: white;
 	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+}
+
+.table{
+	width: 198px;
+	height: 556px;
+	border: 0.5px solid black;
 }
 
 .dayHeader{
@@ -42,12 +44,6 @@
 	font-weight: bold;
 	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
 	text-align: center;
-}
-
-.table{
-	width: 198px;
-	height: 560px;
-	/* border: 2px solid green; */
 }
 
 .column{
@@ -72,47 +68,53 @@
 	font-weight: bold;
 }
 
-#rt1 {
+#rt1{
 	background-color: #D32326;
 }
 
-#rt1e {
+#rt1e{
 	background-color: #F37C7E;
 }
 
-#rt2 {
-	background-color: blue;
+#rt2{
+	background-color: #223E7D;
 }
 
-#stop {
-	width:800px;
+#rt2e{
+	background-color: #85B2DB;
+}
+
+#rt3{
+	background-color: #38A700;
+}
+
+#stop{
+	width:850px;
 	height: 50px;
 	text-align: center;
 	font-size: 36px;
 	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
 }
 
-#footer {
-	width: 800px;
+#footer{
+	width: 850px;
 	height: 135px;
 }
 
 #footerText{
 	position: relative;
-	float: left;
-	left: 100px;
-	width: 450px;
+	left: 90px;
+	width: 500px;
 	height: 135px;
 	text-align: center;
-	font-size: 20px;
+	font-size: 16px;
 	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-	
+	float: left;
 }
 
 #footerImg{
-	width: 100px;
+	width: 120px;
 	height: 100px;
-	display: block;
-	margin: 0 auto;
-	float: center;
+	float: right;
+	margin: 35px 115px 0 0;
 }

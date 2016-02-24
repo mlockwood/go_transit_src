@@ -76,8 +76,7 @@ class Stop:
     @staticmethod
     def add_record(record):
         # Set and handle stop object
-        stop = re.sub(' |\-', '_', str(st.Stop.obj_map[record._stop]._name)
-                      ).title()
+        stop = st.Stop.obj_map[record._stop]._name
         if stop not in Stop.objects:
             Stop(stop, record._display)
         obj = Stop.objects[stop]
@@ -90,42 +89,6 @@ class Stop:
         return True
 
     @staticmethod
-    def _stack_times(a, n):
-        i = 0
-        b = []
-        c = []
-        for entry in sorted(a):
-            if i < n:
-                c.append(entry)
-                i += 1
-            elif i == n:
-                b.append(c)
-                c = [entry]
-                i = 1
-        while i < n:
-            c.append('')
-            i += 1
-        b.append(c)
-        return [list(x) for x in zip(*b)]
-
-    @staticmethod
-    def prepare_table(D):
-        cells = {}
-        temp = []
-        for route in sorted(D.keys()):
-            temp.append(Stop._stack_times(D[route], 15))
-            cells[route] = len(temp[-1][0])
-        i = 0
-        stop_matrix = []
-        while i < len(temp[0]):
-            cur = []
-            for route in temp:
-                cur += route[i]
-            stop_matrix.append(cur)
-            i += 1
-        return stop_matrix, cells
-
-    @staticmethod
     def publish():
         if not os.path.exists(System.path +
                               '/reports/schedules/timetables'):
@@ -133,62 +96,107 @@ class Stop:
                         '/reports/schedules/timetables')
         # Iterate through each stop
         for stop in sorted(Stop.objects.keys()):
+            if not stop:
+                continue
             # Set object
             obj = Stop.objects[stop]
             # Build a timetable for each sign at the stop (by gps_ref)
             for ref in sorted(obj._records.keys()):
-                # Create stop_matrix table with cell widths for the headers
-                stop_matrix, cells = Stop.prepare_table(obj._records[ref])
-                summation = 0
-                for cell in cells:
-                    summation += cells[cell]
-                # Open workbook and worksheet
-                workbook = xlsxwriter.Workbook(System.path +
-                    '/reports/schedules/timetables/' + str(stop) + '_' +
-                    str(ref) + '.xlsx')
-                worksheet = workbook.add_worksheet('Timetable')
-                
-                # Set column widths
-                alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-                            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T']
-                i = 0
-                while i < summation:
-                    worksheet.set_column(eval('\'' + alphabet[i] + ':' +
-                                         alphabet[i] + '\''), 12)
-                    i += 1
-                
-                # Format declarations
-                merge_format = workbook.add_format({'bold': True,
-                                                    'align': 'center',
-                                                    'fg_color': '#D7E4BC',
-                                                    'font_size': 18,
-                                                    })
-                bold_format = workbook.add_format({'bold': True,
-                                                   'align': 'center',
-                                                   })
-                center_format = workbook.add_format({'align': 'center',
-                                                     'valign': 'vcenter',
-                                                     })
-                
-                # Write header
-                worksheet.merge_range(eval('\'A1:' + alphabet[summation - 1] +
-                    '1\''), re.sub('_', ' ', str(stop)), merge_format)
-                # Write subheaders for each route
-                i = 0
-                for cell in sorted(cells.keys()):
-                    worksheet.merge_range(eval('\'' + alphabet[i] + '2:' +
-                        alphabet[i + cells[cell] - 1] + '2\''), 'Route ' +
-                        str(cell), bold_format)
-                    i += cells[cell]
-                
-                # Write data
-                row = 3
-                for line in stop_matrix:
-                    worksheet.write_row('A' + str(row), line , center_format)
-                    row += 1
-                    
-                # Close workbook
-                workbook.close()
+                # Add html document information
+                doc = ('<!doctype html>\n' +
+                       '<!--[if lt IE 7]> ' +
+                       '<html class="lt-ie9 lt-ie8 lt-ie7" lang="en">' +
+                       '<![endif]-->\n' +
+                       '<!--[if IE 7]>' +
+                       '<html class="lt-ie9 lt-ie8" lang="en">' +
+                       '<![endif]-->\n' +
+                       '<!--[if IE 8]>' +
+                       '<html class="lt-ie9" lang="en">' +
+                       '<![endif]-->\n' +
+                       '<!--[if gt IE 8]><!-->' +
+                       '<html lang="en">' +
+                       '<!--<![endif]-->\n' +
+                       '<head>\n' +
+                       '\t<title>GO TRANSIT TIMETABLE</title>\n' +
+                       '\t<link rel="stylesheet" href="css/timetable.css">\n' +
+                       '</head>\n' +
+                       '<body>\n' +
+                       '\t<div id="stop">' + stop +
+                       '</div>\n' +
+                       '\t<div class="main">\n')
+                # Review each route at the stop ref
+                for route in sorted(obj._records[ref]):
+                    # Find stop direction for stop, ref, route
+                    stop_id = str(eval('st.Stop.obj_map[stop]._route' +
+                                       route[0]))
+                    direction = st.Point.objects[(stop_id, ref)]._direction
+                    if direction == 'Pendleton Shoppette':
+                        direction = 'Pend. Shoppette'
+                    elif direction == 'Joint Base Headquarters':
+                        direction = 'Joint Base HQ'
+                    # Find service days
+                    weekdays = rt.Route.objects[route]._weekdays
+                    if weekdays == [1, 2, 3, 4, 5]:
+                        days = 'MONDAY - FRIDAY'
+                    elif weekdays == [6, 7]:
+                        days = 'SATURDAY & SUNDAY'
+                    else:
+                        raise ValueError('Weekdays for Route ' + route +
+                            ' are unknown. Please define in schedule.py.')
+                    # Add basic route information and headers
+                    doc += ('\t\t<div class="route">\n' +
+                            '\t\t\t<img src="img/route' + route +
+                            '_logo.jpg" class="imgHeader" />\n' +
+                            '\t\t\t<div class="dirHeader" id="rt' + route +
+                            '">TO ' + direction.upper() + '</div>\n' +
+                            '\t\t\t<div class="table">\n' +
+                            '\t\t\t\t<div class="dayHeader">' + days +
+                            '</div>\n' +
+                            '\t\t\t\t<div class="column">\n')
+                    # Add time entries
+                    i = 0
+                    times = sorted(obj._records[ref][route])
+                    while i < 40:
+                        # Cap columns at twenty entries
+                        if i == 20:
+                            doc += ('\t\t\t\t</div>\n' +
+                                    '\t\t\t\t<div class="column">\n')
+                        if i < len(times):
+                            # If the entry is 12:00 or later, make it bold
+                            if int(times[i][0:2]) >= 12:
+                                doc += ('\t\t\t\t\t<div class="entry bold">' +
+                                        times[i] + '</div>\n')
+                            # Otherwise do not bold it
+                            else:
+                                doc += ('\t\t\t\t\t<div class="entry">' +
+                                        times[i] + '</div>\n')
+                        # Handle empty entries
+                        else:
+                            doc += '\t\t\t\t\t<div class="entry"></div>\n'
+                        i += 1
+                    # Close route divs
+                    doc += '\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n'
+                # Add footer
+                doc += ('\t<div id="footer">\n' +
+                        '\t\t<div id="footerText">\n' +
+                        '\t\t\t<p>For questions or assistance planning your ' +
+                        'trip, please call the Transit Supervisor at (253) ' +
+                        '966-3939.</p>\n' +
+                        '\t\t\t<p>All times are estimated for public ' +
+                        'guidance only. GO Transit does not operate on ' +
+                        'Federal Holidays.</p>\n' +
+                        '\t\t\t<p>For current route maps and schedules ' +
+                        'please visit www.facebook.com/GoLewisMcChord.</p>\n' +
+                        '\t\t</div>\n' +
+                        '\t\t<img src="img/go_logo.jpg" id="footerImg" />\n' +
+                        '\t</div>\n' +
+                        '</body>\n' +
+                        '</html>\n')
+                # Write document
+                writer = open(System.path + '/reports/schedules/timetables/' +
+                              re.sub(' |\-', '_', stop) + '_' + str(ref) +
+                              '.html', 'w')
+                writer.write(doc)
         return True
 
 class Route:

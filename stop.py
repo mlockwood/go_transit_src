@@ -97,15 +97,15 @@ class Point:
         i = 0
         while i < len(data):
             try:
-                exec('self._' + str(Point.header[i]).lower() + '=' +
-                     str(data[i]).lower())
-                if isinstance(eval('self._' + str(Point.header[i]).lower()),
+                exec('self._' + str(Point.header[i]) + '=' +
+                     str(data[i]))
+                if isinstance(eval('self._' + str(Point.header[i])),
                               complex):
-                    exec('self._' + str(Point.header[i]).lower() + '=\'' +
-                         str(data[i]).lower() + '\'')
+                    exec('self._' + str(Point.header[i]) + '=\'' +
+                         str(data[i]) + '\'')
             except:
-                exec('self._' + str(Point.header[i]).lower() + '=\'' +
-                     str(data[i]).lower() + '\'')
+                exec('self._' + str(Point.header[i]) + '=\'' +
+                     str(data[i]) + '\'')
             i += 1
         Point.objects[(str(self._stop_id), str(self._gps_ref))] = self
 
@@ -189,5 +189,6 @@ class Inventory:
         return True
     
 Point.process()
+
 if __name__ == '__main__':
     Inventory.process()
