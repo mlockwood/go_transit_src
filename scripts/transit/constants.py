@@ -1,7 +1,7 @@
 
 
 import datetime
-from src.path_setter import find_path
+from src.scripts.path_setter import find_path
 
 path = find_path('go')
 begin = datetime.date(2015, 8, 31)

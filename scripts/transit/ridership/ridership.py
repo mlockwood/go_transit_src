@@ -33,7 +33,7 @@ import src.scripts.transit.stop.stop as st
 """
 Main Classes------------------------------------------------------------
 """
-class Sheet:
+class Sheet(object):
 
     objects = {}
     structure = {}
@@ -397,7 +397,7 @@ class Sheet:
                 raise AttributeError(self._file + ' is missing ' + value)
         return True
                             
-class Record:
+class Record(object):
 
     objects = {}
     ID_generator = 1

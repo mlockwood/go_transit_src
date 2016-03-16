@@ -10,7 +10,7 @@ import src.scripts.transit.route.route as rt
 import src.scripts.transit.stop.stop as st
 
 """
-Main Classes------------------------------------------------------------
+Main -------------------------------------------------------------------
 """
 base = ('<!doctype html>\n' +
         '<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->\n' +
@@ -27,18 +27,20 @@ def build_master_table():
     master_table = {}
     dir_table = {}
     for ST in rt.StopTime.objects:
-        # Set master table value [stop][gps_ref][route][time]
         obj = rt.StopTime.objects[ST]
+
+        # Set master table value [stop][gps_ref][route][time]
         if obj.stop_id not in master_table:
             master_table[obj.stop_id] = {}
         if obj.gps_ref not in master_table[obj.stop_id]:
             master_table[obj.stop_id][obj.gps_ref] = {}
         if obj.route not in master_table[obj.stop_id][obj.gps_ref]:
-            master_table[obj.stop_id][obj.gps_ref][obj.route] = []
-        master_table[obj.stop_id][obj.gps_ref][obj.route].append(obj.time)
+            master_table[obj.stop_id][obj.gps_ref][obj.route.name] = []
+        master_table[obj.stop_id][obj.gps_ref][obj.route.name].append(
+            obj.time)
 
         # Set dir table value
-        dir_table[(obj.stop_id, obj.gps_ref, obj.route)] = obj.direction
+        dir_table[(obj.stop_id, obj.gps_ref, obj.route.name)] = obj.direction
     return master_table, dir_table
 
 

@@ -1,13 +1,9 @@
 
-import configparser
-import csv
-import datetime
+
 import os
 import re
-import sys
 import xlsxwriter
 
-from jinja2 import Template
 
 """
 GO Imports-------------------------------------------------------------
@@ -17,34 +13,53 @@ import src.scripts.transit.route.route as rt
 import src.scripts.transit.stop.stop as st
 
 """
-Main Classes------------------------------------------------------------
+Main ------------------------------------------------------------------
 """
 
-def add_record(record):
-    # Set and handle route object
-    if record._route not in Route.objects:
-        Route(record._route,
-              record._sheet._direction1,
-              record._sheet._direction2)
-    obj = Route.objects[record._route]
-    # Add stop, direction, time
-    if record._stop not in obj._records:
-        obj._records[record._stop] = {}
-    if record._direction not in obj._records[record._stop]:
-        obj._records[record._stop][record._direction] = []
-    obj._records[record._stop][record._direction].append(record._time)
-    return True
+def build_master_table():
+    master_table = {}
 
+    # Build master_table
+    for ST in rt.StopTime.objects:
+        obj = rt.StopTime.objects[ST]
+
+        # Remove objects who have a display value of 0
+        if obj.display == 0:
+            continue
+
+        # Set master table value [route][stop][direction] = [times]
+        if obj.route not in master_table:
+            master_table[obj.route] = {}
+        if obj.stop_id not in master_table[obj.route]:
+            master_table[obj.route][obj.stop_id] = {}
+        if obj.direction not in master_table[obj.route][obj.stop_id]:
+            master_table[obj.route][obj.stop_id][obj.direction] = []
+        master_table[obj.route][obj.stop_id][obj.direction].append(obj.time)
+
+    # Sort master_table values
+    for route in master_table:
+        for stop in master_table[route]:
+            for direction in master_table[route][stop]:
+                master_table[route][stop][direction] = sorted(
+                    master_table[route][stop].get(direction, 0))
+
+    return master_table
 
 def publish():
+    # Establish report directory for schedules
     if not os.path.exists(System.path + '/reports/schedules/routes'):
         os.makedirs(System.path + '/reports/schedules/routes')
-    for route in sorted(Route.objects.keys()):
-        # Set object
-        obj = Route.objects[route]
+
+    # Build the master table
+    master = build_master_table()
+
+    # Iterate through each route
+    for route in master:
+
         # Open workbook and worksheet
-        workbook = xlsxwriter.Workbook(System.path +
-            '/reports/schedules/routes/route' + str(route) + '.xlsx')
+        workbook = xlsxwriter.Workbook(System.path + '/reports/schedules/' +
+                                       'routes/' + route.lower() +
+                                       '_schedule.xlsx')
         worksheet = workbook.add_worksheet('Schedule')
         # Set column widths
         worksheet.set_column('A:A', 20)
@@ -70,7 +85,7 @@ def publish():
         text_wrap_format = workbook.add_format({'text_wrap': True})
 
         # Write header
-        worksheet.merge_range('A1:C1', 'Route ' + str(route), merge_format)
+        worksheet.merge_range('A1:C1', route, merge_format)
         worksheet.write_row('A2', ['Stop', 'To ' + obj._dir1.title(),
             'To ' + obj._dir2.title()], bold_format)
 
@@ -99,19 +114,6 @@ def publish():
         workbook.close()
     return True
 
-class Schedule:
 
-    objects = {}
-
-    def __init__(self, route, schedule, entries):
-        self._route = route
-        self._schedule = schedule
-        self._entries = entries
-        Schedule.objects[(route, schedule)] = self
-
-
-"""
-User Interface----------------------------------------------------------
-"""
-process()
-publish()
+if __name__ == "__main__":
+    publish()

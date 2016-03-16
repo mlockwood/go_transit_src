@@ -1,11 +1,11 @@
 
-import configparser
+
 import copy
 import csv
 import datetime
+import math
 import os
 import re
-import sys
 
 """
 GO Imports------------------------------------------------------
@@ -14,10 +14,12 @@ import src.scripts.transit.constants as System
 import src.scripts.transit.route.constants as Constants
 import src.scripts.transit.stop.stop as st
 
+import src.scripts.transit.route.errors as RouteErrors
+
 """
 Classes----------------------------------------------------------------
 """
-class Route:
+class Route(object):
 
     objects = {}
     header_0 = 'Name'
@@ -32,16 +34,22 @@ class Route:
         self.service = rt[4]
         self.offset = rt[7]
         self.joint = rt[8]
-        self.headway = rt[9]
-        self.miles = rt[10]
+        self.headway = int(rt[9])
+        self.miles = float(rt[10])
         self.data_file = rt[11]
         
         # Attributes from conversion
-        self.direction0 = Direction.objects[rt[5]].name
-        self.direction1 = Direction.objects[rt[6]].name
+        self.direction0 = Direction.objects[rt[5]]
+        self.direction1 = Direction.objects[rt[6]]
         self.date = Service.objects[self.service].start_date
         self.start = Service.objects[self.service].start_time
+        self.start = copy.deepcopy(self.date).replace(
+            hour=int(self.start[:-2]),
+            minute=int(self.start[-2:]))
         self.end = Service.objects[self.service].end_time
+        self.end = copy.deepcopy(self.date).replace(
+            hour=int(self.end[:-2]),
+            minute=int(self.end[-2:]))
         self.service_text = Service.objects[self.service].text
         self.data = self.load_data()
 
@@ -51,6 +59,8 @@ class Route:
         self.stop_time1 = {}
         self.origin0 = {}
         self.origin1 = {}
+        self.time0 = {}
+        self.time1 = {}
         self.display = {}
         self.stop_times = {}
 
@@ -100,10 +110,14 @@ class Route:
         
         # Set data entries
         data = []
+        schedule = {}
+        i = 0
         for row in reader:
             if row[0] == Route.header_1:
                 continue
             data.append(row)
+            schedule[i] = row[0]
+            i += 1
         return data
 
     def set_order(self, dirnum):
@@ -111,10 +125,22 @@ class Route:
         i = int(dirnum)
         # Set order[travel_time] = stop_id
         for entry in self.data:
+            # If stop is operating and not the destination
             if not re.search('[a-z]', entry[i + 1]) and entry[0]:
                 order[int(entry[i + 1])] = entry[0]
+                # If 0 second spread set stop as origin
+                if entry[i + 1] == '0':
+                    exec('self.origin_stop{}=entry[0]'.format(dirnum))
+
+            # Elif the stop is the destination
+            elif re.search('d', entry[i + 1]):
+                exec('self.destination_stop{}=entry[0]'.format(dirnum))
+                exec('self.trip_length{}=int(re.sub( '.format(dirnum) +
+                     '\'d\', \'\', entry[i+1]))')
+
         # List of stop_ids in order of travel_time
         temp = [order[key] for key in sorted(order.keys())]
+
         # Convert temp list to dictionary of segment order
         order = {}
         i = 1
@@ -137,12 +163,6 @@ class Route:
         return True
 
     def set_entries(self):
-        # Set daily start and end times
-        start = copy.deepcopy(self.date).replace(hour=int(self.start[:-2]),
-                                                 minute=int(self.start[-2:]))
-        end = copy.deepcopy(self.date).replace(hour=int(self.end[:-2]),
-                                               minute=int(self.end[-2:]))
-
         # Handle processing for each entry
         for entry in self.data:
             # General record validation
@@ -161,10 +181,10 @@ class Route:
             gps_ref = re.split('&', entry[3])
 
             # Process entries
-            self.set_stop_time((entry[0], gps_ref[0]), entry[1], start, end,
-                               '0')
-            self.set_stop_time((entry[0], gps_ref[1]), entry[2], start, end,
-                               '1')
+            self.set_stop_time((entry[0], gps_ref[0]), entry[1], self.start,
+                               self.end, '0')
+            self.set_stop_time((entry[0], gps_ref[1]), entry[2], self.start,
+                               self.end, '1')
         # Convert origin_time value in stop_time to trip_id
         self.set_trip_ids('0')
         self.set_trip_ids('1')
@@ -202,10 +222,15 @@ class Route:
         i = 1
         for time in sorted(eval('self.origin{}.keys()'.format(dirnum))):
             # Instantiate a Trip object
-            exec('trip=Trip(self.id, self.service, Direction.convert[' +
-                 'self.direction{}], i)'.format(dirnum))
+            exec('trip=Trip(self.id, self.service, self.direction' +
+                 '{}.id, i)'.format(dirnum))
             # Set origin_time to trip_id
             exec('self.origin{}[time]=trip.id'.format(dirnum))
+
+            # Set time as a datetime for comparison
+            T = copy.deepcopy(self.date).replace(hour=int(time[0:2]),
+                                                 minute=int(time[-2:]))
+            exec('self.time{}[T]=trip.id'.format(dirnum))
             i += 1
 
         # Instantiate StopTime objects for each stop_time
@@ -219,7 +244,226 @@ class Route:
         return True
 
 
-class Direction:
+class JointRoute(object):
+
+    objects = {}
+
+    def __init__(self, joint):
+        self.joint = joint
+        self.routes = self.set_routes()
+        self.drivers = self.set_drivers()
+
+        # Derive trips and spread
+        self.trips = self.set_trips()
+        self.trip_length = self.set_trip_length()
+
+        # Create a dictionary for all trips
+        unset = dict((tuple(x), True) for x in self.trips)
+        # Delete the first trip which is taken before the order is set
+        del unset[tuple(self.trips[0])]
+
+        # Validate that the final trip ends at the origin of the first
+        self._joint_origin = self.trips[0][2]
+        # Call order function
+        self.order = self.set_order(tuple(self.trips[0][0:2]),
+                                    self.trips[0][3], {}, copy.deepcopy(unset))
+        self.back_order = self.set_back_order()
+
+        # Find first driving start position
+        self.anchor = self.set_anchor()
+        self.schedules = {}
+        self._hidden_key = {}
+        self.locations = {}
+        self.set_schedules()
+        self.disseminate()
+
+        JointRoute.objects[joint] = self
+
+    @staticmethod
+    def process():
+        for route in Route.objects:
+            if (Route.objects[route].joint in JointRoute.objects or
+                Route.objects[route].id in JointRoute.objects):
+                continue
+            elif Route.objects[route].joint != '<null>':
+                JointRoute(Route.objects[route].joint)
+            else:
+                JointRoute(Route.objects[route].id)
+        return True
+
+    def set_routes(self):
+        # Split out routes from the joint key
+        temp = re.split('\&', self.joint)
+
+        # Convert routes to Route objects
+        routes = []
+        for route in temp:
+            routes.append(Route.objects[route])
+        return routes
+
+    def set_drivers(self):
+        self.roundtrip = 0
+        self.headway = self.routes[0].headway
+
+        # Find joint roundtrip
+        for route in self.routes:
+            if route.headway != self.headway:
+                raise RouteErrors.JointHeadwayNotMatchError('The headways for joint key {} do not match.'.format(
+                    self.joint))
+            self.roundtrip += route.roundtrip
+
+        # Find the number of drivers based on the roundtrip and headway
+        drivers = math.ceil(self.roundtrip / self.headway)
+
+        # Convert driver number to range of drivers
+        return [x for x in range(1, drivers + 1)]
+
+    def set_trips(self):
+        trips = []
+        for route in self.routes:
+            # Example: ['Route 1', '0', '100', '480']
+            trips.append([route.id, '0', route.origin_stop0,
+                          route.destination_stop0])
+            try:
+                trips.append([route.id, '1', route.origin_stop1,
+                              route.destination_stop1])
+            except:
+                pass
+        return sorted(trips)
+
+    def set_trip_length(self):
+        trip_length = {}
+        for route in self.routes:
+            trip_length[(route.id, '0')] = (route.trip_length0 / 60)
+            try:
+                trip_length[(route.id, '1')] = (route.trip_length1 / 60)
+            except:
+                pass
+        return trip_length
+
+    def set_order(self, key, next, order, unset):
+        """
+        The set_order is a recursive function that attempts to link
+        trips for the JointRoute object. Note that these trips are not
+        the same as the Trip class in Route.py. There is only one trip
+        for each direction instead of a trip for each headway in each
+        direction.
+        :param next: The previous destination and origin of next trip.
+        :return: True when executed properly, exceptions may be raised.
+        """
+        # Base case - no more trips need to be set
+        if not unset:
+            if next != self._joint_origin:
+                raise RouteErrors.JointRoutesNotMatchError('Trips from joint key {} do not have '.format(self.joint) +
+                                                           ' matching origin and destination values.')
+            order[key] = tuple(self.trips[0][0:2])
+            return order
+
+        # Find acceptable trips
+        for option in unset:
+            if option[2] == next:
+                # Set new values
+                new_key = tuple(option[0:2])
+                new_next = option[3]
+
+                # Deepcopy the order and add current trip
+                new_order = copy.deepcopy(order)
+                new_order[key] = new_key
+
+                # Deepcopy unset and del current trip
+                new_unset = copy.deepcopy(unset)
+                del new_unset[option]
+
+                # Recurse with updated order
+                return self.set_order(new_key, new_next, new_order, new_unset)
+
+        # If no trips were deemed acceptable
+        raise RouteErrors.JointRoutesNotMatchError('Trips from joint key {} do not have '.format(self.joint) +
+                                                           ' matching origin and destination values.')
+
+    def set_back_order(self):
+        back_order = {}
+        for key in self.order:
+            back_order[self.order[key]] = key
+        return back_order
+
+    def set_anchor(self):
+        for time in sorted(self.routes[0].time0.keys()):
+            if time >= self.routes[0].start:
+                return time
+
+    def _set_schedule_anchors(self):
+        """
+        Set a starting time for each driver at the anchor location
+        :return: True
+        """
+        current = self.anchor
+        for driver in self.drivers:
+            self.schedules[driver] = {self.routes[0].time0[current]: current}
+            self._hidden_key[driver] = self.routes[0].time0[current]
+            current = current + datetime.timedelta(0, 60 * int(self.headway))
+        return True
+
+    def set_schedules(self):
+        self._set_schedule_anchors()
+
+        # Forward path
+        for driver in self.schedules:
+            order = (self.routes[0].id, '0')
+            time = self.schedules[driver][self._hidden_key[driver]]
+            while True:
+                # Find time to reach the next segment
+                time = time + datetime.timedelta(0, 60 * int(
+                    self.trip_length[order]))
+                if time > self.routes[0].end:
+                    break
+
+                # Find next trip segment
+                order = self.order[order]
+
+                # Convert time to trip id
+                exec('self.schedules[driver][Route.objects[order[0]].time' +
+                     '{}[time]] = time'.format(order[1]))
+
+        # Backward path
+        for driver in self.schedules:
+            order = (self.routes[0].id, '0')
+            time = self.schedules[driver][self._hidden_key[driver]]
+            while True:
+                # Find previous  trip segment
+                order = self.back_order[order]
+
+                # Find time to reach the previous segment
+                time = time - datetime.timedelta(0, 60 * int(
+                    self.trip_length[order]))
+
+                try:
+                    # Reset hidden key to be able to determine start values
+                    self._hidden_key[driver] = eval('Route.objects[order[0]].' +
+                         'time{}[time]'.format(order[1]))
+
+                    # Convert time to trip id
+                    exec('self.schedules[driver][Route.objects[order[0]].' +
+                         'time{}[time]] = time'.format(order[1]))
+                except KeyError:
+                    break
+
+            # Correct start location to the first StopTime of the trip
+            self.locations[driver] = Trip.objects[self._hidden_key[
+                driver]].stop_times[sorted(Trip.objects[self._hidden_key[
+                driver]].stop_times)[0]]
+
+    def disseminate(self):
+        for driver in self.schedules:
+            for trip_id in self.schedules[driver]:
+                Trip.objects[trip_id].driver = driver
+                for seq in Trip.objects[trip_id].stop_times:
+                    stop_id = Trip.objects[trip_id].stop_times[seq]
+                    StopTime.objects[(trip_id, stop_id)].driver = driver
+        return True
+
+
+class Direction(object):
 
     objects = {}
     convert = {}
@@ -243,7 +487,7 @@ class Direction:
         return True
 
 
-class Service:
+class Service(object):
 
     objects = {}
     service_dates = {}
@@ -287,7 +531,7 @@ class Service:
         return True
 
 
-class Trip:
+class Trip(object):
 
     objects = {}
 
@@ -298,8 +542,8 @@ class Trip:
         self.trip_seq = str(hex(trip_seq))
         self.id = '-'.join([route_id, service_id, direction_id,
                              self.trip_seq])
-        self.route = Route.objects[route_id].name
-        self.direction = Direction.objects[direction_id].name
+        self.route = Route.objects[route_id]
+        self.direction = Direction.objects[direction_id]
         self.stop_times = {}
         Trip.objects[self.id] = self
 
@@ -318,14 +562,16 @@ class Trip:
         obj._stop_time[(stop_id, time)] = True
         return True
 
+    def parse(self):
+        return re.split('-', self.id)
 
-class StopTime:
+
+class StopTime(object):
 
     objects = {}
     matrix_header = ['trip_id', 'stop_id', 'gps_ref', 'direction', 'arrival',
                      'departure', 'stop_seq', 'timepoint', 'pickup',
-                     'dropoff', 'display']
-    matrix = [matrix_header]
+                     'dropoff', 'display', 'driver']
 
     def __init__(self, trip_id, stop_id, gps_ref, time, stop_seq, timepoint,
                  display):
@@ -341,22 +587,20 @@ class StopTime:
         self.pickup = 0
         self.dropoff = 0
         self.display = display
+        self.driver = 0
 
         # Attributes from trip_id
         self.route = Trip.objects[trip_id].route
         self.direction = Trip.objects[trip_id].direction
 
         # Set records
-        self.append_record()
         Trip.objects[trip_id].stop_times[stop_seq] = stop_id
         StopTime.objects[(trip_id, stop_id)] = self
 
-    def append_record(self):
-        StopTime.matrix.append([self.trip_id, self.stop_id, self.gps_ref,
-                                self.direction, self.arrival, self.departure,
-                                self.stop_seq, self.timepoint, self.pickup,
-                                self.dropoff, self.display])
-        return True
+    def get_record(self):
+        return [self.trip_id, self.stop_id, self.gps_ref, self.direction.name,
+                self.arrival, self.departure, self.stop_seq, self.timepoint,
+                self.pickup, self.dropoff, self.display, self.driver]
 
     @staticmethod
     def publish_matrix():
@@ -365,11 +609,13 @@ class StopTime:
         writer = csv.writer(open(System.path +
             '/reports/routes/records' +
             '.csv', 'w', newline=''), delimiter=',', quotechar='|')
-        for row in StopTime.matrix:
-            writer.writerow(row)
+        writer.writerow(StopTime.matrix_header)
+        for stop_time in StopTime.objects:
+            writer.writerow(StopTime.objects[stop_time].get_record())
         return True
 
 
 Route.process()
+JointRoute.process()
 if __name__ == '__main__':
     StopTime.publish_matrix()
