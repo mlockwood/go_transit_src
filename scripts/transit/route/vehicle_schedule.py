@@ -50,8 +50,8 @@ def build_master_table():
 
 def publish():
     # Establish report directory for schedules
-    if not os.path.exists(System.path + '/reports/schedules/routes'):
-        os.makedirs(System.path + '/reports/schedules/routes')
+    if not os.path.exists(System.path + '/reports/routes/schedules/'):
+        os.makedirs(System.path + '/reports/routes/schedules/')
 
     # Build the master table
     master = build_master_table()

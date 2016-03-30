@@ -1,11 +1,7 @@
-
-import configparser
 import csv
 import datetime
 import os
 import re
-import sys
-import xlsxwriter
 
 import multiprocessing as mp
 
@@ -14,10 +10,12 @@ GO Imports------------------------------------------------------
 """
 import src.scripts.transit.constants as System
 
+import src.scripts.transit.stop.errors as StopErrors
+
 """
 Main Classes------------------------------------------------------------
 """
-class Stop:
+class Stop(object):
 
     objects = {}
     obj_map = {}
@@ -36,11 +34,11 @@ class Stop:
                 if obj.name:
                     Stop.obj_map[obj.name] = obj
             except:
-                raise ValueError('The name for stop ' + str(stop) +
-                                 ' does not match between points.')
+                raise ValueError('The name for stop ' + str(stop) + ' does not match between points.')
         return True
 
-class Point:
+
+class Point(object):
     
     objects = {}
     header = {}
@@ -48,18 +46,9 @@ class Point:
     def __init__(self, data):
         i = 0
         while i < len(data):
-            try:
-                exec('self.' + str(Point.header[i]) + '=' +
-                     str(data[i]))
-                if isinstance(eval('self.' + str(Point.header[i])),
-                              complex):
-                    exec('self.' + str(Point.header[i]) + '=\'' +
-                         str(data[i]) + '\'')
-            except:
-                exec('self.' + str(Point.header[i]) + '=\'' +
-                     str(data[i]) + '\'')
+            exec('self.' + str(Point.header[i]) + '=\'' + re.escape(data[i]) + '\'')
             i += 1
-        Point.objects[(str(self.stop_id), str(self.gps_ref))] = self
+        Point.objects[(self.stop_id, self.gps_ref)] = self
 
     @staticmethod
     def process():
@@ -103,7 +92,79 @@ class Point:
         Stop.map_objects()
         return True
 
-class Inventory:
+
+class Historic(object):
+
+    objects = {}
+    header_0 = 'start_date'
+    header_1 = 'stop_id'
+
+    def __init__(self, start_date, end_date, file):
+        self.start_date = start_date
+        self.end_date = end_date
+        self.file = file
+        self.stops = self.load_historic_stops()
+        Historic.objects[(start_date, end_date)] = self
+
+    @staticmethod
+    def process():
+        # Load metadata.csv
+        reader = csv.reader(open(System.path + '/data/stops/historic/metadata.csv', 'r', newline=''), delimiter=',',
+                            quotechar='|')
+
+        # Initialize and process historic sheets
+        for row in reader:
+            if row[0] == Historic.header_0:
+                continue
+            # Add all rows as Historic objects
+            Historic(datetime.datetime.strptime(row[0], '%Y%m%d'), datetime.datetime.strptime(row[1], '%Y%m%d'), row[2])
+        return True
+
+    @staticmethod
+    def historic_conversion(date, stop):
+        """
+        Convert a historic stop name to the current stop object.
+        :param date: a date string with format '%Y%m%d'
+        :param stop: the historic stop name
+        :return: Stop object
+        """
+        # Find the historic file for which the date belongs
+        date = datetime.datetime.strptime(date, '%Y%m%d')
+        for date_range in Historic.objects:
+            if date_range[0] <= date <= date_range[1]:
+                obj = Historic.objects[date_range]
+
+                # Convert the stop to the current stop object
+                if stop in obj.stops:
+                    return Stop.objects[obj.stops[stop]]
+
+                # If stop not in the historic file raise an error
+                raise StopErrors.StopNotInHistoricDateError('Stop {} is not available for date {}'.format(stop, date))
+
+    def load_historic_stops(self):
+        stops = {}
+
+        # Load metadata.csv for all historic time periods
+        if self.file != '*':
+            reader = csv.reader(open(System.path + '/data/stops/historic/' + self.file, 'r', newline=''), delimiter=',',
+                                quotechar='|')
+
+            # Process the historic file
+            for row in reader:
+                if not re.sub(' ', '', ''.join(row)):
+                    continue
+
+                # Add historic stop to historic object stops
+                stops[row[0]] = row[1]
+
+        # For the current time period set self.stops equal to Stops.objects
+        else:
+            for stop in Stop.objects:
+                stops[stop] = stop
+        return stops
+
+
+class Inventory(object):
 
     objects = {}
     tags = {}
@@ -172,12 +233,15 @@ class Inventory:
                 writer.write('\n\n')
         writer.close()
 
+
 def parse_gps_dms(gps):
     return re.split('[\'|\"|°]', re.sub(' ', '', gps))
+
 
 def convert_gps_dms_to_dd(gps):
     gps = parse_gps_dms(gps)
     return (gps[0] + (gps[1] / 60) + (gps[2] / 3600), gps[3])
+
 
 def remove_gps_direction(dd_gps):
     if dd_gps[1] == 'N' or dd_gps[1] == 'E':
@@ -186,8 +250,10 @@ def remove_gps_direction(dd_gps):
         return '-' + dd_gps[0]
     else:
         raise ValueError('GPS Point ' + dd_gps + ' has an invalid direction')
-    
+
+
 Point.process()
+Historic.process()
 
 if __name__ == '__main__':
     Inventory.process()

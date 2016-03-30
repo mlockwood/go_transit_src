@@ -34,7 +34,7 @@ def build_master_table():
             master_table[obj.stop_id] = {}
         if obj.gps_ref not in master_table[obj.stop_id]:
             master_table[obj.stop_id][obj.gps_ref] = {}
-        if obj.route not in master_table[obj.stop_id][obj.gps_ref]:
+        if obj.route.name not in master_table[obj.stop_id][obj.gps_ref]:
             master_table[obj.stop_id][obj.gps_ref][obj.route.name] = []
         master_table[obj.stop_id][obj.gps_ref][obj.route.name].append(
             obj.time)
@@ -46,8 +46,8 @@ def build_master_table():
 
 def publish():
     # Establish report directory for timetables
-    if not os.path.exists(System.path + '/reports/schedules/timetables'):
-        os.makedirs(System.path + '/reports/schedules/timetables')
+    if not os.path.exists(System.path + '/reports/routes/timetables'):
+        os.makedirs(System.path + '/reports/routes/timetables')
 
     # Build the input tables
     master, dir_table = build_master_table()
@@ -66,9 +66,8 @@ def publish():
             # Review each route at the stop ref
             for route in sorted(master[stop][ref].keys()):
                 # Route name
-                route_compile = re.compile('\d+\w?$')
-                route_name = route_compile.search((re.sub(' ', '', route))
-                                                  ).group().lower()
+                route_name = re.sub(' ', '', route.lower())
+                route_number = route_name[5:]
 
                 # Find stop direction for stop, ref, route
                 direction = dir_table[(stop, ref, route)]
@@ -82,13 +81,10 @@ def publish():
 
                 # Add basic route information and headers
                 doc += ('\t\t<div class="route">\n' +
-                        '\t\t\t<img src="img/route' + route_name +
-                        '_logo.jpg" class="imgHeader" />\n' +
-                        '\t\t\t<div class="dirHeader" id="rt' + route_name +
-                        '">TO ' + direction.upper() + '</div>\n' +
+                        '\t\t\t<img src="img/{}_logo.jpg" class="imgHeader" />\n'.format(route_name) +
+                        '\t\t\t<div class="dirHeader" id="{}">TO {}</div>\n'.format(route_name, direction.name) +
                         '\t\t\t<div class="table">\n' +
-                        '\t\t\t\t<div class="dayHeader">' + days +
-                        '</div>\n' +
+                        '\t\t\t\t<div class="dayHeader">{}</div>\n'.format(days) +
                         '\t\t\t\t<div class="column">\n')
 
                 # Add time entries
@@ -135,7 +131,7 @@ def publish():
                     '</html>\n')
 
             # Write document
-            writer = open(System.path + '/reports/schedules/timetables/' +
+            writer = open(System.path + '/reports/routes/timetables/' +
                           re.sub(' |\-', '_', stop) + str(ref) + '.html', 'w')
             writer.write(doc)
     return True
