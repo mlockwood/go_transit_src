@@ -3,13 +3,12 @@ import datetime
 import re
 
 
-version_1 = datetime.date(2015, 8, 31)
-version_2 = datetime.date(2015, 9, 8)
-version_3 = datetime.date(2015, 10, 30)
+VERSION1 = datetime.date(2015, 8, 31)
+VERSION2 = datetime.date(2015, 9, 8)
+VERSION3 = datetime.date(2015, 10, 30)
+CHARS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T']
+HEADER = ['Boarding', 'Time', 'Count', 'Destination']
 
-
-chars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T']
-header = ['Boarding', 'Time', 'Count', 'Destination']
 
 def load_version(version):
     reader = csv.reader(open('version{}.csv'.format(str(version)), 'r', newline=''), delimiter=',', quotechar='|')
@@ -37,4 +36,4 @@ def load_version(version):
 
     return standard, meta_map
 
-standard, meta_map = load_version(3)
+STANDARD, META_MAP = load_version(3)

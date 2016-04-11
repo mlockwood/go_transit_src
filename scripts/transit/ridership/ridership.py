@@ -1,40 +1,33 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 
-"""
-__authors__ = MichaelLockwood
-__projectclass__ = go
-__projectsubclass__ = transit
-__projectnumber__ = 11
-__projectname__ = ridership.py
-__date__ = February2015
-__credits__ = None
-__collaborators__ = None
-
-Explanation here.
-"""
-
-# Import packages
+# Python libraries and packages
 import csv
 import datetime
 import os
 import re
 import xlsxwriter
-
 import multiprocessing as mp
 
-"""
-GO Transit Imports------------------------------------------------------
-"""
-import src.scripts.transit.constants as System
+# Entire scripts from src
 import src.scripts.transit.stop.stop as st
-
-import src.scripts.transit.ridership.constants as Constants
 import src.scripts.transit.ridership.errors as RidershipErrors
 
-"""
-Main Classes------------------------------------------------------------
-"""
+# Classes and variables from src
+from src.scripts.transit.constants import PATH, BEGIN, BASELINE, INCREMENT
+from src.scripts.transit.ridership.constants import CHARS, HEADER, STANDARD, META_MAP
+
+
+__author__ = 'Michael Lockwood'
+__github__ = 'mlockwood'
+__projectclass__ = 'go'
+__projectsubclass__ = 'transit'
+__projectname__ = 'ridership.py'
+__date__ = 'February2015'
+__credits__ = None
+__collaborators__ = None
+
+
 class Sheet(object):
 
     objects = {}
@@ -60,7 +53,7 @@ class Sheet(object):
     @staticmethod
     def process():
         # obj_list = []
-        for dirpath, dirnames, filenames in os.walk(System.path + '/data'):
+        for dirpath, dirnames, filenames in os.walk(PATH + '/data'):
             if 'archive' in dirpath or 'archive' in dirnames:
                 continue
             for filename in [f for f in filenames if re.search('\d{6}_S\d', f)]:
@@ -107,11 +100,11 @@ class Sheet(object):
             if meta:
                 # Handle metadata category
                 cur_meta = re.sub(' ', '', str(row[0]).lower())
-                if cur_meta not in Constants.standard:
+                if cur_meta not in STANDARD:
                     # FIX STANDARD, MAPPING, and OVERRIDING-------------------------------------------------------------
-                    if cur_meta in Constants.meta_map:
-                        if Constants.meta_map[cur_meta] != '<delete>':
-                            cur_meta = Constants.meta_map[cur_meta]
+                    if cur_meta in META_MAP:
+                        if META_MAP[cur_meta] != '<delete>':
+                            cur_meta = META_MAP[cur_meta]
                 
                 # Handle metadata value
                 cur_value = str(row[1])
@@ -158,10 +151,10 @@ class Sheet(object):
 
     def validate(self, data, meta_D):
         # If no data, alert user just in case of error
-        if data == False:
+        if not data:
             print(self.file, 'does not contain any data.')
 
-        # Merge former seperated route format
+        # Merge former separated route format
         delete = []
         route_meta = []
         for meta in meta_D:
@@ -180,13 +173,13 @@ class Sheet(object):
             exec('self.route=\'&\'.join(sorted(route_meta))')
 
         # Check standard metadata variables
-        for meta in Constants.standard:
+        for meta in STANDARD:
             if meta not in meta_D:
-                if Constants.standard[meta] == '<required>':
+                if STANDARD[meta] == '<required>':
                     raise RidershipErrors.MissingMetadataError('{} is missing metadata for "{}".'.format(self.file,
                                                                                                          meta))
-                meta_D[meta] = Constants.standard[meta]
-                exec('self.' + meta + '=' + Constants.standard[meta])
+                meta_D[meta] = STANDARD[meta]
+                exec('self.' + meta + '=' + STANDARD[meta])
 
         # Check if the naming convention matches the standard
         match = re.search('\d{6}', self.file)
@@ -195,6 +188,7 @@ class Sheet(object):
 
         # Build date strp such as '20160831' from metadata
         self.strp = '{}{:02d}{:02d}'.format(int(self.year), int(self.month), int(self.day))
+        self.date = datetime.datetime.strptime(self.strp, '%Y%m%d')
 
         # Construct date strp from file name
         f_year = '20' + self.file[match.span()[0]:match.span()[0] + 2]
@@ -223,7 +217,7 @@ class Sheet(object):
             while i < len(entry):
                 if not re.sub(' ', '', entry[i]):
                     raise RidershipErrors.EntryError('{} record in row {} does not have a '.format(self.file, R) +
-                                                     '{}'.format(Constants.header[i]))
+                                                     '{}'.format(HEADER[i]))
                 i += 1
             
             # Stop validation and mapping
@@ -322,17 +316,16 @@ class Record(object):
 
     @staticmethod
     def publish_matrix():
-        if not os.path.exists(System.path + '/reports/ridership'):
-            os.makedirs(System.path + '/reports/ridership')
-        writer = csv.writer(open(System.path +
-            '/reports/ridership/records' +
-            '.csv', 'w', newline=''), delimiter=',', quotechar='|')
+        if not os.path.exists(PATH + '/reports/ridership'):
+            os.makedirs(PATH + '/reports/ridership')
+        writer = csv.writer(open(PATH + '/reports/ridership/records.csv', 'w', newline=''),
+                            delimiter=',', quotechar='|')
         for row in Record.matrix:
             writer.writerow(row)
         return True
     
 
-class Day:
+class Day(object):
 
     objects = {}
 
@@ -345,8 +338,7 @@ class Day:
         self.dow = dow
         self.count = 0
         self.average = 0
-        self.straight_line = System.increment * abs(date - System.begin
-                                                     ).days + System.baseline
+        self.straight_line = INCREMENT * abs(date - BEGIN).days + BASELINE
         self.set_week()
         self.set_month()
         Day.objects[(year, month, day)] = self
@@ -371,7 +363,7 @@ class Day:
         Month.objects[month_key].days[self.date] = self
 
 
-class Week:
+class Week(object):
 
     objects = {}
     convert_d = {'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 'Friday': 5, 'Saturday': 6}
@@ -385,12 +377,12 @@ class Week:
 
     @staticmethod
     def publish():
-        if not os.path.exists(System.path + '/reports/ridership/weekly/excel'):
-            os.makedirs(System.path + '/reports/ridership/weekly/excel')
+        if not os.path.exists(PATH + '/reports/ridership/weekly/excel'):
+            os.makedirs(PATH + '/reports/ridership/weekly/excel')
 
         for week in sorted(Week.objects.keys()):
             # Open workbook and worksheet
-            workbook = xlsxwriter.Workbook(System.path + '/reports/ridership/weekly/excel/' + str(week) + '.xlsx')
+            workbook = xlsxwriter.Workbook(PATH + '/reports/ridership/weekly/excel/' + str(week) + '.xlsx')
             worksheet = workbook.add_worksheet('Ridership')
             chart = workbook.add_chart({'type': 'column'})
 
@@ -467,7 +459,7 @@ class Week:
         return True
 
 
-class Month:
+class Month(object):
 
     objects = {}
     convert_m = {1: 'JAN', 2: 'FEB', 3: 'MAR', 4: 'APR', 5: 'MAY', 6: 'JUN', 7: 'JUL', 8: 'AUG', 9: 'SEP', 10: 'OCT',
@@ -480,11 +472,11 @@ class Month:
 
     @staticmethod
     def publish():
-        if not os.path.exists(System.path + '/reports/ridership/monthly/excel'):
-            os.makedirs(System.path + '/reports/ridership/monthly/excel')
+        if not os.path.exists(PATH + '/reports/ridership/monthly/excel'):
+            os.makedirs(PATH + '/reports/ridership/monthly/excel')
         for month in sorted(Month.objects.keys()):
-            writer = csv.writer(open(System.path + '/reports/ridership/monthly/excel/' + str(month) + '.csv', 'w',
-                                     newline=''), delimiter=',', quotechar='|')
+            writer = csv.writer(open(PATH + '/reports/ridership/monthly/excel/' + str(month) + '.csv', 'w', newline=''),
+                                delimiter=',', quotechar='|')
             obj = Month.objects[month]
             for date in sorted(obj.days.keys()):
                 writer.writerow([Week.convert_a[int(obj.days[date].dow)], date, obj.days[date].count,
@@ -492,36 +484,102 @@ class Month:
         return True
 
 
-class Report:
+class Report(object):
 
     @staticmethod
-    def publish(features):
+    def prepare(features, start, end):
+        # If no features, return total only
+        if not features:
+            count = 0
+            for record in Record.objects:
+                count += Record.objects[record].count
+            return {'Total': count}
+
+        # If features, produce variable data structure
         data = {}
         for record in Record.objects:
             obj = Record.objects[record]
+
+            # If outside of the daterange, continue
+            if obj.date < start or obj.date > end:
+                continue
+
+            # If inside the daterange, process count information
             i = 0
             DS = 'data'
+
+            # Process all except the last feature
             while i < (len(features) - 1):
                 try:
-                    if eval('obj._' + features[i]) not in eval(DS):
-                        exec(DS + '[\'' + eval('obj._' + features[i]) +
-                             '\']={}')
-                    DS += '[\'' + eval('obj._' + features[i]) + '\']'
+                    if eval('obj.' + features[i]) not in eval(DS):
+                        exec(DS + '[\'' + eval('obj.' + features[i]) + '\']={}')
+                    DS += '[\'' + eval('obj.' + features[i]) + '\']'
                 except TypeError:
-                    if eval('obj._' + features[i]) not in eval(DS):
-                        exec(DS + '[' + str(eval('obj._' + features[i])) +
-                             ']={}')
-                    DS += '[' + str(eval('obj._' + features[i])) + ']'
+                    if eval('obj.' + features[i]) not in eval(DS):
+                        exec(DS + '[' + str(eval('obj.' + features[i])) + ']={}')
+                    DS += '[' + str(eval('obj.' + features[i])) + ']'
                 i += 1
+
+            # Process the counts of the last feature
             try:
-                exec(DS + '[\'' + eval('obj._' + features[-1]) + '\']=' + DS +
-                     '.get(\'' + eval('obj._' + features[-1]) + '\', 0) + ' +
-                     'obj._count')
+                exec(DS + '[\'' + eval('obj.' + features[-1]) + '\']=' + DS + '.get(\'' + eval('obj.' + features[-1]) +
+                     '\', 0) + obj.count')
+            # Except if boolean
             except TypeError:
-                exec(DS + '[' + str(eval('obj._' + features[-1])) + ']=' + DS +
-                     '.get(' + str(eval('obj._' + features[-1])) + ', 0) + ' +
-                     'obj._count')
-        print(data)
+                exec(DS + '[' + str(eval('obj.' + features[-1])) + ']=' + DS + '.get(' +
+                     str(eval('obj.' + features[-1])) + ', 0) + obj.count')
+        return data
+
+    @staticmethod
+    def dict_to_matrix(data):
+        # Set outer and inner keys
+        outer_keys = sorted(data.keys())
+        inner_keys_D = {}
+        # Find all inner key values
+        for o_key in outer_keys:
+            for i_key in data[o_key]:
+                inner_keys_D[i_key] = True
+        inner_keys = sorted(inner_keys_D.keys())
+        # Set matrix
+        matrix = [[''] + inner_keys]
+        for o_key in outer_keys:
+            row = [o_key]
+            for i_key in inner_keys:
+                # If inner key is found for the outer key, set amount
+                if i_key in data[o_key]:
+                    row.append(data[o_key][i_key])
+                # Otherwise inner key DNE for outer key, set to 0
+                else:
+                    row.append(0)
+            matrix.append(row)
+        return matrix
+
+    @staticmethod
+    def recurse_data(data, features, writer, prev=[], i=0, limit=2):
+        if i == (len(features) - limit):
+            matrix = Report.dict_to_matrix(data)
+            # Write title by previous values
+            writer.writerow(prev)
+            # Write matrix rows
+            for row in matrix:
+                writer.writerow(row)
+            # Write empty row
+            writer.writerow([])
+        else:
+            for key in sorted(data.keys()):
+                Report.recurse_data(data[key], features, writer, prev + [str(features[i]).title() + ': ' + str(key)],
+                                     i+1, limit=limit)
+        return True
+
+    @staticmethod
+    def generate(features, start=datetime.date(2015, 8, 31), end=datetime.date.today()):
+        data = Report.prepare(features, start, end)
+        if not os.path.isdir(PATH + '/reports/ridership/custom'):
+            os.makedirs(PATH + '/reports/ridership/custom')
+        writer = csv.writer(open(PATH + '/reports/ridership/custom/Ridership_' + '_'.join(features).title() +
+                                 '.csv', 'w', newline=''), delimiter=',', quotechar='|')
+        Report.recurse_data(data, features, writer)
+        return True
 
 
 def publish():
@@ -538,23 +596,14 @@ Sheet.process()
 
 if __name__ == "__main__":
     publish()
-                                
-"""
-User Interface----------------------------------------------------------
 
-start = datetime.date(2015, 8, 31)
-end = datetime.date(2016, 12, 31)
+    start = datetime.date(2015, 8, 31)
+    end = datetime.date(2016, 12, 31)
 
-rp.Report.path = System.path + '/reports/ridership/custom'
-rp.Report.name = 'Ridership_'
-
-rp_obj = rp.Report(rp.convert_objects(Record.objects))
-
-rp_obj.generate(['week', 'route'], start=start, end=end)
-rp_obj.generate(['year', 'month', 'route'], start=start, end=end)
-rp_obj.generate(['week', 'dow'], start=start, end=end)
-rp_obj.generate(['dow', 'on_stop', 'off_stop'], start=start, end=end)
-rp_obj.generate(['year', 'month', 'day', 'route'], start=start, end=end)
-rp_obj.generate(['on_stop', 'off_stop'], start=start, end=end)
-rp_obj.generate(['time', 'route'], start=start, end=end)
-"""
+    Report.generate(['week', 'route'], start=start, end=end)
+    Report.generate(['year', 'month', 'route'], start=start, end=end)
+    Report.generate(['week', 'dow'], start=start, end=end)
+    Report.generate(['dow', 'on_stop', 'off_stop'], start=start, end=end)
+    Report.generate(['year', 'month', 'day', 'route'], start=start, end=end)
+    Report.generate(['on_stop', 'off_stop'], start=start, end=end)
+    Report.generate(['time', 'route'], start=start, end=end)

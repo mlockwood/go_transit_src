@@ -8,13 +8,12 @@ import multiprocessing as mp
 """
 GO Imports------------------------------------------------------
 """
-import src.scripts.transit.constants as System
 
 import src.scripts.transit.stop.errors as StopErrors
 
-"""
-Main Classes------------------------------------------------------------
-"""
+from src.scripts.transit.constants import PATH
+
+
 class Stop(object):
 
     objects = {}
@@ -46,14 +45,16 @@ class Point(object):
     def __init__(self, data):
         i = 0
         while i < len(data):
-            exec('self.' + str(Point.header[i]) + '=\'' + re.escape(data[i]) + '\'')
+            try:
+                exec('self.' + str(Point.header[i]) + '=\'' + data[i] + '\'')
+            except SyntaxError:
+                exec('self.' + str(Point.header[i]) + '=\'' + re.escape(data[i]) + '\'')
             i += 1
         Point.objects[(self.stop_id, self.gps_ref)] = self
 
     @staticmethod
     def process():
-        reader = csv.reader(open(System.path + '/data/stops/stops.csv', 'r',
-                                 newline=''), delimiter=',', quotechar='|')
+        reader = csv.reader(open(PATH + '/data/stops/stops.csv', 'r', newline=''), delimiter=',', quotechar='|')
         points = []
         for row in reader:
             points.append(row)
@@ -109,7 +110,7 @@ class Historic(object):
     @staticmethod
     def process():
         # Load metadata.csv
-        reader = csv.reader(open(System.path + '/data/stops/historic/metadata.csv', 'r', newline=''), delimiter=',',
+        reader = csv.reader(open(PATH + '/data/stops/historic/metadata.csv', 'r', newline=''), delimiter=',',
                             quotechar='|')
 
         # Initialize and process historic sheets
@@ -146,7 +147,7 @@ class Historic(object):
 
         # Load metadata.csv for all historic time periods
         if self.file != '*':
-            reader = csv.reader(open(System.path + '/data/stops/historic/' + self.file, 'r', newline=''), delimiter=',',
+            reader = csv.reader(open(PATH + '/data/stops/historic/' + self.file, 'r', newline=''), delimiter=',',
                                 quotechar='|')
 
             # Process the historic file
@@ -179,10 +180,8 @@ class Inventory(object):
     @staticmethod
     def process():
         Inventory.load_codes()
-        for dirpath, dirnames, filenames in os.walk(System.path
-                                                    + '/data/stops'):
-            for filename in [f for f in filenames if re.search(
-                'stop_inventory', f)]:
+        for dirpath, dirnames, filenames in os.walk(PATH + '/data/stops'):
+            for filename in [f for f in filenames if re.search('stop_inventory', f)]:
                 obj = Inventory((str(dirpath) + '/' + str(filename)))
                 obj.read_inventory()
                 obj.write_report()
@@ -190,7 +189,7 @@ class Inventory(object):
 
     @staticmethod
     def load_codes():
-        reader = open(System.path + '/data/stops/inventory/inventory_codes',
+        reader = open(PATH + '/data/stops/inventory/inventory_codes',
                       'r')
         for line in reader:
             line = line.rstrip()
@@ -214,9 +213,9 @@ class Inventory(object):
         return True
 
     def write_report(self):
-        if not os.path.exists(System.path + '/reports/stops/inventory'):
-            os.makedirs(System.path + '/reports/stops/inventory')
-        writer = open(System.path + '/reports/stops/inventory/Inventory_' +
+        if not os.path.exists(PATH + '/reports/stops/inventory'):
+            os.makedirs(PATH + '/reports/stops/inventory')
+        writer = open(PATH + '/reports/stops/inventory/Inventory_' +
                       'Report_' + str(self.year) + str(self.month) +
                       str(self.day), 'w')
         for tag in Inventory.order:
@@ -235,21 +234,24 @@ class Inventory(object):
 
 
 def parse_gps_dms(gps):
-    return re.split('[\'|\"|°]', re.sub(' ', '', gps))
-
-
-def convert_gps_dms_to_dd(gps):
-    gps = parse_gps_dms(gps)
-    return (gps[0] + (gps[1] / 60) + (gps[2] / 3600), gps[3])
+    return [x for x in re.split('[\'’\"”°]', re.sub(' ', '', gps.replace('\\', ''))) if x]
 
 
 def remove_gps_direction(dd_gps):
     if dd_gps[1] == 'N' or dd_gps[1] == 'E':
         return dd_gps[0]
     elif dd_gps[1] == 'S' or dd_gps[1] == 'W':
-        return '-' + dd_gps[0]
+        return 0 - dd_gps[0]
     else:
         raise ValueError('GPS Point ' + dd_gps + ' has an invalid direction')
+
+
+def convert_gps_dms_to_dd(gps):
+    try:
+        gps = parse_gps_dms(gps)
+        return remove_gps_direction([int(gps[0]) + (int(gps[1]) / 60) + (float(gps[2]) / 3600), gps[3]])
+    except IndexError:
+        return ''
 
 
 Point.process()
