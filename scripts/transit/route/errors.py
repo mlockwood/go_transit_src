@@ -6,6 +6,14 @@ class RouteError(Exception):
         self.message = message
 
 
+class UnknownStopPointError(RouteError):
+    pass
+
+
+class DuplicateTimingSpreadError(RouteError):
+    pass
+
+
 class JointHeadwayNotMatchError(RouteError):
     pass
 
