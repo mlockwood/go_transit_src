@@ -2,12 +2,14 @@
 import os
 import re
 
-"""
-GO Imports-------------------------------------------------------------
-"""
-import src.scripts.transit.constants as System
+# Entire scripts from src
 import src.scripts.transit.route.route as rt
 import src.scripts.transit.stop.stop as st
+import src.scripts.transit.route.constants as RouteConstants
+import src.scripts.transit.route.errors as RouteErrors
+
+# Classes and variables from src
+from src.scripts.transit.constants import PATH
 
 """
 Main -------------------------------------------------------------------
@@ -37,7 +39,7 @@ def build_master_table():
         if obj.route.name not in master_table[obj.stop_id][obj.gps_ref]:
             master_table[obj.stop_id][obj.gps_ref][obj.route.name] = []
         master_table[obj.stop_id][obj.gps_ref][obj.route.name].append(
-            obj.time)
+            obj.depart)
 
         # Set dir table value
         dir_table[(obj.stop_id, obj.gps_ref, obj.route.name)] = obj.direction
@@ -46,8 +48,8 @@ def build_master_table():
 
 def publish():
     # Establish report directory for timetables
-    if not os.path.exists(System.path + '/reports/routes/timetables'):
-        os.makedirs(System.path + '/reports/routes/timetables')
+    if not os.path.exists(PATH + '/reports/routes/timetables'):
+        os.makedirs(PATH + '/reports/routes/timetables')
 
     # Build the input tables
     master, dir_table = build_master_table()
@@ -131,7 +133,7 @@ def publish():
                     '</html>\n')
 
             # Write document
-            writer = open(System.path + '/reports/routes/timetables/' +
+            writer = open(PATH + '/reports/routes/timetables/' +
                           re.sub(' |\-', '_', stop) + str(ref) + '.html', 'w')
             writer.write(doc)
     return True

@@ -20,3 +20,15 @@ class JointHeadwayNotMatchError(RouteError):
 
 class JointRoutesNotMatchError(RouteError):
     pass
+
+
+class IncongruentSchedulesError(RouteError):
+    pass
+
+
+class MismatchedJointSchedulesTimingError(RouteError):
+    pass
+
+
+class LaxConstraintFailureError(RouteError):
+    pass

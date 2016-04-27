@@ -16,7 +16,7 @@ import src.scripts.transit.route.errors as RouteErrors
 # Classes and variables from src
 from src.scripts.transit.constants import PATH
 from src.scripts.transit.route.route_graph import StopSeq, Segment, RouteGraph
-from src.scripts.transit.route.constants import DATE, LAX, STOP_TIME_HEADER
+from src.scripts.transit.route.constants import DATE, STOP_TIME_HEADER
 
 
 class Route(object):
@@ -49,8 +49,7 @@ class Route(object):
             self.sheets[Sheet(*new_sheet)] = True
 
     def __repr__(self):
-        return ('<{} was initialized with service {} and directions of '.format(self.name, self.service) +
-                '{} and {}>'.format(self.direction0.name, self.direction1.name))
+        return '<{}>'.format(self.name)
 
     @staticmethod
     def process():
@@ -70,28 +69,39 @@ class Route(object):
 
                 # Search for YYYYMMDD file collections/subdirectories within the /route{X} subdirectory
                 for inner_dirpath, inner_dirnames, inner_filenames in os.walk('{}/{}'.format(dirpath, dirname)):
+
                     # Only explore subdirectories that match the YYYYMMDD format
-                    for inner_dirname in sorted([d for d in inner_dirnames if re.search('\d{8}', d)]):
-                        # Only select the folder that matches the date query from route/constants.py
-                        date = datetime.datetime.strptime(inner_dirname, '%Y%m%d')
-                        if date >= DATE:
+                    subdirs = sorted([d for d in inner_dirnames if re.search('\d{8}', d)]) + [
+                        datetime.datetime.max.strftime('%Y%m%d')]
+
+                    # Iterate through the subdirs in order checking if the DATE is between it and the subsequent date
+                    i = 0
+                    while i < (len(subdirs) - 1):
+                        # Only select the folder that matches the DATE query from route/constants.py
+                        date0 = datetime.datetime.strptime(subdirs[i], '%Y%m%d')
+                        date1 = datetime.datetime.strptime(subdirs[i + 1], '%Y%m%d')
+                        if date0 <= DATE < date1:
 
                             # Read the data.csv file
                             data = []
-                            reader = csv.reader(open('{}/{}/{}/config.csv'.format(dirpath, dirname, inner_dirname), 'r',
+                            reader = csv.reader(open('{}/{}/{}/config.csv'.format(dirpath, dirname, subdirs[i]), 'r',
                                                      newline=''), delimiter=',', quotechar='|')
                             for row in reader:
                                 if row[0] == Route.header_0:
                                     continue
+                                if Service.objects[row[1]].end_date < DATE:
+                                    break
                                 data.append(row)
 
                             # Create Route object
-                            args = re.split(',', metadata.rstrip()) + [date, '{}/{}/{}/'.format(dirpath, dirname,
-                                                                                                inner_dirname), data]
+                            args = re.split(',', metadata.rstrip()) + [date0, '{}/{}/{}/'.format(dirpath, dirname,
+                                                                                                 subdirs[i]), data]
                             Route(*args)
 
-                            # Break loop so that first match >= constant date is the final selection
-                            break
+                            # Break loop so that the correct match is the final selection
+                            i = len(subdirs)
+
+                        i += 1
 
         return True
 
@@ -127,6 +137,9 @@ class Sheet(object):
 
         # Process
         self.set_entries()
+
+    def __repr__(self):
+        return '<Sheet object for {}>'.format(self.sheet)
 
     def load_data(self):
         # Load data file for the route
@@ -171,7 +184,7 @@ class Sheet(object):
                     self.segment.destination = (entry[0], entry[1])
                     self.segment.trip_length = int(re.sub('d', '', entry[3]))
 
-                args = [self.sheet] + entry + [i]
+                args = [self] + entry + [i, self.segment]
                 self.segment.add_stop_seq(StopSeq(*args))
 
             i += 1
@@ -181,7 +194,7 @@ class Sheet(object):
 
         # Set stop_times
         for stop_seq in self.segment.stop_seqs:
-            self.set_stop_time(self.segment, stop_seq, self.start, self.end)
+            self.set_stop_time(self.segment, self.segment.stop_seqs[stop_seq], self.start, self.end)
 
         # Set trips by converting origin_time value in stop_time to trip_id
         self.set_trip_ids()
@@ -189,53 +202,47 @@ class Sheet(object):
 
     def set_stop_time(self, segment, stop_seq, start, end):
         # Base time is start + spread + offset
-        base = start + datetime.timedelta(0, (stop_seq.arrive + (segment.offset * 60)))
+        base = start + datetime.timedelta(seconds=(stop_seq.arrive + segment.offset))
 
         # If spread + offset >= headway then reduce base by headway time
-        if (stop_seq.arrive / 60) + segment.offset >= int(self.headway):
-            base = base - datetime.timedelta(0, 60 * int(self.headway))
+        if stop_seq.arrive + segment.offset >= self.headway:
+            base = base - datetime.timedelta(seconds=self.headway)
 
         # Add stop_times until end time
-        while True:
-            if base < end:
-                origin = base - datetime.timedelta(0, int(stop_seq.arrive))
+        while base < end:
+            origin = base - datetime.timedelta(seconds=stop_seq.arrive)
 
-                # stop_seq.stop_times[time] = origin_time
-                stop_seq.stop_times[base] = origin
+            # stop_seq.stop_times[time] = origin_time
+            stop_seq.stop_times[base] = origin
 
-                # segment.origin_times[origin_time] = True
-                segment.origin_times[origin] = True
+            # segment.trips[origin_time] = True
+            segment.trips[origin] = True
 
-            else:
-                break
-
-            base = base + datetime.timedelta(0, 60 * int(self.headway))
+            base = base + datetime.timedelta(seconds=self.headway)
         return True
 
     def set_trip_ids(self):
         # For each origin time of the segment set a unique Trip id
-        for time in sorted(self.segment.origin_times):
+        for time in sorted(self.segment.trips):
             # Instantiate a Trip object
-            self.segment.origin_times[time] = Trip(self.route.id, self.service.id, self.direction.id,
-                                                   self.route.trip_id, self.segment)
-
-            # If time is <= self.start the trip is a starting trip for the schedule
-            if time <= self.start:
-                self.segment.start_trips.append(self.segment.origin_times[time])
+            self.segment.trips[time] = Trip(self.route.id, self.service.id, self.direction.id,
+                                            self.route.trip_id, self.segment)
 
             # Increment route's Trip id generator
             self.route.trip_id += 1
 
         # Instantiate StopTime objects for each stop_time
         for stop_seq in self.segment.stop_seqs:
+            stop_seq = self.segment.stop_seqs[stop_seq]
             for arrive in stop_seq.stop_times:
                 # Collect the trip_id based on the origin time
-                trip_id = self.segment.origin_times[stop_seq.stop_times[arrive]].id
+                trip_id = self.segment.trips[stop_seq.stop_times[arrive]].id
                 depart = arrive + stop_seq.timedelta
+                gtfs_depart = arrive + stop_seq.gtfs_timedelta
 
                 # Set a StopTime object with all attributes
-                StopTime(trip_id, stop_seq.stop, stop_seq.gps_ref, arrive, depart, stop_seq.order, stop_seq.timed,
-                         stop_seq.display)
+                StopTime(trip_id, stop_seq.stop, stop_seq.gps_ref, arrive, depart, gtfs_depart, stop_seq.order,
+                         stop_seq.timed, stop_seq.display)
         return True
 
 
@@ -243,12 +250,16 @@ class JointRoute(object):
 
     objects = {}
 
-    def __init__(self, joint):
-        self.joint = joint
+    def __init__(self, id):
+        self.id = id
         self.sheets = {}  # {service_id: [Sheet1, Sheet2, ... , SheetN]}
         self.route_graphs = {}  # {service_id: RouteGraph}
         self.service_order = {}  # {service_id: prev service_id else None}
-        JointRoute.objects[joint] = self
+        self.schedule_text = ''
+        self.start_time = None
+        self.end_time = None
+        self.headway = 0
+        JointRoute.objects[id] = self
 
     @staticmethod
     def process():
@@ -258,8 +269,8 @@ class JointRoute(object):
 
             # Set JointRoute name/id
             joint = sheet.joint
-            if joint == '<null>':
-                joint = Sheet.objects[sheet].route
+
+            # VALIDATE WITH JOINT.csv LATER -------------------------------------------------------------------------!!!
 
             # Load JointRoute object
             if joint not in JointRoute.objects:
@@ -272,7 +283,7 @@ class JointRoute(object):
             obj.sheets[sheet.service] = obj.sheets.get(sheet.service, 0) + [sheet]
 
         # Iterate through JointRoute objects and process
-        for joint in JointRoute.objects:
+        for joint in sorted(JointRoute.objects):
             joint = JointRoute.objects[joint]
             joint.set_service_order()
             prev = None
@@ -280,22 +291,24 @@ class JointRoute(object):
             # Process each service within the JointRoute object in order
             for service in joint.service_order:
                 segments = [sheet.segment for sheet in joint.sheets[service]]
-                joint.route_graphs[service] = RouteGraph(joint.joint, service, segments, prev)
+                joint.route_graphs[service] = RouteGraph(joint.id, service, segments, prev)
+                joint.headway = joint.route_graphs[service].headway
                 prev = joint.route_graphs[service]
 
                 # After processing the RouteGraph and assigning drivers to trips
-                obj = joint.route_graphs[service]
-                for driver in obj.schedules:
+                route_graph = joint.route_graphs[service]
+                for driver in route_graph.schedules:
                     # Set the correct start location for each of the drivers based on the first trip
-                    obj.locations[driver] = Trip.objects[obj.hidden_key[driver]].stop_times[sorted(
-                        Trip.objects[obj.hidden_key[driver]].stop_times)[0]]
+                    trip = route_graph.schedules[driver][sorted(route_graph.schedules[driver].keys())[0]]
+                    route_graph.locations[driver] = trip.stop_times[sorted(trip.stop_times.keys())[0]]
 
                     # Disseminate driver values to Trip and StopTime objects
-                    for trip in obj.schedules[driver]:
+                    for trip in route_graph.schedules[driver]:
+                        trip = route_graph.schedules[driver][trip]
                         trip.driver = driver
                         for seq in trip.stop_times:
-                            StopTime.objects[(trip.id, seq)].driver = driver.id
-                            StopTime.objects[(trip.id, seq)].joint = joint.joint
+                            StopTime.objects[(trip.id, seq)].driver = driver
+                            StopTime.objects[(trip.id, seq)].joint = joint
 
         return True
 
@@ -303,6 +316,9 @@ class JointRoute(object):
         services = self.sheets.keys()
         temp = sorted([(service.start_time, service) for service in services])
         self.service_order = [t[1] for t in temp]
+        self.schedule_text = self.service_order[0].text
+        self.start_time = self.service_order[0].start_time
+        self.end_time = self.service_order[-1].end_time
         return True
 
 
@@ -351,8 +367,16 @@ class Service(object):
         self.start_date = datetime.datetime.strptime(start_date, '%Y%m%d')
         self.end_date = datetime.datetime.strptime(end_date, '%Y%m%d')
         self.start_time = copy.deepcopy(self.start_date).replace(hour=int(start_time[:-2]), minute=int(start_time[-2:]))
-        self.end_time = copy.deepcopy(self.start_date).replace(hour=int(end_time[:-2]), minute=int(end_time[-2:]))
         self.text = text
+
+        # Handle times that are at or after midnight (24 + hour scale for GTFS)
+        if int(end_time[:-2]) >= 24:
+            self.end_time = copy.deepcopy(self.start_date.replace(hour=int(end_time[:-2]) - 24,
+                                                                  minute=int(end_time[-2:]))) + datetime.timedelta(
+                days=1)
+        else:
+            self.end_time = copy.deepcopy(self.start_date).replace(hour=int(end_time[:-2]), minute=int(end_time[-2:]))
+
         self.set_service_date()
         Service.objects[id] = self
 
@@ -392,6 +416,10 @@ class Trip(object):
         self.stop_times = {}
         Trip.objects[self.id] = self
 
+    def __repr__(self):
+        return '<Trip for {} with service {} and direction {}>'.format(self.route.name, self.service_id,
+                                                                       self.direction.name)
+
     @staticmethod
     def get_trip_id(route_id, direction_id, service_id, seq):
         if '-'.join([route_id, direction_id, service_id, str(hex(seq))]) not in Trip.objects:
@@ -406,32 +434,33 @@ class StopTime(object):
 
     objects = {}
 
-    def __init__(self, trip_id, stop_id, gps_ref, arrive, depart, stop_seq, timepoint, display):
+    def __init__(self, trip_id, stop_id, gps_ref, arrive, depart, gtfs_depart, stop_seq, timepoint, display):
         # Attributes from __init__
-        self.trip_id = trip_id
+        self.trip = Trip.objects[trip_id]
         self.stop_id = stop_id
         self.gps_ref = gps_ref
         self.arrive = arrive.strftime('%H:%M:%S')
         self.depart = depart.strftime('%H:%M:%S')
+        self.gtfs_depart = gtfs_depart.strftime('%H:%M:%S')
         self.stop_seq = stop_seq
         self.timepoint = timepoint
-        self.pickup = 3
-        self.dropoff = 3
+        self.pickup = 3 if not timepoint else 0
+        self.dropoff = 3 if not timepoint else 0
         self.display = display
         self.driver = 0
         self.joint = None
 
         # Attributes from trip_id
-        self.route = Trip.objects[trip_id].route
+        self.route = self.trip.route
         self.direction = Trip.objects[trip_id].direction
 
         # Set records
-        Trip.objects[trip_id].stop_times[stop_seq] = stop_id
+        self.trip.stop_times[stop_seq] = stop_id
         StopTime.objects[(trip_id, stop_seq)] = self
 
     def get_record(self):
-        return [self.trip_id, self.stop_id, self.gps_ref, self.direction.name, self.arrive, self.depart, self.stop_seq,
-                self.timepoint, self.pickup, self.dropoff, self.display, self.driver]
+        return [self.trip.id, self.stop_id, self.gps_ref, self.direction.name, self.arrive, self.gtfs_depart,
+                self.stop_seq, self.timepoint, self.pickup, self.dropoff, self.display, self.driver, self.joint.id]
 
     @staticmethod
     def publish_matrix():
@@ -443,7 +472,6 @@ class StopTime(object):
         for stop_time in sorted(StopTime.objects):
             writer.writerow(StopTime.objects[stop_time].get_record())
         return True
-
 
 Route.process()
 JointRoute.process()

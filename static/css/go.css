@@ -1,120 +1,24 @@
-.main{
-	text-align: center;
-	width: 850px;
-	height: 700px;
-}
-
-.route{
-	width: 200px;
-	height: 700px;
-	margin: 3px;
-	display: inline-block;
-	text-align: center;
-	/* border: 0.5px solid black; */
-}
-
-.imgHeader{
-	width: 100px;
-	height: 100px;
-	display: block;
-	margin: 0 auto;
-}
-
-.dirHeader{
-	width: 200px;
-	height: 24px;
-	margin-top: 5px;
-	text-align: center;
-	font-size: 18px;
-	color: white;
-	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-}
-
-.table{
-	width: 198px;
-	height: 556px;
-	border: 0.5px solid black;
-}
-
-.dayHeader{
-	width: 198px;
-	height: 24px;
-	margin: 5px 0 2px 0;
-	font-size: 16px;
-	font-weight: bold;
-	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-	text-align: center;
-}
-
-.column{
-	width: 97px;
-	height: 560px;
-	display: inline-block;
-}
-
-.entry{
-	width: 95px;
-	height: 24px;
-	/* border: 0.5px solid black; */
-	margin: 1px;
-	text-align: center;
-	clear: left;
-	float: left;
-	font-size: 18px;
-	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-}
-
-.bold{
-	font-weight: bold;
-}
-
-#rt1{
+#route1{
 	background-color: #D32326;
 }
 
-#rt1e{
-	background-color: #F37C7E;
-}
-
-#rt2{
+#route2{
 	background-color: #223E7D;
 }
 
-#rt2e{
-	background-color: #85B2DB;
-}
-
-#rt3{
+#route3{
 	background-color: #38A700;
 }
 
-#stop{
-	width:850px;
-	height: 50px;
-	text-align: center;
-	font-size: 36px;
-	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+#route4 {
+	background-color: #E69800;
 }
 
-#footer{
-	width: 850px;
-	height: 135px;
+#route10{
+	background-color: #800000;
 }
 
-#footerText{
-	position: relative;
-	left: 90px;
-	width: 500px;
-	height: 135px;
-	text-align: center;
-	font-size: 16px;
-	font-family: "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-	float: left;
+#route20{
+	background-color: #00C5FF;
 }
 
-#footerImg{
-	width: 120px;
-	height: 100px;
-	float: right;
-	margin: 35px 115px 0 0;
-}

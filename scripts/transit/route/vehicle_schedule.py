@@ -8,9 +8,11 @@ import datetime
 import math
 import os
 import re
+import xlsxwriter
 
 # Entire scripts from src
 import src.scripts.transit.route.route as rt
+import src.scripts.transit.stop.stop as st
 import src.scripts.transit.route.constants as RouteConstants
 import src.scripts.transit.route.errors as RouteErrors
 
@@ -23,46 +25,65 @@ def build_master_table():
 
     # Build master_table
     for ST in rt.StopTime.objects:
-        obj = rt.StopTime.objects[ST]
+        stoptime = rt.StopTime.objects[ST]
 
-        # If stop_seq == 0, implying an origin, add to the table
-        if int(obj.stop_seq) == 1:
+        # If the point is a timepoint, add to the table
+        if int(stoptime.timepoint) == 1:
 
-            # Create the reference point of (route_id, dir_id)
-            trip = rt.Trip.objects[obj.trip_id]
-            point = (trip.route_id, trip.direction_id)
-
-            # Prepare multiple dictionary layers for the master_table
-            if obj.joint not in master_table:
-                master_table[obj.joint] = {}
-            if obj.driver not in master_table[obj.joint]:
-                master_table[obj.joint][obj.driver] = {}
-            if point not in master_table[obj.joint][obj.driver]:
-                master_table[obj.joint][obj.driver][point] = []
-
-            # Add stop_time to master_table [joint][driver][point] = [stop_time, ...]
-            master_table[obj.joint][obj.driver][point] = master_table[obj.joint][obj.driver].get(point, 0) + [
-                obj.departure]
-
-    # Sort master_table lists
-    for joint in master_table:
-        for driver in master_table[joint]:
-            for point in master_table[joint][driver]:
-                master_table[joint][driver][point] = sorted(master_table[joint][driver].get(point, 0))
+            if stoptime.driver not in master_table:
+                master_table[stoptime.driver] = []
+            master_table[stoptime.driver] = master_table.get(stoptime.driver) + [
+                [stoptime.stop_id, st.Stop.obj_map[stoptime.stop_id].name, 'TO {}'.format(stoptime.direction.name),
+                 stoptime.depart]]
 
     return master_table
 
 
 def publish():
     # Establish report directory for schedules
-    if not os.path.exists(PATH + '/reports/routes/schedules/'):
-        os.makedirs(PATH + '/reports/routes/schedules/')
+    if not os.path.exists(PATH + '/reports/routes/vehicle_schedules/'):
+        os.makedirs(PATH + '/reports/routes/vehicle_schedules/')
 
     # Build the master table
     master = build_master_table()
     # Iterate through each joint_route
-    for joint in master:
-        print(joint, rt.JointRoute.objects[joint].display_order)
+    for driver in master:
+        # Open workbook and worksheet
+        workbook = xlsxwriter.Workbook(PATH + '/reports/routes/vehicle_schedules/schedule_{}.xlsx'.format(driver))
+        worksheet = workbook.add_worksheet('Schedule {}'.format(driver))
+
+        # Set column widths
+        worksheet.set_column('A:A', 8)
+        worksheet.set_column('B:B', 24)
+        worksheet.set_column('C:C', 30)
+        worksheet.set_column('D:D', 12)
+
+        # Format declarations
+        merge_format = workbook.add_format({'font_size': '20',
+                                            'align': 'center',
+                                            })
+        bold_format = workbook.add_format({'bold': True,
+                                           'align': 'center',
+                                           'fg_color': '#D7E4BC',
+                                           })
+        even_format = workbook.add_format({'fg_color': '#F3F3F3'
+                                           })
+
+        # Write header
+        worksheet.merge_range('A1:D1', 'Vehicle Schedule: {}'.format(driver), merge_format)
+        worksheet.write_row('A2', ['Stop ID', 'Stop Name', 'Direction', 'Departure'], bold_format)
+
+        # Write data
+        row = 3
+        for stoptime in sorted(master[driver], key=lambda x: x[3]):
+            if row % 2 == 0:
+                worksheet.write_row('A{}'.format(row), stoptime, even_format)
+            else:
+                worksheet.write_row('A{}'.format(row), stoptime)
+            row += 1
+
+        # Close workbook
+        workbook.close()
 
     return True
 
