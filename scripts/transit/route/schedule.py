@@ -237,7 +237,6 @@ def publish():
         writer.write('\n</body>\n</html>')
 
 
-
 if __name__ == "__main__":
     process()
     publish()
