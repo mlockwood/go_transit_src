@@ -59,6 +59,7 @@ class Segment(object):
         self.direction = sheet.direction
         self.offset = sheet.offset
         self.headway = sheet.headway
+        self.service = sheet.service
         self.start = sheet.start
         self.end = sheet.end
 
@@ -151,7 +152,6 @@ class RouteGraph(object):
         # Make schedules
         self.schedules = {}
         self.hidden_key = {}
-        self.locations = {}
         self.set_schedules()
 
         # Add to objects

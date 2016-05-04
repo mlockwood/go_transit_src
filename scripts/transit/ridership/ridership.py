@@ -16,6 +16,7 @@ import src.scripts.transit.ridership.errors as RidershipErrors
 # Classes and variables from src
 from src.scripts.transit.constants import PATH, BEGIN, BASELINE, INCREMENT
 from src.scripts.transit.ridership.constants import CHARS, HEADER, STANDARD, META_MAP
+from src.scripts.utils.functions import csv_writer
 
 
 __author__ = 'Michael Lockwood'
@@ -31,34 +32,37 @@ __collaborators__ = None
 class Sheet(object):
 
     objects = {}
-    structure = {}
-    sheet_names = {}
     rewrite = {}
     header_0 = 'Boarding'
 
     def __init__(self, file):
         self.file = file
-        self.start_shift = ''
         self.time_key = 0
         self.records = {}
         self.entries = []
         self.temp = {}
-        self.year = None
-        self.month = None
-        self.day = None
+        self.meta = {}
+        self.errors = []
+        self.warnings = []
         self.strp = None
-        self.schedule = None
+        self.date = None
         Sheet.objects[self.file] = self
 
     @staticmethod
     def process():
         # obj_list = []
-        for dirpath, dirnames, filenames in os.walk(PATH + '/data'):
+        errors = []
+        warnings = []
+
+        for dirpath, dirnames, filenames in os.walk(PATH + '/data/ridership'):
             if 'archive' in dirpath or 'archive' in dirnames:
                 continue
             for filename in [f for f in filenames if re.search('\d{6}_S\d', f)]:
                 obj = Sheet((str(dirpath) + '/' + str(filename)))
-                obj.read_sheet()
+                output = obj.read_sheet()
+                errors += output[0]
+                warnings += output[1]
+
         """
         # This section is not working, it is attempting to multithread the
         # reading of the datasheets but has pickling problems due to the use
@@ -66,17 +70,23 @@ class Sheet(object):
         pool = mp.Pool()
         results = pool.map_async(Sheet.read_sheet, obj_list)
         """
-        #  Sheet.write_sheets()
+
+        csv_writer('{}/reports/ridership/'.format(PATH), 'errors', errors)
+        csv_writer('{}/reports/ridership/'.format(PATH), 'warnings', warnings)
+
         return True
 
+    def convert_messages(self, messages):
+        temp = []
+        for message in messages:
+            temp.append([self.file] + list(message))
+        return temp
+
     def read_sheet(self):
-        reader = csv.reader(open(self.file, 'r', newline=''),
-                            delimiter=',', quotechar='|')
+        reader = csv.reader(open(self.file, 'r', newline=''), delimiter=',', quotechar='|')
         meta = False
-        columns = False
         data = False
-        direction = '1'
-        meta_D = {}
+
         for row in reader:
             # <Handle Types>
             # Blank row handle
@@ -91,7 +101,6 @@ class Sheet(object):
             # Data boolean handle
             elif row[0] == 'DATA':
                 data = True
-                columns = False
                 meta = False
                 continue
             # </Handle Types>
@@ -112,82 +121,63 @@ class Sheet(object):
                 #    cur_value = Sheet.override[cur_meta]
                 
                 # Add meta category, value to meta_D and Sheet object
-                #if cur_meta not in Sheet.delete:
-                meta_D[cur_meta] = cur_value
-                try:
-                    exec('self.' + cur_meta + '=\'' + cur_value + '\'')
-                except:
-                    raise ValueError('Metadata error in ' + cur_value)
+                # if cur_meta not in Sheet.delete
+                self.meta[cur_meta] = cur_value
                         
             # Data
             if data:
-                if row != Sheet.header_0:
+                if row[0] != Sheet.header_0:
                     self.entries.append(row)
-        
-        # Add sheet to the general sheet structure
-        self.set_structure()
 
         # Validation
-        self.validate(data, meta_D)
+        self.validate()
 
         # Actually process record using the latest version methodology
         self.set_records()
-        return True
 
-    def set_structure(self):
+        # Send error and warning messages to report
+        return self.convert_messages(self.errors), self.convert_messages(self.warnings)
 
-        if not (self.year, self.month, self.day) in Sheet.structure:
-            Sheet.structure[(self.year, self.month, self.day)] = {}
-        if self.schedule not in Sheet.structure[(self.year, self.month, self.day)]:
-            Sheet.structure[(self.year, self.month, self.day)][self.schedule] = {}
-
-        if self.start_shift:
-            Sheet.structure[(self.year, self.month, self.day)][self.schedule][
-                int(re.sub(':', '', self.start_shift))] = True
-            self.time_key = int(re.sub(':', '', self.start_shift))
-        else:
-            Sheet.structure[(self.year, self.month, self.day)][self.schedule][self.time_key] = True
-        return True
-
-    def validate(self, data, meta_D):
+    def validate(self):
         # If no data, alert user just in case of error
-        if not data:
-            print(self.file, 'does not contain any data.')
+        if not self.entries:
+            self.warnings += [RidershipErrors.EmptyDataWarning.get()]
 
         # Merge former separated route format
         delete = []
         route_meta = []
-        for meta in meta_D:
+        for meta in self.meta:
             if meta.lower() == 'route':
                 continue
             if re.search('route[\d]*', meta.lower()):
-                if re.search('y', meta_D[meta].lower()):
+                if re.search('y', self.meta[meta].lower()):
                     route_meta.append(re.sub('route', '', meta.lower()))
                 delete.append(meta)
+
         # Delete old meta keys from meta_D
         for meta in delete:
-            del meta_D[meta]
+            del self.meta[meta]
+
         # Add new meta key for route
         if route_meta:
-            meta_D['route'] = '&'.join(sorted(route_meta))
+            self.meta['route'] = '&'.join(sorted(route_meta))
             exec('self.route=\'&\'.join(sorted(route_meta))')
 
         # Check standard metadata variables
         for meta in STANDARD:
-            if meta not in meta_D:
-                if STANDARD[meta] == '<required>':
-                    raise RidershipErrors.MissingMetadataError('{} is missing metadata for "{}".'.format(self.file,
-                                                                                                         meta))
-                meta_D[meta] = STANDARD[meta]
-                exec('self.' + meta + '=' + STANDARD[meta])
+            if meta not in self.meta:
+                self.meta[meta] = STANDARD[meta][0]
+                exec('self.{}=\'{}\''.format(meta, STANDARD[meta][0]))
+                if STANDARD[meta][1] == 'r':
+                    self.errors += [RidershipErrors.MissingMetadataError.get(meta)]
 
         # Check if the naming convention matches the standard
         match = re.search('\d{6}', self.file)
         if not match:
-            RidershipErrors.NamingConventionWarning('Naming convention error with file {}'.format(self.file))
+            self.warnings += [RidershipErrors.NamingConventionWarning.get()]
 
         # Build date strp such as '20160831' from metadata
-        self.strp = '{}{:02d}{:02d}'.format(int(self.year), int(self.month), int(self.day))
+        self.strp = '{}{:02d}{:02d}'.format(int(self.meta['year']), int(self.meta['month']), int(self.meta['day']))
         self.date = datetime.datetime.strptime(self.strp, '%Y%m%d')
 
         # Construct date strp from file name
@@ -197,8 +187,7 @@ class Sheet(object):
 
         # Check if the file name matches the year, month, and day file contents
         if self.strp != '{}{}{}'.format(f_year, f_month, f_day):
-            RidershipErrors.FileNameMismatchWarning('year, month, day do not match contents for file' +
-                                                    ' {}.'.format(self.file))
+            self.warnings += [RidershipErrors.FileNameMismatchWarning.get()]
         return True
 
     def set_records(self):
@@ -216,8 +205,7 @@ class Sheet(object):
             i = 0
             while i < len(entry):
                 if not re.sub(' ', '', entry[i]):
-                    raise RidershipErrors.EntryError('{} record in row {} does not have a '.format(self.file, R) +
-                                                     '{}'.format(HEADER[i]))
+                    self.errors += [RidershipErrors.EntryError.get(R, HEADER[i])]
                 i += 1
             
             # Stop validation and mapping
@@ -225,19 +213,34 @@ class Sheet(object):
             try:
                 on = st.Historic.historic_conversion(self.strp, entry[0]).stop_id
             except:
-                raise RidershipErrors.StopValidationError('{} record in row {} with boarding '.format(self.file, R) +
-                                                          '{} could not be found in the Stop lookup.'.format(entry[0]))
+                self.errors += [RidershipErrors.StopValidationError.get('Boarding', entry[0], R)]
+                on = '0'
 
             # Deboarding (off)
             try:
                 off = st.Historic.historic_conversion(self.strp, entry[3]).stop_id
             except:
-                raise RidershipErrors.StopValidationError('{} record in row {} with deboarding '.format(self.file, R) +
-                                                          '{} could not be found in the Stop lookup.'.format(entry[3]))
+                self.errors += [RidershipErrors.StopValidationError.get('Deboarding', entry[3], R)]
+                off = '0'
+
+            # Time and count validation
+            time = re.sub(':', '', entry[1])
+            try:
+                time = str(int(time[:-2])) + ':' + str(time[-2:])
+            except TypeError:
+                self.errors += [RidershipErrors.TimeValidationError.get(time, R)]
+                time = 'xxxx'
+
+            try:
+                count = int(entry[2])
+            except TypeError:
+                self.errors += [RidershipErrors.CountValidationError.get(entry[2], R)]
+                count = 0
 
             # Set record
-            record = Record(self.year, self.month, self.day, self.sheet, self.route, self.driver, self.schedule,
-                            self.license, entry[1], on, off, entry[2])
+            record = Record(self.meta['year'], self.meta['month'], self.meta['day'], self.meta['sheet'],
+                            self.meta['route'], self.meta['driver'], self.meta['schedule'], self.meta['license'],
+                            on, off, time, count)
             self.records[(on, entry[1], off)] = record
             R += 1
         return True
@@ -251,7 +254,7 @@ class Record(object):
                      'On_Stop', 'Off_Stop', 'Count']
     matrix = [matrix_header]
 
-    def __init__(self, year, month, day, sheet, route, driver, schedule, veh_license, time, on_stop, off_stop, count):
+    def __init__(self, year, month, day, sheet, route, driver, schedule, veh_license, on_stop, off_stop, time, count):
         # Default values
         self.year = int(year)
         self.month = int(month)
@@ -263,10 +266,10 @@ class Record(object):
         self.license = veh_license
         self.on_stop = on_stop
         self.off_stop = off_stop
+        self.time = time
+        self.count = count
         # Processing functions
         self.set_date()
-        self.set_time(time)
-        self.set_count(count)
         self.set_id()
         self.append_record()
         # Add record to the date it pertains
@@ -279,25 +282,6 @@ class Record(object):
         self.week = (str(self.date.isocalendar()[0]) + '_' +
                       str(self.date.isocalendar()[1]))
         self.dow = str(self.date.isocalendar()[2])
-        return True
-
-    def set_time(self, time):
-        time = re.sub(':', '', time)
-        try:
-            self.time = str(int(time[:-2])) + ':' + str(time[-2:])
-        except:
-            raise RidershipErrors.EntryError('A problem with a time entry occurred in {}. Consult '.format(self.file) +
-                                             ' records where boarding={} and deboarding={}'.format(self.on_stop,
-                                                                                                   self.off_stop))
-        return True
-
-    def set_count(self, count):
-        try:
-            self.count = int(count)
-        except:
-            raise RidershipErrors.EntryError('A problem with a count entry occurred in {}. Consult '.format(self.file) +
-                                             ' records where boarding={} and deboarding={}'.format(self.on_stop,
-                                                                                                   self.off_stop))
         return True
 
     def set_id(self):

@@ -29,7 +29,7 @@ def load_version(version):
             meta_map_bool = True
 
         elif standard_bool:
-            standard[row[0]] = row[1]
+            standard[row[0]] = (row[1], row[2])
 
         elif meta_map_bool:
             meta_map[row[0]] = row[1]

@@ -6,7 +6,7 @@ timetable. Originally in schedule.py.
 class Stop:
     
     @staticmethod
-    def _stack_times(a, n):
+    def stack_times(a, n):
         i = 0
         b = []
         c = []
@@ -29,7 +29,7 @@ class Stop:
         cells = {}
         temp = []
         for route in sorted(D.keys()):
-            temp.append(Stop._stack_times(D[route], 15))
+            temp.append(Stop.stack_times(D[route], 15))
             cells[route] = len(temp[-1][0])
         i = 0
         stop_matrix = []

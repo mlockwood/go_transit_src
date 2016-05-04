@@ -62,6 +62,9 @@ def publish():
         merge_format = workbook.add_format({'font_size': '20',
                                             'align': 'center',
                                             })
+        start_format = workbook.add_format({'italic': True,
+                                            'align': 'center',
+                                            })
         bold_format = workbook.add_format({'bold': True,
                                            'align': 'center',
                                            'fg_color': '#D7E4BC',
@@ -70,13 +73,15 @@ def publish():
                                            })
 
         # Write header
-        worksheet.merge_range('A1:D1', 'Vehicle Schedule: {}'.format(driver), merge_format)
-        worksheet.write_row('A2', ['Stop ID', 'Stop Name', 'Direction', 'Departure'], bold_format)
+        worksheet.merge_range('A1:D1', 'Vehicle Schedule for Driver {}'.format(driver), merge_format)
+        worksheet.merge_range('A2:D2', 'Starting Location: {} {}'.format(rt.JointRoute.locations[driver],
+            st.Stop.obj_map[rt.JointRoute.locations[driver]].name), start_format)
+        worksheet.write_row('A3', ['Stop ID', 'Stop Name', 'Direction', 'Departure'], bold_format)
 
         # Write data
-        row = 3
+        row = 4
         for stoptime in sorted(master[driver], key=lambda x: x[3]):
-            if row % 2 == 0:
+            if row % 2 == 1:
                 worksheet.write_row('A{}'.format(row), stoptime, even_format)
             else:
                 worksheet.write_row('A{}'.format(row), stoptime)

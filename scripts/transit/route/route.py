@@ -37,6 +37,7 @@ class Route(object):
         # Additional attributes
         self.trip_id = 1
         self.stop_times = {}
+        self.dirnums = {}
 
         # Set objects
         Route.objects[self.name] = self
@@ -124,6 +125,7 @@ class Sheet(object):
 
         # Set objects
         Sheet.objects[(sheet, route.id, self.service.id, self.direction.id)] = self
+        self.route.dirnums[dirnum] = True
 
         # Attributes from conversion
         self.date = self.route.date
@@ -249,6 +251,7 @@ class Sheet(object):
 class JointRoute(object):
 
     objects = {}
+    locations = {}
 
     def __init__(self, id):
         self.id = id
@@ -300,7 +303,8 @@ class JointRoute(object):
                 for driver in route_graph.schedules:
                     # Set the correct start location for each of the drivers based on the first trip
                     trip = route_graph.schedules[driver][sorted(route_graph.schedules[driver].keys())[0]]
-                    route_graph.locations[driver] = trip.stop_times[sorted(trip.stop_times.keys())[0]]
+                    if service == joint.service_order[0]:
+                        JointRoute.locations[driver] = trip.stop_times[sorted(trip.stop_times.keys())[0]]
 
                     # Disseminate driver values to Trip and StopTime objects
                     for trip in route_graph.schedules[driver]:
@@ -439,9 +443,14 @@ class StopTime(object):
         self.trip = Trip.objects[trip_id]
         self.stop_id = stop_id
         self.gps_ref = gps_ref
+
         self.arrive = arrive.strftime('%H:%M:%S')
         self.depart = depart.strftime('%H:%M:%S')
         self.gtfs_depart = gtfs_depart.strftime('%H:%M:%S')
+        self.arrive_24p = convert_to_24_plus_time(self.trip.segment.start, arrive)
+        self.depart_24p = convert_to_24_plus_time(self.trip.segment.start, depart)
+        self.gtfs_depart_24p = convert_to_24_plus_time(self.trip.segment.start, gtfs_depart)
+
         self.stop_seq = stop_seq
         self.timepoint = timepoint
         self.pickup = 3 if not timepoint else 0
@@ -472,6 +481,34 @@ class StopTime(object):
         for stop_time in sorted(StopTime.objects):
             writer.writerow(StopTime.objects[stop_time].get_record())
         return True
+
+
+def convert_to_24_plus_time(date0, date1, seconds=True):
+    if date0.day != date1.day:
+        if seconds:
+            return ':'.join(pad_time(t) for t in [date1.hour + 24, date1.minute, date1.second])
+        else:
+            return ':'.join(pad_time(t) for t in [date1.hour + 24, date1.minute])
+    else:
+        if seconds:
+            return date1.strftime('%H:%M:%S')
+        else:
+            return date1.strftime('%H:%M')
+
+
+def convert_to_24_time(time, seconds=True):
+    time = re.split(':', time)
+    hour = int(time[0])
+    hour %= 24
+    if seconds:
+        return ':'.join(pad_time(t) for t in [hour] + time[1:])
+    else:
+        return ':'.join(pad_time(t) for t in [hour, time[1]])
+
+
+def pad_time(time_unit):
+    return '0' + str(time_unit) if len(str(time_unit)) == 1 else str(time_unit)
+
 
 Route.process()
 JointRoute.process()

@@ -8,12 +8,11 @@ import re
 # Entire scripts from src
 import src.scripts.transit.route.route as rt
 import src.scripts.transit.stop.stop as st
-import src.scripts.transit.route.constants as RouteConstants
 import src.scripts.transit.route.errors as RouteErrors
 
 # Classes and variables from src
 from src.scripts.transit.constants import PATH
-from src.scripts.transit.route.constants import DISPLAY_ALL, SCHEDULE_TEXT
+from src.scripts.transit.route.constants import DISPLAY_ALL, SCHEDULE_HEADER
 
 
 class Route(object):
@@ -96,12 +95,15 @@ class Schedule(object):
         return '\n\t<div class="col-md-12 scheduleHeader">\n\t\t{}</br>\n\t\t{} - {}\n\t</div>\n'.format(
             self.joint.schedule_text, self.joint.start_time.strftime('%H:%M'), self.joint.end_time.strftime('%H:%M'))
 
-    def get_schedule_html(self, dirs=2):
+    def get_schedule_html(self, dirs=2, civic_plus=False):
         text = '\n\t<div class="col-md-{}">\n\n\t\t<div class="col-md-12 directionHeader route{}">\n\t\t\t{} to {}\n\
                \t\t</div></br>\n'.format(math.floor((12 / dirs) + 0.01), self.route.name[6:],
                                          ', '.join(self.origins.keys()), ', '.join(self.dirnames))
         for stop in Stop.seq_sorted(self.stops):
-            text += stop.get_stop_html()
+            if civic_plus:
+                text += stop.get_stop_html_for_civic_plus()
+            else:
+                text += stop.get_stop_html()
 
         return text + '\n\t</div>'
 
@@ -129,7 +131,7 @@ class Stop(object):
         return True
 
     def convert_to_list(self):
-        self.times = sorted(key[0:5] for key in self.times.keys())
+        self.times = [rt.convert_to_24_time(time) for time in sorted(key[0:5] for key in self.times.keys())]
         return True
 
     def test_timing_headways(self):
@@ -159,6 +161,12 @@ class Stop(object):
         \t\t\t<div class="col-md-7 stopInfo">\n\t\t\t\t{}\n\t\t\t</div>\n\t\t</div>\n\
         '.format(self.stop, st.Stop.obj_map[self.stop].name, ', '.join(self.times))
 
+    def get_stop_html_for_civic_plus(self):
+        return '\n\t\t<div class="col-md-12">\n\t\t\t<div class="col-md-2">\n\t\t\t\t<div class="stopCircle">\n\
+        \t\t\t\t\t{}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4 stopInfo">\n\t\t\t\t{}\n\t\t\t</div>\n\
+        \t\t\t<div class="col-md-6 stopInfo">\n\t\t\t\t{}\n\t\t\t</div>\n\t\t</div>\n\
+        '.format(self.stop, st.Stop.obj_map[self.stop].name, ', '.join(self.times))
+
 
 def process():
     # Add StopTime object values to the correct DS
@@ -178,10 +186,7 @@ def process():
         dirname = stoptime.direction.name
         stop = stoptime.stop_id
         stop_seq = stoptime.stop_seq
-        time = stoptime.depart
-
-        if not joint:
-            continue
+        time = stoptime.depart_24p
 
         # Find the appropriate Schedule
         if (route.id, joint.id, dirnum) not in Schedule.objects:
@@ -225,14 +230,19 @@ def publish():
             os.makedirs(PATH + '/reports/routes/schedules/')
 
         writer = open('{}/reports/routes/schedules/{}.html'.format(PATH, re.sub(' ', '', route.name)), 'w')
-        writer.write(SCHEDULE_TEXT + route.get_logo_html() + route.get_map_html())
+        writer.write(SCHEDULE_HEADER + route.get_logo_html() + route.get_map_html())
 
         observed = {}
+        joint = {}
+        for schedule in route.schedules:
+            joint[route.schedules[schedule].joint] = joint.get(route.schedules[schedule].joint, 0) + 1
+
         for schedule in sorted(route.schedules):
             if schedule[0] not in observed:
                 writer.write(route.schedules[schedule].get_schedule_header_html())
                 observed[schedule[0]] = True
-            writer.write(route.schedules[schedule].get_schedule_html())
+            writer.write(route.schedules[schedule].get_schedule_html(dirs=joint[route.schedules[schedule].joint],
+                         civic_plus=True))
 
         writer.write('\n</body>\n</html>')
 
