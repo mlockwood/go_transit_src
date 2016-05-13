@@ -24,15 +24,17 @@ class Route(object):
     objects = {}
     header_0 = 'sheet'
 
-    def __init__(self, name, id, desc, color, miles, date, path, config):
+    def __init__(self, name, id, short, desc, color, miles, date, path, config, logo):
         # Attributes from metadata
         self.name = name
         self.id = id
+        self.short = short
         self.desc = desc
         self.color = color
         self.miles = float(miles)
         self.date = date
         self.path = path
+        self.logo = logo
 
         # Additional attributes
         self.trip_id = 1
@@ -40,7 +42,6 @@ class Route(object):
         self.dirnums = {}
 
         # Set objects
-        Route.objects[self.name] = self
         Route.objects[self.id] = self
 
         # Load sheets from data
@@ -96,7 +97,8 @@ class Route(object):
 
                             # Create Route object
                             args = re.split(',', metadata.rstrip()) + [date0, '{}/{}/{}/'.format(dirpath, dirname,
-                                                                                                 subdirs[i]), data]
+                                                                                                 subdirs[i]), data,
+                                                                       logo]
                             Route(*args)
 
                             # Break loop so that the correct match is the final selection
@@ -412,12 +414,13 @@ class Trip(object):
         self.route_id = route_id
         self.service_id = service_id
         self.direction_id = direction_id
-        self.trip_seq = str(hex(trip_seq))
+        self.trip_seq = str(trip_seq)
         self.id = '-'.join([route_id, service_id, direction_id, self.trip_seq])
         self.route = Route.objects[route_id]
         self.direction = Direction.objects[direction_id]
         self.segment = segment
         self.stop_times = {}
+        self.driver = None
         Trip.objects[self.id] = self
 
     def __repr__(self):

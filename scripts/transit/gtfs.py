@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # Python libraries and packages
+import csv
+import datetime
 import os
 import re
 import shutil
@@ -47,6 +49,9 @@ def build_stops():
     stops = [['stop_id', 'stop_name', 'stop_desc', 'stop_lat', 'stop_lon']]
     for obj in st.Point.objects:
         stop = st.Point.objects[obj]
+        if (not stop.name or not st.convert_gps_dms_to_dd(stop.gps_n) or not st.convert_gps_dms_to_dd(stop.gps_w) or
+                stop.name == 'None'):
+            continue
         stops.append([stop.stop_id + stop.gps_ref, stop.name, stop.desc, st.convert_gps_dms_to_dd(stop.gps_n),
                       st.convert_gps_dms_to_dd(stop.gps_w)])
     return stops
@@ -54,19 +59,19 @@ def build_stops():
 
 @txt_writer
 def build_routes():
-    routes = [['route_id', 'route_short_name', 'route_desc', 'route_type', 'route_color']]
+    routes = [['route_id', 'route_short_name', 'route_long_name', 'route_desc', 'route_type', 'route_color']]
     for obj in rt.Route.objects:
         route = rt.Route.objects[obj]
-        routes.append([route.id, route.name, route.desc, '3', route.color])
+        routes.append([route.id, route.short, route.name, route.desc, '3', route.color])
     return routes
 
 
 @txt_writer
 def build_trips():
-    trips = [['route_id', 'service_id', 'trip_id', 'direction_id']]
+    trips = [['route_id', 'service_id', 'trip_id', 'direction_id', 'block_id', 'shape_id']]
     for obj in rt.Trip.objects:
         trip = rt.Trip.objects[obj]
-        trips.append([trip.route_id, trip.service_id, trip.id, trip.direction_id])
+        trips.append([trip.route_id, trip.service_id, trip.id, trip.direction_id, trip.driver, trip.direction_id])
     return trips
 
 
@@ -76,7 +81,8 @@ def build_stop_times():
                    'drop_off_type', 'timepoint']]
     for obj in rt.StopTime.objects:
         stop_time = rt.StopTime.objects[obj]
-        stop_times.append([stop_time.trip_id, stop_time.arrival, stop_time.departure, stop_time.stop_id,
+        stop_times.append([stop_time.trip.id, stop_time.arrive, stop_time.depart, '{}{}'.format(stop_time.stop_id,
+                                                                                                stop_time.gps_ref),
                            stop_time.stop_seq, stop_time.pickup, stop_time.dropoff, stop_time.timepoint])
     return stop_times
 
@@ -87,11 +93,28 @@ def build_calendar():
                  'start_date', 'end_date']]
     for obj in rt.Service.objects:
         service = rt.Service.objects[obj]
-        calendars.append([service.id] + [v for k, v in sorted(service.days.items())] + [service.start_date,
-                                                                                        service.end_date])
+        calendars.append([service.id, service.monday, service.tuesday, service.wednesday, service.thursday,
+                          service.friday, service.saturday, service.sunday, service.start_date.strftime('%Y%m%d'),
+                          service.end_date.strftime('%Y%m%d')])
     return calendars
 
 
+@txt_writer
+def build_calendar_dates():
+    dates = [['service_id', 'date', 'exception_type']]
+    holidays = csv.reader(open('{}/data/routes/holidays.csv'.format(PATH), 'r', newline=''), delimiter=',',
+                          quotechar='|')
+    for row in holidays:
+        if re.search('[a-zA-Z]', row[0]):
+            continue
+        for obj in rt.Service.objects:
+            service = rt.Service.objects[obj]
+            # Check if the holiday applies to the given service dates
+            if service.start_date <= datetime.datetime.strptime(row[0], '%Y%m%d') <= service.end_date:
+                dates.append([service.id, row[0], 2])
+    return dates
+
+
 if __name__ == "__main__":
-    shutil.copyfile(PATH + '/data/agency/agency.txt', PATH + '/reports/gtfs/agency.txt')
-    shutil.copyfile(PATH + '/data/agency/feed_info.txt', PATH + '/reports/gtfs/feed_info.txt')
+    shutil.copyfile('{}/data/agency/agency.txt'.format(PATH), '{}/reports/gtfs/agency.txt'.format(PATH))
+    shutil.copyfile('{}/data/routes/transfers.txt'.format(PATH), '{}/reports/gtfs/transfers.txt'.format(PATH))

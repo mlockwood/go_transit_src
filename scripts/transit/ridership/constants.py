@@ -15,7 +15,9 @@ def load_version(version):
     standard_bool = False
     meta_map_bool = False
     standard = {}
+    order = {}
     meta_map = {}
+    i = 0
     for row in reader:
         if not re.sub(' ', '', ''.join(row)):
             continue
@@ -30,10 +32,12 @@ def load_version(version):
 
         elif standard_bool:
             standard[row[0]] = (row[1], row[2])
+            order[i] = row[0]
+            i += 1
 
         elif meta_map_bool:
             meta_map[row[0]] = row[1]
 
-    return standard, meta_map
+    return standard, order, meta_map
 
-STANDARD, META_MAP = load_version(3)
+STANDARD, ORDER, META_MAP = load_version(3)

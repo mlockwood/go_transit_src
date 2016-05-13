@@ -250,7 +250,7 @@ def convert_gps_dms_to_dd(gps):
     try:
         gps = parse_gps_dms(gps)
         return remove_gps_direction([int(gps[0]) + (int(gps[1]) / 60) + (float(gps[2]) / 3600), gps[3]])
-    except IndexError:
+    except:
         return ''
 
 

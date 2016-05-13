@@ -15,7 +15,7 @@ import src.scripts.transit.ridership.errors as RidershipErrors
 
 # Classes and variables from src
 from src.scripts.transit.constants import PATH, BEGIN, BASELINE, INCREMENT
-from src.scripts.transit.ridership.constants import CHARS, HEADER, STANDARD, META_MAP
+from src.scripts.transit.ridership.constants import CHARS, HEADER, STANDARD, ORDER, META_MAP
 from src.scripts.utils.functions import csv_writer
 
 
@@ -33,7 +33,6 @@ class Sheet(object):
 
     objects = {}
     rewrite = {}
-    header_0 = 'Boarding'
 
     def __init__(self, file):
         self.file = file
@@ -46,6 +45,7 @@ class Sheet(object):
         self.warnings = []
         self.strp = None
         self.date = None
+        self.dow = None
         Sheet.objects[self.file] = self
 
     @staticmethod
@@ -81,6 +81,83 @@ class Sheet(object):
         for message in messages:
             temp.append([self.file] + list(message))
         return temp
+
+    def overwrite(self):
+        print('File {} was overwritten.'.format(self.file))
+        writer = csv.writer(open(self.file, 'w', newline=''), delimiter=',', quotechar='|')
+        writer.writerow(['METADATA'])
+        for i in sorted(ORDER.keys()):
+            writer.writerow([str(ORDER[i]).title(), self.meta[ORDER[i]]])
+
+        writer.writerow([])
+        writer.writerow(['DATA'])
+        writer.writerow(HEADER)
+        for row in self.entries:
+            writer.writerow(row)
+        return True
+
+    def overwrite_route(self):
+        prev = self.meta['route']
+
+        # 2015 AUG 31 to 2015 NOV 8
+        if self.date < datetime.datetime(2015, 11, 9):
+            self.meta['route'] = '1'
+
+        # 2015 NOV 9 to 2015 DEC 15
+        if datetime.datetime(2015, 11, 9) <= self.date < datetime.datetime(2015, 12, 16):
+            # Weekends are Route 1 only
+            if self.dow == '6' or self.dow == '7':
+                self.meta['route'] = '1'
+            # Weekdays are 1&2
+            else:
+                self.meta['route'] = '1&2'
+
+        # 2015 DEC 15 to 2016 JAN 15
+        if datetime.datetime(2015, 12, 16) <= self.date < datetime.datetime(2016, 1, 16):
+            # Weekends are Route 1 only
+            if self.dow == '6' or self.dow == '7':
+                self.meta['route'] = '1'
+            # Weekdays
+            else:
+                # Early morning Route 2 service only
+                if int(re.sub(':', '', self.meta['end_shift'])) <= 700:
+                    self.meta['route'] = '2'
+                # Otherwise Routes 1&2
+                else:
+                    self.meta['route'] = '1&2'
+
+        # 2016 JAN 16 to 2016 MAR 27
+        if datetime.datetime(2016, 1, 16) <= self.date < datetime.datetime(2016, 3, 28):
+            # Weekends are Route 10 only
+            if self.dow == '6' or self.dow == '7':
+                self.meta['route'] = '10'
+            # Weekdays
+            else:
+                # Early morning Route 2 service only
+                if int(re.sub(':', '', self.meta['end_shift'])) <= 700:
+                    self.meta['route'] = '2'
+                # Otherwise Routes 1&2
+                else:
+                    self.meta['route'] = '1&2'
+
+        # 2016 MAR 28 to 2016 APR 24
+        if datetime.datetime(2016, 3, 28) <= self.date < datetime.datetime(2016, 4, 25):
+            # Weekends are Routes 10&20
+            if self.dow == '6' or self.dow == '7':
+                self.meta['route'] = '10&20'
+            # Weekdays
+            else:
+                # Early morning Route 2 service only
+                if int(re.sub(':', '', self.meta['end_shift'])) <= 700:
+                    self.meta['route'] = '2'
+                # Otherwise Routes 1&2
+                else:
+                    self.meta['route'] = '1&2'
+
+        if self.meta['route'] == prev:
+            return False
+        else:
+            return True
 
     def read_sheet(self):
         reader = csv.reader(open(self.file, 'r', newline=''), delimiter=',', quotechar='|')
@@ -126,7 +203,7 @@ class Sheet(object):
                         
             # Data
             if data:
-                if row[0] != Sheet.header_0:
+                if row != HEADER:
                     self.entries.append(row)
 
         # Validation
@@ -143,34 +220,6 @@ class Sheet(object):
         if not self.entries:
             self.warnings += [RidershipErrors.EmptyDataWarning.get()]
 
-        # Merge former separated route format
-        delete = []
-        route_meta = []
-        for meta in self.meta:
-            if meta.lower() == 'route':
-                continue
-            if re.search('route[\d]*', meta.lower()):
-                if re.search('y', self.meta[meta].lower()):
-                    route_meta.append(re.sub('route', '', meta.lower()))
-                delete.append(meta)
-
-        # Delete old meta keys from meta_D
-        for meta in delete:
-            del self.meta[meta]
-
-        # Add new meta key for route
-        if route_meta:
-            self.meta['route'] = '&'.join(sorted(route_meta))
-            exec('self.route=\'&\'.join(sorted(route_meta))')
-
-        # Check standard metadata variables
-        for meta in STANDARD:
-            if meta not in self.meta:
-                self.meta[meta] = STANDARD[meta][0]
-                exec('self.{}=\'{}\''.format(meta, STANDARD[meta][0]))
-                if STANDARD[meta][1] == 'r':
-                    self.errors += [RidershipErrors.MissingMetadataError.get(meta)]
-
         # Check if the naming convention matches the standard
         match = re.search('\d{6}', self.file)
         if not match:
@@ -179,6 +228,7 @@ class Sheet(object):
         # Build date strp such as '20160831' from metadata
         self.strp = '{}{:02d}{:02d}'.format(int(self.meta['year']), int(self.meta['month']), int(self.meta['day']))
         self.date = datetime.datetime.strptime(self.strp, '%Y%m%d')
+        self.dow = str(self.date.isocalendar()[2])
 
         # Construct date strp from file name
         f_year = '20' + self.file[match.span()[0]:match.span()[0] + 2]
@@ -188,15 +238,26 @@ class Sheet(object):
         # Check if the file name matches the year, month, and day file contents
         if self.strp != '{}{}{}'.format(f_year, f_month, f_day):
             self.warnings += [RidershipErrors.FileNameMismatchWarning.get()]
+
+        # Add standard metadata variables to those missing from the version template
+        for meta in STANDARD:
+            if meta not in self.meta:
+                self.meta[meta] = STANDARD[meta][0]
+                if STANDARD[meta][1] == 'r':
+                    self.errors += [RidershipErrors.MissingMetadataError.get(meta)]
+
+        # Overwrite metadata
+        if self.overwrite_route():
+            self.overwrite()
+
         return True
 
     def set_records(self):
-        R = 1
+        r = 1
+        new_entries = []
         for entry in self.entries:
-            # Ignore headers, blank rows and counts of 0
-            if entry[0] == Sheet.header_0:
-                continue
-            elif not re.sub(' ', '', ''.join(str(x) for x in entry)):
+            # Ignore blank rows and counts of 0
+            if not re.sub(' ', '', ''.join(str(x) for x in entry)):
                 continue
             elif entry[2] == '0':
                 continue
@@ -205,44 +266,65 @@ class Sheet(object):
             i = 0
             while i < len(entry):
                 if not re.sub(' ', '', entry[i]):
-                    self.errors += [RidershipErrors.EntryError.get(R, HEADER[i])]
+                    self.errors += [RidershipErrors.EntryError.get(r, HEADER[i])]
                 i += 1
             
             # Stop validation and mapping
             # Boarding (on)
             try:
-                on = st.Historic.historic_conversion(self.strp, entry[0]).stop_id
-            except:
-                self.errors += [RidershipErrors.StopValidationError.get('Boarding', entry[0], R)]
+                on = st.Stop.obj_map[entry[0]].stop_id
+            except KeyError:
+                self.errors += [RidershipErrors.StopValidationError.get('Boarding', entry[0], r)]
                 on = '0'
 
             # Deboarding (off)
             try:
-                off = st.Historic.historic_conversion(self.strp, entry[3]).stop_id
-            except:
-                self.errors += [RidershipErrors.StopValidationError.get('Deboarding', entry[3], R)]
+                off = st.Stop.obj_map[entry[3]].stop_id
+            except KeyError:
+                self.errors += [RidershipErrors.StopValidationError.get('Deboarding', entry[3], r)]
                 off = '0'
 
-            # Time and count validation
+            # Time validation
             time = re.sub(':', '', entry[1])
-            try:
-                time = str(int(time[:-2])) + ':' + str(time[-2:])
-            except TypeError:
-                self.errors += [RidershipErrors.TimeValidationError.get(time, R)]
+            if len(time) > 4:
+                self.errors += [RidershipErrors.TimeValidationError.get(time, r)]
                 time = 'xxxx'
+            else:
+                try:
+                    time = str(int(time[:-2])) + ':' + str(time[-2:])
+                except TypeError:
+                    self.errors += [RidershipErrors.TimeValidationError.get(time, r)]
+                    time = 'xxxx'
+                except ValueError:
+                    if len(time) == 2:
+                        time = '00:{}'.format(time)
+                    elif len(time) == 1:
+                        time = '00:0{}'.format(time)
+                    else:
+                        self.errors += [RidershipErrors.TimeValidationError.get(time, r)]
+                        time = 'xxxx'
 
+            # Count validation
             try:
                 count = int(entry[2])
             except TypeError:
-                self.errors += [RidershipErrors.CountValidationError.get(entry[2], R)]
+                self.errors += [RidershipErrors.CountValidationError.get(entry[2], r)]
                 count = 0
 
             # Set record
             record = Record(self.meta['year'], self.meta['month'], self.meta['day'], self.meta['sheet'],
                             self.meta['route'], self.meta['driver'], self.meta['schedule'], self.meta['license'],
                             on, off, time, count)
-            self.records[(on, entry[1], off)] = record
-            R += 1
+            self.records[(on, off, time)] = record
+            #  new_entries += [[on, re.sub(':', '', time), count, off]]
+            r += 1
+
+        """
+        # Write new file to update changes
+        if self.entries != new_entries:
+            self.entries = new_entries
+            self.overwrite()
+        """
         return True
 
 
@@ -269,33 +351,20 @@ class Record(object):
         self.time = time
         self.count = count
         # Processing functions
-        self.set_date()
-        self.set_id()
+        self.datestr = '{}/{}/{}'.format(*[str(s) for s in [self.year, self.month, self.day]])
+        self.date = datetime.date(self.year, self.month, self.day)
+        self.week = Week.get_name(self.date)
+        self.dow = str(self.date.isocalendar()[2])
+        self.ID = hex(Record.ID_generator)
+        Record.ID_generator += 1
+        Record.objects[self.ID] = self
         self.append_record()
         # Add record to the date it pertains
         Day.add_count(self.date, self.dow, self.week, self.count)
 
-    def set_date(self):
-        self.datestr = (str(self.year) + '/' + str(self.month) + '/' +
-                         str(self.day))
-        self.date = datetime.date(self.year, self.month, self.day)
-        self.week = (str(self.date.isocalendar()[0]) + '_' +
-                      str(self.date.isocalendar()[1]))
-        self.dow = str(self.date.isocalendar()[2])
-        return True
-
-    def set_id(self):
-        self.ID = hex(Record.ID_generator)
-        Record.ID_generator += 1
-        Record.objects[self.ID] = self
-        return True
-
     def append_record(self):
-        Record.matrix.append([self.ID, self.year, self.month, self.day,
-                              self.dow, self.sheet, self.route,
-                              self.driver, self.schedule, self.license,
-                              self.time, self.on_stop, self.off_stop,
-                              self.count])
+        Record.matrix.append([self.ID, self.year, self.month, self.day, self.dow, self.sheet, self.route, self.driver,
+                              self.schedule, self.license, self.time, self.on_stop, self.off_stop, self.count])
         return True
 
     @staticmethod
@@ -341,7 +410,7 @@ class Day(object):
         return True
 
     def set_month(self):
-        month_key = str(self.year) + '_' + Month.convert_m[int(self.month)]
+        month_key = '{}_{}_{}'.format(str(self.year), str(self.month), Month.convert_m[int(self.month)])
         if month_key not in Month.objects:
             Month(month_key)
         Month.objects[month_key].days[self.date] = self
@@ -358,6 +427,13 @@ class Week(object):
         self.week = week
         self.days = {}
         Week.objects[week] = self
+
+    @staticmethod
+    def get_name(date):
+        if len(str(date.isocalendar()[1])) == 1:
+            return '{}_0{}'.format(str(date.isocalendar()[0]), str(date.isocalendar()[1]))
+        else:
+            return '{}_{}'.format(str(date.isocalendar()[0]), str(date.isocalendar()[1]))
 
     @staticmethod
     def publish():
