@@ -5,10 +5,8 @@
       <name>Post Exchange</name>
       <description>
         <![CDATA[
-          <h1>CDATA Tags are useful!</h1>
-          <p><font color="green">Text is <i>more readable</i> and 
-          <b>easier to write</b> when you can avoid using entity 
-          references.</font></p>
+          <h1>Located on Nevada AVE at entrance to the Post Exchange.</h1>
+          <p><font color="green"> Monday-Friday 700-1800 <b>xx:10, xx:30, xx:50</b></font></p>
         ]]>
       </description>
       <Point>
