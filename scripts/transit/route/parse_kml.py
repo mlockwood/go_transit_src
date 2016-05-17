@@ -35,7 +35,7 @@ class Shape(object):
             self.distances[path] = {}
             for to_path in [x for x in self.paths.keys() if x != path]:
                 self.distances[path][to_path] = Shape.euclidean(path.destination, to_path.origin)
-        
+
         self.select_best_order(self.paths)
         return True
 
@@ -124,7 +124,8 @@ def process():
                 shape.add_path([re.split(',', x) for x in re.split('\s', t.text) if len(re.split(',', x)) == 3])
 
     # Open writer
-    writer = open('{}/reports/gtfs/shapes.txt'.format(PATH), 'w')
+    writer = open('{}/reports/gtfs/files/shapes.txt'.format(PATH), 'w')
+    writer.write('{}\n'.format(','.join(['shape_id', 'shape_pt_lat', 'shape_pt_lon', 'shape_pt_sequence'])))
 
     for obj in sorted(Shape.objects.keys()):
         shape = Shape.objects[obj]

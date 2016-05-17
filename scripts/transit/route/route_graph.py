@@ -381,7 +381,7 @@ class RouteGraph(object):
 
         # If previous, use stitch to reconfigure drivers
         if self.prev:
-            starting = self.stitch_prev(trip_starts)
+            trip_starts = self.stitch_prev(trip_starts)
 
         # Initialize schedule for each driver
         for position in trip_starts:

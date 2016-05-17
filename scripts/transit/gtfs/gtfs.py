@@ -30,7 +30,7 @@ def txt_writer(func):
     # Set up directories and files
     if not os.path.isdir(PATH + '/reports/gtfs'):
         os.makedirs(PATH + '/reports/gtfs')
-    writer = open('{}/reports/gtfs/{}.txt'.format(PATH, re.sub('build_', '', func.__name__)), 'w')
+    writer = open('{}/reports/gtfs/files/{}.txt'.format(PATH, re.sub('build_', '', func.__name__)), 'w')
 
     # Call inner function
     matrix = func()
@@ -49,20 +49,19 @@ def build_stops():
     stops = [['stop_id', 'stop_name', 'stop_desc', 'stop_lat', 'stop_lon']]
     for obj in st.Point.objects:
         stop = st.Point.objects[obj]
-        if (not stop.name or not st.convert_gps_dms_to_dd(stop.gps_n) or not st.convert_gps_dms_to_dd(stop.gps_w) or
-                stop.name == 'None'):
-            continue
-        stops.append([stop.stop_id + stop.gps_ref, stop.name, stop.desc, st.convert_gps_dms_to_dd(stop.gps_n),
-                      st.convert_gps_dms_to_dd(stop.gps_w)])
+        if st.convert_gps_dms_to_dd(stop.gps_n) and st.convert_gps_dms_to_dd(stop.gps_w) and stop.available == '1':
+            stops.append([stop.stop_id + stop.gps_ref, stop.name, stop.desc, st.convert_gps_dms_to_dd(stop.gps_n),
+                          st.convert_gps_dms_to_dd(stop.gps_w)])
     return stops
 
 
 @txt_writer
 def build_routes():
-    routes = [['route_id', 'route_short_name', 'route_long_name', 'route_desc', 'route_type', 'route_color']]
+    routes = [['route_id', 'route_short_name', 'route_long_name', 'route_desc', 'route_type', 'route_color',
+               'route_text_color']]
     for obj in rt.Route.objects:
         route = rt.Route.objects[obj]
-        routes.append([route.id, route.short, route.name, route.desc, '3', route.color])
+        routes.append([route.id, route.short, route.name, route.desc, '3', route.color, route.text_color])
     return routes
 
 
@@ -71,7 +70,8 @@ def build_trips():
     trips = [['route_id', 'service_id', 'trip_id', 'direction_id', 'block_id', 'shape_id']]
     for obj in rt.Trip.objects:
         trip = rt.Trip.objects[obj]
-        trips.append([trip.route_id, trip.service_id, trip.id, trip.direction_id, trip.driver, trip.direction_id])
+        if len(trip.stop_times) > 1:
+            trips.append([trip.route_id, trip.service_id, trip.id, trip.segment.dirnum, trip.driver, trip.direction_id])
     return trips
 
 
@@ -81,9 +81,10 @@ def build_stop_times():
                    'drop_off_type', 'timepoint']]
     for obj in rt.StopTime.objects:
         stop_time = rt.StopTime.objects[obj]
-        stop_times.append([stop_time.trip.id, stop_time.arrive, stop_time.depart, '{}{}'.format(stop_time.stop_id,
-                                                                                                stop_time.gps_ref),
-                           stop_time.stop_seq, stop_time.pickup, stop_time.dropoff, stop_time.timepoint])
+        if len(stop_time.trip.stop_times) > 1:
+            stop_times.append([stop_time.trip.id, stop_time.arrive_24p, stop_time.gtfs_depart_24p,
+                               '{}{}'.format(stop_time.stop_id, stop_time.gps_ref), stop_time.order, stop_time.pickup,
+                               stop_time.dropoff, stop_time.timepoint])
     return stop_times
 
 
@@ -116,5 +117,5 @@ def build_calendar_dates():
 
 
 if __name__ == "__main__":
-    shutil.copyfile('{}/data/agency/agency.txt'.format(PATH), '{}/reports/gtfs/agency.txt'.format(PATH))
-    shutil.copyfile('{}/data/routes/transfers.txt'.format(PATH), '{}/reports/gtfs/transfers.txt'.format(PATH))
+    shutil.copyfile('{}/data/agency/agency.txt'.format(PATH), '{}/reports/gtfs/files/agency.txt'.format(PATH))
+    shutil.copyfile('{}/data/routes/transfers.txt'.format(PATH), '{}/reports/gtfs/files/transfers.txt'.format(PATH))

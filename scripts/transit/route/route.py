@@ -24,13 +24,14 @@ class Route(object):
     objects = {}
     header_0 = 'sheet'
 
-    def __init__(self, name, id, short, desc, color, miles, date, path, config, logo):
+    def __init__(self, name, id, short, desc, color, text_color, miles, date, path, config, logo):
         # Attributes from metadata
         self.name = name
         self.id = id
         self.short = short
         self.desc = desc
         self.color = color
+        self.text_color = text_color
         self.miles = float(miles)
         self.date = date
         self.path = path
@@ -239,14 +240,9 @@ class Sheet(object):
         for stop_seq in self.segment.stop_seqs:
             stop_seq = self.segment.stop_seqs[stop_seq]
             for arrive in stop_seq.stop_times:
-                # Collect the trip_id based on the origin time
-                trip_id = self.segment.trips[stop_seq.stop_times[arrive]].id
-                depart = arrive + stop_seq.timedelta
-                gtfs_depart = arrive + stop_seq.gtfs_timedelta
 
                 # Set a StopTime object with all attributes
-                StopTime(trip_id, stop_seq.stop, stop_seq.gps_ref, arrive, depart, gtfs_depart, stop_seq.order,
-                         stop_seq.timed, stop_seq.display)
+                StopTime(self.segment.trips[stop_seq.stop_times[arrive]].id, stop_seq, arrive)
         return True
 
 
@@ -441,24 +437,27 @@ class StopTime(object):
 
     objects = {}
 
-    def __init__(self, trip_id, stop_id, gps_ref, arrive, depart, gtfs_depart, stop_seq, timepoint, display):
+    def __init__(self, trip_id, stop_seq, arrive):
         # Attributes from __init__
         self.trip = Trip.objects[trip_id]
-        self.stop_id = stop_id
-        self.gps_ref = gps_ref
+        self.stop_seq = stop_seq
+
+        # Attributes from stop_seq
+        self.stop_id = stop_seq.stop
+        self.gps_ref = stop_seq.gps_ref
 
         self.arrive = arrive.strftime('%H:%M:%S')
-        self.depart = depart.strftime('%H:%M:%S')
-        self.gtfs_depart = gtfs_depart.strftime('%H:%M:%S')
+        self.depart = (arrive + stop_seq.timedelta).strftime('%H:%M:%S')
+        self.gtfs_depart = (arrive + stop_seq.gtfs_timedelta).strftime('%H:%M:%S')
         self.arrive_24p = convert_to_24_plus_time(self.trip.segment.start, arrive)
-        self.depart_24p = convert_to_24_plus_time(self.trip.segment.start, depart)
-        self.gtfs_depart_24p = convert_to_24_plus_time(self.trip.segment.start, gtfs_depart)
+        self.depart_24p = convert_to_24_plus_time(self.trip.segment.start, (arrive + stop_seq.timedelta))
+        self.gtfs_depart_24p = convert_to_24_plus_time(self.trip.segment.start, (arrive + stop_seq.gtfs_timedelta))
 
-        self.stop_seq = stop_seq
-        self.timepoint = timepoint
-        self.pickup = 3 if not timepoint else 0
-        self.dropoff = 3 if not timepoint else 0
-        self.display = display
+        self.order = stop_seq.order
+        self.timepoint = stop_seq.timed
+        self.pickup = 3 if not self.timepoint else 0
+        self.dropoff = 3 if not self.timepoint else 0
+        self.display = stop_seq.display
         self.driver = 0
         self.joint = None
 
@@ -467,12 +466,12 @@ class StopTime(object):
         self.direction = Trip.objects[trip_id].direction
 
         # Set records
-        self.trip.stop_times[stop_seq] = stop_id
-        StopTime.objects[(trip_id, stop_seq)] = self
+        self.trip.stop_times[self.order] = self.stop_id
+        StopTime.objects[(trip_id, self.order)] = self
 
     def get_record(self):
         return [self.trip.id, self.stop_id, self.gps_ref, self.direction.name, self.arrive, self.gtfs_depart,
-                self.stop_seq, self.timepoint, self.pickup, self.dropoff, self.display, self.driver, self.joint.id]
+                self.order, self.timepoint, self.pickup, self.dropoff, self.display, self.driver, self.joint.id]
 
     @staticmethod
     def publish_matrix():
