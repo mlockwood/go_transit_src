@@ -124,7 +124,7 @@ class Stop(object):
 
     @staticmethod
     def objects_sorted():
-        keys = sorted([(obj[0].joint.id, obj[0].dirnum, obj[0].route.id, obj[1], obj[2], Stop.objects[obj])
+        keys = sorted([(obj[1], obj[2], obj[0].joint.id, obj[0].dirnum, obj[0].route.id, Stop.objects[obj])
                        for obj in Stop.objects.keys() if obj[2]])
         return [stop[-1] for stop in keys]
 
@@ -280,7 +280,7 @@ def stop_schedule():
         schedule = point.schedule
         route = point.route
 
-        if schedule == prev:
+        if (stop, gps_ref, schedule) == prev:
             table[(stop, gps_ref)] = table.get((stop, gps_ref), '') + (
                 '<h5> Route {D} to {E} </h5>{F}<hr>'.format(
                     D=route.id,
@@ -301,7 +301,7 @@ def stop_schedule():
                 )
             )
 
-        prev = schedule
+        prev = (stop, gps_ref, schedule)
 
     return table
 
