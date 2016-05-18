@@ -280,7 +280,7 @@ def stop_schedule():
         route = point.route
 
         table[(stop, gps_ref)] = table.get((stop, gps_ref), '') + (
-            '<h4>{A} | {B}-{C}</h4><h6> Route {D} to {E} </h6><p> {F} </p><hr>'.format(
+            '<h4>{A} | {B}-{C}</h4><h5> Route {D} to {E} </h5><p> {F} </p><hr>'.format(
                 A=schedule.joint.schedule_text,
                 B=schedule.joint.start_time.strftime('%H:%M'),
                 C=schedule.joint.end_time.strftime('%H:%M'),
