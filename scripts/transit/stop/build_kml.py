@@ -99,5 +99,8 @@ for line in re.split('\n', kml):
 writer = open('{}/reports/stops/stops.kml'.format(PATH), 'w')
 writer.write('\n'.join(final))
 
+writer = open('{}/src/static/kml/stops.kml'.format(PATH), 'w')
+writer.write('\n'.join(final))
+
 
 
