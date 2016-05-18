@@ -23,8 +23,9 @@ for obj in st.Point.objects:
 
         # Add a placemark in the KML file
         doc.append(KML.Placemark(
-            KML.name(stop.name),
-            KML.description('<![CDATA[{}]]>'.format(table[(stop.stop_id, stop.gps_ref)])),
+            KML.name('({}{}) {}'.format(stop.stop_id, stop.gps_ref, stop.name)),
+            KML.description('<![CDATA[<a href="../stops/{}{}">View Stop Timetable</a>{}]]>'.format(stop.stop_id,
+                            stop.gps_ref, table[(stop.stop_id, stop.gps_ref)])),
             KML.styleUrl('#icon-503-777777'),
             KML.Point(
                 KML.coordinates('{},{},0'.format(st.convert_gps_dms_to_dd(stop.gps_w),
