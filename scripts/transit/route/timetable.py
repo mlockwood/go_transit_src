@@ -2,6 +2,7 @@
 import math
 import os
 import re
+import sys
 
 # Entire scripts from src
 import src.scripts.transit.route.route as rt
@@ -88,14 +89,14 @@ class Schedule(object):
         self.stop = stop  # Stop object
         self.route = route  # Route object
         self.schedule = schedule  # schedule text such as "Monday - Friday"
-        self.joint = 9999999999
+        self.joint = sys.maxsize
         self.times = {}
 
         route.schedules[self] = True
         try:
             route.order[ORDER[schedule]] = self
         except KeyError:
-            route.order[9999999999] = self
+            route.order[sys.maxsize] = self
         Schedule.objects[(stop, route, schedule)] = self
 
     @staticmethod
@@ -192,6 +193,7 @@ def publish():
         writer.write(TIMETABLE_FOOTER)
 
     return True
+
 
 if __name__ == "__main__":
     process()

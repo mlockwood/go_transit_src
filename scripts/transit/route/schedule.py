@@ -112,18 +112,25 @@ class Stop(object):
 
     objects = {}
 
-    def __init__(self, route, schedule, stop, stop_seq):
+    def __init__(self, route, schedule, stop, stop_seq, gps_ref=None):
         self.route = route
         self.schedule = schedule
         self.stop = stop
         self.stop_seq = stop_seq
+        self.gps_ref = gps_ref
         self.times = {}
 
-        Stop.objects[(schedule, stop)] = self
+        Stop.objects[(schedule, stop, gps_ref)] = self
+
+    @staticmethod
+    def objects_sorted():
+        keys = sorted([(obj[0].route.id, obj[0].joint.id, obj[0].dirnum, obj[1], obj[2], Stop.objects[obj])
+                       for obj in Stop.objects.keys() if obj[2]])
+        return [stop[-1] for stop in keys]
 
     @staticmethod
     def seq_sorted(stop_dict):
-        keys = sorted([(stop.stop_seq, stop) for stop in stop_dict])
+        keys = sorted([(stop.stop_seq, stop) for stop in stop_dict if not stop.gps_ref])
         return [stop[1] for stop in keys]
 
     def add_time(self, time):
@@ -185,7 +192,8 @@ def process():
         dirnum = stoptime.trip.segment.sheet.dirnum
         dirname = stoptime.direction.name
         stop = stoptime.stop_id
-        stop_seq = stoptime.stop_seq
+        gps_ref = stoptime.gps_ref
+        stop_seq = stoptime.order
         time = stoptime.depart_24p
 
         # Find the appropriate Schedule
@@ -197,14 +205,20 @@ def process():
         if dirname not in schedule.dirnames:
             schedule.dirnames.append(dirname)
 
+        # Find the appropriate Point
+        if (schedule, stop, gps_ref) not in Stop.objects:
+            Stop(schedule.route, schedule, stop, stop_seq, gps_ref)
+        point = Stop.objects[(schedule, stop, gps_ref)]
+
         # Find the appropriate Stop
-        if (schedule, stop) not in Stop.objects:
+        if (schedule, stop, None) not in Stop.objects:
             Stop(schedule.route, schedule, stop, stop_seq)
-        stop = Stop.objects[(schedule, stop)]
+        stop = Stop.objects[(schedule, stop, None)]
 
         # Select the largest stop_seq
         if stop_seq > stop.stop_seq:
             stop.stop_seq = stop_seq
+            point.stop_seq = stop_seq
 
         # Add stop_seq of 1 so the origin
         if stop_seq == 1:
@@ -212,7 +226,9 @@ def process():
 
         # Add the current time to the stop and then add the stop to the schedule
         stop.add_time(time)
+        point.add_time(time)
         schedule.stops[stop] = True
+        schedule.stops[point] = True
 
     for obj in Schedule.objects:
         schedule = Schedule.objects[obj]
@@ -246,6 +262,35 @@ def publish():
 
         writer.write('\n</body>\n</html>')
 
+
+def stop_schedule():
+    table = {}
+
+    # Process if not __name__ == "__main__"
+    if __name__ != "__main__":
+        process()
+
+    # Add StopTime object values to the correct DS
+    for point in Stop.objects_sorted():
+
+        # Define terms
+        stop = point.stop
+        gps_ref = point.gps_ref
+        schedule = point.schedule
+        route = point.route
+
+        table[(stop, gps_ref)] = table.get((stop, gps_ref), '') + (
+            '<h3>{A} | {B}-{C}</h3><h5> Route {D} to {E} </h5><p> {F} </p><hr>'.format(
+                A=schedule.joint.schedule_text,
+                B=schedule.joint.start_time.strftime('%H:%M'),
+                C=schedule.joint.end_time.strftime('%H:%M'),
+                D=route.id,
+                E=', '.join(schedule.dirnames),
+                F=', '.join(Stop.objects[(schedule, stop, gps_ref)].times)
+            )
+        )
+
+    return table
 
 if __name__ == "__main__":
     process()
