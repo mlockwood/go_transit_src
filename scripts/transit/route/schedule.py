@@ -4,6 +4,7 @@ import datetime
 import math
 import os
 import re
+import shutil
 
 # Entire scripts from src
 import src.scripts.transit.route.route as rt
@@ -35,10 +36,11 @@ class Route(object):
             print('\n')
 
     def get_logo_html(self):
-        return '\n\t<div>\n\t\t<img src="img/route{}_logo.jpg" class="imgHeader"/>\n\t</div>\n'.format(self.name[6:])
+        return '\n\t<div>\n\t\t<img src="../../img/route{}_logo.jpg" class="imgHeader"/>\n\t</div>\n'.format(
+            self.name[6:])
 
     def get_map_html(self):
-        return '\n\t<div>\n\t\t<embed src="img/route{}_map.pdf" width="1680" height="700" type=application/pdf>\n\
+        return '\n\t<div>\n\t\t<embed src="../../pdf/route{}_map.pdf" width="1680" height="700" type=application/pdf>\n\
         \t</div>\n'.format(self.name[6:])
 
 
@@ -52,6 +54,7 @@ class Schedule(object):
         self.origins = {}
         self.dirnames = []
         self.stops = {}
+        self.check_stops = {}
 
         Schedule.objects[(route.id, joint.id, dirnum)] = self
 
@@ -76,7 +79,7 @@ class Schedule(object):
             for stop in self.stops:
 
                 # If the headway timing test passes, convert to xx:00 time
-                if stop.test_timing_headways():
+                if stop.test_timing_headways() and (count - 1) < len(stop.times) < (count + 1):
                     stop.convert_to_xx()
 
                 # Else move to the exceptions dict for the Route
@@ -112,12 +115,12 @@ class Stop(object):
 
     objects = {}
 
-    def __init__(self, route, schedule, stop, stop_seq, gps_ref=None):
+    def __init__(self, route, schedule, stop, gps_ref, stop_seq):
         self.route = route
         self.schedule = schedule
         self.stop = stop
-        self.stop_seq = stop_seq
         self.gps_ref = gps_ref
+        self.stop_seq = stop_seq
         self.times = {}
 
         Stop.objects[(schedule, stop, gps_ref)] = self
@@ -130,8 +133,8 @@ class Stop(object):
 
     @staticmethod
     def seq_sorted(stop_dict):
-        keys = sorted([(stop.stop_seq, stop) for stop in stop_dict if not stop.gps_ref])
-        return [stop[1] for stop in keys]
+        keys = sorted([(stop.stop_seq, stop.gps_ref, stop) for stop in stop_dict])
+        return [stop[-1] for stop in keys]
 
     def add_time(self, time):
         self.times[time] = True
@@ -163,10 +166,10 @@ class Stop(object):
         return True
 
     def get_stop_html(self):
-        return '\n\t\t<div class="col-md-12">\n\t\t\t<div class="col-md-1">\n\t\t\t\t<div class="stopCircle">\n\
-        \t\t\t\t\t{}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="col-md-4 stopInfo">\n\t\t\t\t{}\n\t\t\t</div>\n\
-        \t\t\t<div class="col-md-7 stopInfo">\n\t\t\t\t{}\n\t\t\t</div>\n\t\t</div>\n\
-        '.format(self.stop, st.Stop.obj_map[self.stop].name, ', '.join(self.times))
+        return '\n\t\t<div class="col-md-12">\n\t\t\t<div class="col-md-1">\n\t\t\t\t<div class="stopCircle">\n\t\t\t\
+        \t\t{A}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<a href="../stops/{A}{B}.html"><div class="col-md-4 stopInfo">\n\
+        \t\t\t\t{C} ({B})\n\t\t\t</div></a>\n\t\t\t<div class="col-md-7 stopInfo">\n\t\t\t\t{D}\n\t\t\t</div>\n\t\t\
+        </div>\n'.format(A=self.stop, B=self.gps_ref, C=st.Stop.obj_map[self.stop].name, D=', '.join(self.times))
 
     def get_stop_html_for_civic_plus(self):
         return '\n\t\t<div class="col-md-12">\n\t\t\t<div class="col-md-2">\n\t\t\t\t<div class="stopCircle">\n\
@@ -207,28 +210,34 @@ def process():
 
         # Find the appropriate Point
         if (schedule, stop, gps_ref) not in Stop.objects:
-            Stop(schedule.route, schedule, stop, stop_seq, gps_ref)
+            Stop(schedule.route, schedule, stop, gps_ref, stop_seq)
         point = Stop.objects[(schedule, stop, gps_ref)]
 
-        # Find the appropriate Stop
-        if (schedule, stop, None) not in Stop.objects:
-            Stop(schedule.route, schedule, stop, stop_seq)
-        stop = Stop.objects[(schedule, stop, None)]
-
         # Select the largest stop_seq
-        if stop_seq > stop.stop_seq:
-            stop.stop_seq = stop_seq
+        if stop_seq > point.stop_seq:
             point.stop_seq = stop_seq
 
         # Add stop_seq of 1 so the origin
         if stop_seq == 1:
-            schedule.origins[st.Stop.obj_map[stop.stop].name] = True
+            schedule.origins[st.Stop.obj_map[point.stop].name] = True
 
         # Add the current time to the stop and then add the stop to the schedule
-        stop.add_time(time)
         point.add_time(time)
-        schedule.stops[stop] = True
         schedule.stops[point] = True
+
+        # Adjust the stop_seq if the stop_id already exists, choose the largest
+        if stop not in schedule.check_stops:
+            schedule.check_stops[stop] = (stop_seq, [point])
+        else:
+            if stop_seq > schedule.check_stops[stop][0]:
+                for pt in schedule.check_stops[stop][1]:
+                    pt.stop_seq = stop_seq
+                schedule.check_stops[stop] = (stop_seq, schedule.check_stops[stop][1])
+
+            else:
+                point.stop_seq = schedule.check_stops[stop][0]
+                schedule.check_stops[stop] = (schedule.check_stops[stop][0],
+                                              schedule.check_stops[stop][1] + [point])
 
     for obj in Schedule.objects:
         schedule = Schedule.objects[obj]
@@ -245,7 +254,7 @@ def publish():
         if not os.path.exists(PATH + '/reports/routes/schedules/'):
             os.makedirs(PATH + '/reports/routes/schedules/')
 
-        writer = open('{}/reports/routes/schedules/{}.html'.format(PATH, re.sub(' ', '', route.name)), 'w')
+        writer = open('{}/reports/routes/schedules/{}.html'.format(PATH, re.sub(' ', '', route.name.lower())), 'w')
         writer.write(SCHEDULE_HEADER + route.get_logo_html() + route.get_map_html())
 
         observed = {}
@@ -258,10 +267,13 @@ def publish():
                 writer.write(route.schedules[schedule].get_schedule_header_html())
                 observed[schedule[0]] = True
             writer.write(route.schedules[schedule].get_schedule_html(dirs=joint[route.schedules[schedule].joint],
-                         civic_plus=True))
+                         civic_plus=False))
 
         writer.write('\n</body>\n</html>')
+        writer.close()
 
+        shutil.copyfile('{}/reports/routes/schedules/{}.html'.format(PATH, re.sub(' ', '', route.name)),
+                        '{}/reports/website/transit/routes/{}.html'.format(PATH, re.sub(' ', '', route.name)))
 
 def stop_schedule():
     table = {}

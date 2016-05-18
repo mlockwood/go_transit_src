@@ -2,6 +2,7 @@
 import math
 import os
 import re
+import shutil
 import sys
 
 # Entire scripts from src
@@ -71,9 +72,9 @@ class Route(object):
         return Route.objects[(stop, route, dirnum)]
 
     def get_route_html(self, route_dirs=2):
-        text = '\n\t<div class="col-md-{col}">\n\n\t\t\t<img src="img/route{rt}_logo.jpg" class="imgHeader"/>\n\n\t\t\t\
-               <div class="dirHeader route{rt}">\n\t\t\t\tTO {dirs}\n\t\t\t</div>\n'.format(
-               col=math.floor((12 / route_dirs) + 0.01), rt=self.route.name[6:], dirs=', '.join(sorted(self.dirnames)))
+        text = '\n\t<div class="col-md-{A}">\n\n\t\t\t<img src="../../img/route{B}_logo.jpg" class="imgHeader"/>\n\
+                \n\t\t\t<div class="dirHeader route{B}">\n\t\t\t\tTO {C}\n\t\t\t</div>\n'.format(
+                A=math.floor((12 / route_dirs) + 0.01), B=self.route.name[6:], C=', '.join(sorted(self.dirnames)))
 
         for schedule_order in sorted(self.order.keys()):
             text += self.order[schedule_order].get_schedule_html()
@@ -149,7 +150,7 @@ def process():
         dirname = stoptime.direction.name
         schedule = stoptime.trip.segment.service.text
         time = stoptime.depart_24p
-        joint = int(stoptime.joint.id[2:])
+        joint = int(stoptime.joint.id)
 
         # If the DISPLAY_ALL is set to False
         if not DISPLAY_ALL:
@@ -183,7 +184,7 @@ def publish():
     for obj in Stop.objects:
         stop = Stop.objects[obj]
 
-        writer = open('{}/reports/routes/timetables/{}.html'.format(PATH, '{}{}'.format(stop.id, stop.gps_ref)), 'w')
+        writer = open('{}/reports/routes/timetables/{}{}.html'.format(PATH, stop.id, stop.gps_ref), 'w')
 
         writer.write(TIMETABLE_HEADER + stop.get_stop_html())
 
@@ -191,6 +192,10 @@ def publish():
             writer.write(stop.routes[route].get_route_html(len(stop.routes)))
 
         writer.write(TIMETABLE_FOOTER)
+        writer.close()
+
+        shutil.copyfile('{}/reports/routes/timetables/{}{}.html'.format(PATH, stop.id, stop.gps_ref),
+                        '{}/reports/website/transit/stops/{}{}.html'.format(PATH, stop.id, stop.gps_ref))
 
     return True
 
