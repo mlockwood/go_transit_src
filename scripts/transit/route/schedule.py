@@ -124,7 +124,7 @@ class Stop(object):
 
     @staticmethod
     def objects_sorted():
-        keys = sorted([(obj[0].route.id, obj[0].joint.id, obj[0].dirnum, obj[1], obj[2], Stop.objects[obj])
+        keys = sorted([(obj[0].joint.id, obj[0].dirnum, obj[0].route.id, obj[1], obj[2], Stop.objects[obj])
                        for obj in Stop.objects.keys() if obj[2]])
         return [stop[-1] for stop in keys]
 
@@ -270,6 +270,7 @@ def stop_schedule():
     if __name__ != "__main__":
         process()
 
+    prev = None
     # Add StopTime object values to the correct DS
     for point in Stop.objects_sorted():
 
@@ -279,16 +280,28 @@ def stop_schedule():
         schedule = point.schedule
         route = point.route
 
-        table[(stop, gps_ref)] = table.get((stop, gps_ref), '') + (
-            '<h4>{A} | {B}-{C}</h4><h5> Route {D} to {E} </h5><p> {F} </p><hr>'.format(
-                A=schedule.joint.schedule_text,
-                B=schedule.joint.start_time.strftime('%H:%M'),
-                C=schedule.joint.end_time.strftime('%H:%M'),
-                D=route.id,
-                E=', '.join(schedule.dirnames),
-                F=', '.join(Stop.objects[(schedule, stop, gps_ref)].times)
+        if schedule == prev:
+            table[(stop, gps_ref)] = table.get((stop, gps_ref), '') + (
+                '<h5> Route {D} to {E} </h5>{F}<hr>'.format(
+                    D=route.id,
+                    E=', '.join(schedule.dirnames),
+                    F=', '.join(Stop.objects[(schedule, stop, gps_ref)].times)
+                )
             )
-        )
+
+        else:
+            table[(stop, gps_ref)] = table.get((stop, gps_ref), '') + (
+                '<h4>{A} | {B}-{C}</h4><h5> Route {D} to {E} </h5>{F}<hr>'.format(
+                    A=schedule.joint.schedule_text,
+                    B=schedule.joint.start_time.strftime('%H:%M'),
+                    C=schedule.joint.end_time.strftime('%H:%M'),
+                    D=route.id,
+                    E=', '.join(schedule.dirnames),
+                    F=', '.join(Stop.objects[(schedule, stop, gps_ref)].times)
+                )
+            )
+
+        prev = schedule
 
     return table
 

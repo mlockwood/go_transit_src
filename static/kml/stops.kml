@@ -3,1035 +3,1035 @@
   <Document>
     <name>GO Transit Stops</name>
     <Placemark>
-      <name>(375a) 9TH Division &amp; Mann AVE</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/375a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:14, xx:34, xx:54 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.6172111111111,47.08605555555556,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(223b) 5th ASOS</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/223b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:16, 20:36, 21:56, 23:16 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:16, 20:36, 21:56, 23:56, 01:16 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:11, xx:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57077222222222,47.087697222222225,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(780a) Passenger Terminal</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/780a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> 08:00, 08:20, 08:40, 09:00, 09:20, 09:40, 10:00, 10:20, 10:40, 11:00, 11:20, 11:40, 12:00, 12:20, 12:40, 13:00, 13:20, 13:40, 14:00, 14:20, 14:40, 15:00, 15:20, 15:40, 18:00 </p><hr><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:01, xx:21, xx:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.4850388888889,47.15034166666666,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
       <name>(391a) Main Post Office</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/391a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:15, xx:35, xx:55 </p><hr>]]></description>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/391a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:15, xx:35, xx:55<hr>]]></description>
       <styleUrl>#icon-503-777777</styleUrl>
       <Point>
         <coordinates>-122.61697222222222,47.091350000000006,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>(701b) McChord Exchange</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/701b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:08, xx:28, xx:48 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5><p> 18:22, 19:42, 21:02, 22:22, 23:42 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5><p> 18:22, 19:42, 21:02, 23:02, 00:22, 01:42 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5><p> xx:12, xx:42 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49410833333333,47.12656111111111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(325b) Cowan Stadium</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/325b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:46, 20:06, 21:26, 22:46 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:46, 20:06, 21:26, 23:26, 00:46 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:11, xx:41 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:00, xx:20, xx:40 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59508888888888,47.08813333333334,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(705a) COL Joe Jackson &amp; Barnes</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/705a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:08, xx:28, xx:48 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:13, 19:33, 20:53, 22:13, 23:33 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:13, 19:33, 20:53, 22:53, 00:13, 01:33 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5><p> xx:28, xx:58 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49384166666667,47.132019444444445,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(745b) F ST &amp; 3rd ST</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/745b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:06, xx:26, xx:46 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48672222222223,47.13511666666667,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(750a) B ST &amp; 4TH ST</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/750a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:09, xx:29, xx:49 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.4889388888889,47.13611944444445,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(801a) 512 Park &amp; Ride</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/801a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> 07:20, 07:40, 16:00, 16:20, 16:40, 17:00, 17:20, 17:40 </p><hr><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> 07:00, 07:20, 07:40, 16:00, 16:20, 16:40, 17:00, 17:20, 17:40 </p><hr><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to McChord Lodging, Lakewood </h5><p> 07:00 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48318333333333,47.160830555555556,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(465a) Sports Complex</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/465a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:55, 20:15, 21:35, 22:55 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:55, 20:15, 21:35, 23:35, 00:55 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:20, xx:50 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Warrior Zone </h5><p> xx:17, xx:37, xx:57 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60818333333333,47.12891944444444,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(101a) SFAC and WTB</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/101a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:00, xx:20, xx:40 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:35, 19:55, 21:15, 22:35, 23:55 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:35, 19:55, 21:15, 23:15, 00:35, 01:55 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:00, xx:30 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.554025,47.10570277777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(327a) The Commons</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/327a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:09, 20:29, 21:49, 23:09 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:09, 20:29, 21:49, 23:49, 01:09 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:04, xx:34 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59161944444443,47.087894444444444,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(782a) North Gate Internal</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/782a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> 07:14, 07:34, 15:54, 16:14, 16:34, 16:54, 17:14, 17:34 </p><hr><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to McChord Lodging, Lakewood </h5><p> 06:57 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48345277777779,47.15428055555555,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(113a) Madigan Annex</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/113a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:02, xx:22, xx:42 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:07, 19:27, 20:47, 22:07, 23:27 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:07, 19:27, 20:47, 22:47, 00:07, 01:27 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5><p> xx:22, xx:52 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.54009444444445,47.10096388888889,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(300b) Post Exchange</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/300b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:10, xx:30, xx:50 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:50, 20:10, 21:30, 22:50 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:50, 20:10, 21:30, 23:30, 00:50 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:15, xx:45 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58824166666666,47.09328611111111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(300d) Post Exchange</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/300d.html</p><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Warrior Zone </h5><p> xx:10, xx:30, xx:50 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Post Exchange </h5><p> xx:10, xx:30, xx:50 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58863888888888,47.093161111111115,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(379a) Albanese Hall</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/379a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:14, xx:34, xx:54 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.62551111111111,47.08792777777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(200b) 3rd Division &amp; Pendleton</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/200b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:14, xx:34, xx:54 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:16, 20:36, 21:56, 23:16 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:16, 20:36, 21:56, 23:56, 01:16 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:11, xx:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.56904166666666,47.0919,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(777a) Flight Simulator</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/777a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:13, xx:33, xx:53 </p><hr><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to McChord Lodging, Lakewood </h5><p> 06:55 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49098611111111,47.15205833333333,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(780b) Passenger Terminal</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/780b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> 07:14, 07:34, 15:54, 16:14, 16:34, 16:54, 17:14, 17:34 </p><hr><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to McChord Lodging, Lakewood </h5><p> 06:56 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.4847861111111,47.15205833333333,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(744a) The Castle &amp; Customer Service Mall</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/744a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:09, xx:29, xx:49 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48717777777777,47.13385,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(324a) Carey Theater</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/324a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:08, 20:28, 21:48, 23:08 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:08, 20:28, 21:48, 23:48, 01:08 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:03, xx:33 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59783888888889,47.08804444444445,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(220b) Pendleton Shoppette</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/220b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:16, 20:36, 21:56, 23:16 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:16, 20:36, 21:56, 23:56, 01:16 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:11, xx:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57195,47.090316666666666,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(378a) Pittman Complex</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/378a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:14, xx:34, xx:54 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.62300833333333,47.08724166666667,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(110b) Madigan HHC</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/110b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:14, xx:34, xx:54 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5><p> 18:28, 19:48, 21:08, 22:28, 23:48 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5><p> 18:28, 19:48, 21:08, 23:08, 00:28, 01:48 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5><p> xx:18, xx:48 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.54525833333334,47.10617222222222,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(741a) C ST &amp; 4TH ST</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/741a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:08, xx:28, xx:48 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.491175,47.133069444444445,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(305a) Waller Hall</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/305a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:10, xx:30, xx:50 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:06, 20:26, 21:46, 23:06 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:06, 20:26, 21:46, 23:46, 01:06 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:01, xx:31 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59577777777777,47.09000555555556,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(320a) Jensen Gym</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/320a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:07, 20:27, 21:47, 23:07 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:07, 20:27, 21:47, 23:47, 01:07 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:02, xx:32 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60519444444444,47.088794444444446,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(227a) Evergreen Theatre</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/227a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:40, 20:00, 21:20, 22:40 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:40, 20:00, 21:20, 23:20, 00:40 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:05, xx:35 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:14, xx:34, xx:54 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57229444444444,47.07545833333334,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(320b) Jensen Gym</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/320b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:47, 20:07, 21:27, 22:47 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:47, 20:07, 21:27, 23:27, 00:47 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:12, xx:42 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:01, xx:21, xx:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60511666666666,47.08893888888889,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(217a) Hillside at Colorado</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/217a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:04, xx:24, xx:44 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58324444444445,47.097033333333336,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(113b) Madigan Annex</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/113b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:13, xx:33, xx:53 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5><p> 18:27, 19:47, 21:07, 22:27, 23:47 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5><p> 18:27, 19:47, 21:07, 23:07, 00:27, 01:47 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5><p> xx:17, xx:47 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.54028888888888,47.10107222222222,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(705b) COL Joe Jackson &amp; Barnes</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/705b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:07, xx:27, xx:47 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5><p> 18:21, 19:41, 21:01, 22:21, 23:41 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5><p> 18:21, 19:41, 21:01, 23:01, 00:21, 01:41 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5><p> xx:11, xx:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49408055555556,47.132025,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(304a) Commissary</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/304a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:10, xx:30, xx:50 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:06, 20:26, 21:46, 23:06 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:06, 20:26, 21:46, 23:46, 01:06 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:01, xx:31 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.5925861111111,47.089955555555555,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(324b) Carey Theater</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/324b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:46, 20:06, 21:26, 22:46 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:46, 20:06, 21:26, 23:26, 00:46 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:11, xx:41 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:00, xx:20, xx:40 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59788055555555,47.088166666666666,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(778b) 373rd Training Detachment</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/778b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:02, xx:22, xx:42 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48795555555556,47.15218888888889,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(310b) Public Works</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/310b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:01, xx:21, xx:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60718333333332,47.09130277777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(313a) French Theatre</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/313a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:12, xx:32, xx:52 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.61281666666666,47.09303611111111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(273a) Soldiers Chapel</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/273a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:42, 20:02, 21:22, 22:42 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:42, 20:02, 21:22, 23:22, 00:42 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:07, xx:37 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:17, xx:37, xx:57 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58531111111111,47.075675000000004,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(304b) Commissary</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/304b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:02, xx:22, xx:42 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:49, 20:09, 21:29, 22:49 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:49, 20:09, 21:29, 23:29, 00:49 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:14, xx:44 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:02, xx:22, xx:42 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59220555555555,47.08977222222222,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(700a) Lincoln &amp; Barnes</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/700a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:07, xx:27, xx:47 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:12, 19:32, 20:52, 22:12, 23:32 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:12, 19:32, 20:52, 22:52, 00:12, 01:32 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5><p> xx:27, xx:57 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49385555555556,47.123047222222226,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(217b) Hillside at Colorado</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/217b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:11, xx:31, xx:51 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:10, xx:30, xx:50 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58414722222221,47.09715,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(201b) National Guard</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/201b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:13, xx:33, xx:53 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:11, xx:31, xx:51 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57203333333332,47.09205555555556,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(305b) Waller Hall</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/305b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:02, xx:22, xx:42 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:48, 20:08, 21:28, 22:48 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:48, 20:08, 21:28, 23:28, 00:48 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:13, xx:43 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:02, xx:22, xx:42 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59571666666666,47.08983611111111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(270b) 296 BSB and 23 BEB</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/270b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:13, 20:33, 21:53, 23:13 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:13, 20:33, 21:53, 23:53, 01:13 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:08, xx:38 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58113055555555,47.069475000000004,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(300a) Post Exchange</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/300a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:10, xx:30, xx:50 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:05, 20:25, 21:45, 23:05 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:05, 20:25, 21:45, 23:45, 01:05 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:00, xx:30 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58870555555555,47.09334166666667,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(327b) The Commons</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/327b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:46, 20:06, 21:26, 22:46 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:46, 20:06, 21:26, 23:26, 00:46 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:11, xx:41 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:19, xx:39, xx:59 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59046666666666,47.087922222222225,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(315a) Joint Base Headquarters</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/315a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:00, xx:20, xx:40 </p><hr><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:00, xx:20, xx:40 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.61457499999999,47.09246111111111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
       <name>(452a) Lancer DFAC</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/452a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:54, 20:14, 21:34, 22:54 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:54, 20:14, 21:34, 23:34, 00:54 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:19, xx:49 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Warrior Zone </h5><p> xx:16, xx:36, xx:56 </p><hr>]]></description>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/452a.html</p><h5> Route 4 to Warrior Zone </h5>xx:16, xx:36, xx:56<hr><h5> Route 10 to Lewis North </h5>18:54, 20:14, 21:34, 22:54<hr><h5> Route 10 to Lewis North </h5>18:54, 20:14, 21:34, 23:34, 00:54<hr><h5> Route 10 to Lewis North </h5>xx:19, xx:49<hr>]]></description>
       <styleUrl>#icon-503-777777</styleUrl>
       <Point>
         <coordinates>-122.6023361111111,47.125236111111114,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>(307a) Rainier Inn</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/307a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:11, xx:31, xx:51 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:07, 20:27, 21:47, 23:07 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:07, 20:27, 21:47, 23:47, 01:07 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:02, xx:32 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.6001861111111,47.08996944444445,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(101b) SFAC and WTB</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/101b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:16, xx:36, xx:56 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:18, 20:38, 21:58, 23:18 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:18, 20:38, 21:58, 23:58, 01:18 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:13, xx:43 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.55356944444443,47.105602777777776,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(201a) National Guard</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/201a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:03, xx:23, xx:43 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57184166666666,47.09203611111111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(777b) Flight Simulator</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/777b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:02, xx:22, xx:42 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49145,47.15221944444444,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(272b) 2-3 Battalion HQ</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/272b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:12, 20:32, 21:52, 23:12 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:12, 20:32, 21:52, 23:52, 01:12 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:07, xx:37 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58306388888889,47.073475,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(780c) Passenger Terminal</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/780c.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> 07:01, 07:21, 07:41, 16:01, 16:21, 16:41, 17:01, 17:21, 17:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48521944444444,47.15218055555555,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(772b) Evergreen McChord Lodging</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/772b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:03, xx:23, xx:43 </p><hr><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to McChord Dining </h5><p> 06:25, 06:35, 06:45 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5><p> 18:20, 19:40, 21:00, 22:20, 23:40 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5><p> 18:20, 19:40, 21:00, 23:00, 00:20, 01:40 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5><p> xx:10, xx:40 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49400555555556,47.14445833333333,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(141b) Hillside at Jackson</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/141b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:15, xx:35, xx:55 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:17, 20:37, 21:57, 23:17 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:17, 20:37, 21:57, 23:57, 01:17 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:12, xx:42 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.56083611111112,47.09881111111111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(307b) Rainier Inn</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/307b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:02, xx:22, xx:42 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:48, 20:08, 21:28, 22:48 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:48, 20:08, 21:28, 23:28, 00:48 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:13, xx:43 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:01, xx:21, xx:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60015277777777,47.08979166666667,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(270a) 296 BSB and 23 BEB</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/270a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:41, 20:01, 21:21, 22:41 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:41, 20:01, 21:21, 23:21, 00:41 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:06, xx:36 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:15, xx:35, xx:55 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58099722222222,47.06952777777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(226b) 16th CAB HQ</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/226b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:15, 20:35, 21:55, 23:15 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:15, 20:35, 21:55, 23:55, 01:15 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:10, xx:40 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57112222222221,47.07790000000001,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(772a) Evergreen McChord Lodging</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/772a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:13, xx:33, xx:53 </p><hr><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to McChord Lodging, Lakewood </h5><p> 06:35, 06:45, 06:55 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:20, 19:40, 21:00, 22:20, 23:40 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:20, 19:40, 21:00, 23:00, 00:20, 01:40 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5><p> xx:10, xx:40 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49375833333333,47.144425,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(316a) Main Chapel</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/316a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:13, xx:33, xx:53 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.61364722222221,47.09140555555556,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(100a) Madigan Hospital</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/100a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:00, xx:20, xx:40 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:35, 19:55, 21:15, 22:35, 23:55 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:25, 20:45, 22:05, 23:25 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:35, 19:55, 21:15, 23:15, 00:35, 01:55 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:25, 20:45, 22:05, 00:05, 01:25 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:00, xx:30 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:20, xx:50 </p><hr><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:00, xx:20, xx:40 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:05, 19:25, 20:45, 22:05, 23:25 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:05, 19:25, 20:45, 22:45, 00:05, 01:25 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5><p> xx:20, xx:50 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.55411111111111,47.10863333333334,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(226a) 16th CAB HQ</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/226a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:39, 19:59, 21:19, 22:39, 23:59 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:39, 19:59, 21:19, 23:19, 00:39, 01:59 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:04, xx:34 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:13, xx:33, xx:53 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.5712361111111,47.07798888888889,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(700b) Lincoln &amp; Barnes</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/700b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:08, xx:28, xx:48 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5><p> 18:22, 19:42, 21:02, 22:22, 23:42 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5><p> 18:22, 19:42, 21:02, 23:02, 00:22, 01:42 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5><p> xx:12, xx:42 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49411388888889,47.12248888888889,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(325a) Cowan Stadium</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/325a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:08, 20:28, 21:48, 23:08 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:08, 20:28, 21:48, 23:48, 01:08 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:03, xx:33 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59509444444444,47.08800277777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(110a) Madigan HHC</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/110a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:01, xx:21, xx:41 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:06, 19:26, 20:46, 22:06, 23:26 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:06, 19:26, 20:46, 22:46, 00:06, 01:26 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5><p> xx:21, xx:51 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.54540277777778,47.10609166666667,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(220a) Pendleton Shoppette</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/220a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:38, 19:58, 21:18, 22:38, 23:58 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:38, 19:58, 21:18, 23:18, 00:38, 01:58 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:03, xx:33 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:11, xx:31, xx:51 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57193333333333,47.09095833333333,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(273b) Soldiers Chapel</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/273b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:12, 20:32, 21:52, 23:12 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:12, 20:32, 21:52, 23:52, 01:12 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:07, xx:37 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58525833333333,47.07543611111112,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(313b) French Theatre</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/313b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:00, xx:20, xx:40 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.61234444444443,47.09278333333334,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(744b) The Castle &amp; Customer Service Mall</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/744b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:06, xx:26, xx:46 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.487375,47.13381666666667,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(309a) Reception Center</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/309a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:01, xx:21, xx:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60514166666665,47.09070277777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(224a) DPTMS Training Branch</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/224a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:39, 19:59, 21:19, 22:39, 23:59 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:39, 19:59, 21:19, 23:19, 00:39, 01:59 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:04, xx:34 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:12, xx:32, xx:52 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.5704611111111,47.08465833333334,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(227b) Evergreen Theatre</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/227b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:14, 20:34, 21:54, 23:14 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:14, 20:34, 21:54, 23:54, 01:14 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:09, xx:39 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.5721361111111,47.075452777777784,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
       <name>(764a) Logistics Readiness Squadron</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/764a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:10, xx:30, xx:50 </p><hr><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:03, xx:23, xx:43 </p><hr>]]></description>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/764a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:10, xx:30, xx:50<hr><h5> Route 2 to Madigan </h5>xx:03, xx:23, xx:43<hr>]]></description>
       <styleUrl>#icon-503-777777</styleUrl>
       <Point>
         <coordinates>-122.49050833333334,47.14136944444444,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>(778a) 373rd Training Detachment</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/778a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:14, xx:34, xx:54 </p><hr><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to McChord Lodging, Lakewood </h5><p> 06:56 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48755555555556,47.15205833333333,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(274b) Sheridan Gym</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/274b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:11, 20:31, 21:51, 23:11 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:11, 20:31, 21:51, 23:51, 01:11 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:06, xx:36 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58720555555556,47.07712777777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(750b) B ST &amp; 4TH ST</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/750b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:06, xx:26, xx:46 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48930277777778,47.136208333333336,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(322b) McVeigh Fitness</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/322b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:46, 20:06, 21:26, 22:46 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:46, 20:06, 21:26, 23:26, 00:46 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:11, xx:41 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:00, xx:20, xx:40 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60093055555555,47.08827222222222,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(140a) Four Chaplains Chapel</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/140a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:01, xx:21, xx:41 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:36, 19:56, 21:16, 22:36, 23:56 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:36, 19:56, 21:16, 23:16, 00:36, 01:56 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:01, xx:31 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.55570833333333,47.10297777777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(311a) DFMWR</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/311a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:12, xx:32, xx:52 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60951944444444,47.09213888888889,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(200a) 3rd Division &amp; Pendleton</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/200a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:03, xx:23, xx:43 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:38, 19:58, 21:18, 22:38, 23:58 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:38, 19:58, 21:18, 23:18, 00:38, 01:58 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:03, xx:33 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.56929166666666,47.092108333333336,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(765a) Air Crew Life Support</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/765a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:10, xx:30, xx:50 </p><hr><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:04, xx:24, xx:44 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48670833333334,47.142427777777776,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(701a) McChord Exchange</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/701a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:07, xx:27, xx:47 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:12, 19:32, 20:52, 22:12, 23:32 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:12, 19:32, 20:52, 22:52, 00:12, 01:32 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5><p> xx:27, xx:57 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49389166666667,47.12623333333333,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(800b) North Gate External</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/800b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> 07:00, 07:20, 07:40, 16:00, 16:20, 16:40, 17:00, 17:20, 17:40 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48366388888888,47.15656388888889,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(225a) Soldiers Fieldhouse</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/225a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:39, 19:59, 21:19, 22:39, 23:59 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:39, 19:59, 21:19, 23:19, 00:39, 01:59 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:04, xx:34 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:13, xx:33, xx:53 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57041666666666,47.08191666666667,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
       <name>(308a) I Corps</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/308a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:11, xx:31, xx:51 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:07, 20:27, 21:47, 23:07 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:07, 20:27, 21:47, 23:47, 01:07 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:02, xx:32 </p><hr>]]></description>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/308a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:11, xx:31, xx:51<hr><h5> Route 10 to Madigan </h5>19:07, 20:27, 21:47, 23:07<hr><h5> Route 10 to Madigan </h5>19:07, 20:27, 21:47, 23:47, 01:07<hr><h5> Route 10 to Madigan </h5>xx:02, xx:32<hr>]]></description>
       <styleUrl>#icon-503-777777</styleUrl>
       <Point>
         <coordinates>-122.60369722222222,47.09045833333334,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>(704b) McChord Clinic</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/704b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:07, xx:27, xx:47 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5><p> 18:21, 19:41, 21:01, 22:21, 23:41 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5><p> 18:21, 19:41, 21:01, 23:01, 00:21, 01:41 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5><p> xx:11, xx:41 </p><hr>]]></description>
+      <name>(300b) Post Exchange</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/300b.html</p><h5> Route 1 to Madigan </h5>xx:10, xx:30, xx:50<hr><h5> Route 10 to Lewis North </h5>18:50, 20:10, 21:30, 22:50<hr><h5> Route 10 to Lewis North </h5>18:50, 20:10, 21:30, 23:30, 00:50<hr><h5> Route 10 to Lewis North </h5>xx:15, xx:45<hr>]]></description>
       <styleUrl>#icon-503-777777</styleUrl>
       <Point>
-        <coordinates>-122.49411944444445,47.130766666666666,0</coordinates>
+        <coordinates>-122.58824166666666,47.09328611111111,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>(310a) Public Works</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/310a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:12, xx:32, xx:52 </p><hr>]]></description>
+      <name>(324b) Carey Theater</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/324b.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:00, xx:20, xx:40<hr><h5> Route 10 to Lewis North </h5>18:46, 20:06, 21:26, 22:46<hr><h5> Route 10 to Lewis North </h5>18:46, 20:06, 21:26, 23:26, 00:46<hr><h5> Route 10 to Lewis North </h5>xx:11, xx:41<hr>]]></description>
       <styleUrl>#icon-503-777777</styleUrl>
       <Point>
-        <coordinates>-122.60743055555555,47.09153611111111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(228b) 2-75 Ranger Battalion</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/228b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:14, 20:34, 21:54, 23:14 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:14, 20:34, 21:54, 23:54, 01:14 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:09, xx:39 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57360555555555,47.07188611111111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(745a) F ST &amp; 3rd ST</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/745a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:09, xx:29, xx:49 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48655277777777,47.13509444444444,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(223a) 5th ASOS</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/223a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:38, 19:58, 21:18, 22:38, 23:58 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:38, 19:58, 21:18, 23:18, 00:38, 01:58 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:03, xx:33 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:12, xx:32, xx:52 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57087222222222,47.087425,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(271a) 1-14 Squadron HQ</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/271a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:41, 20:01, 21:21, 22:41 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:41, 20:01, 21:21, 23:21, 00:41 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:06, xx:36 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:15, xx:35, xx:55 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58156666666666,47.07107777777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(112a) Fisher House</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/112a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:02, xx:22, xx:42 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:07, 19:27, 20:47, 22:07, 23:27 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:07, 19:27, 20:47, 22:47, 00:07, 01:27 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5><p> xx:22, xx:52 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.54395555555556,47.10152777777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(141a) Hillside at Jackson</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/141a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:02, xx:22, xx:42 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:37, 19:57, 21:17, 22:37, 23:57 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:37, 19:57, 21:17, 23:17, 00:37, 01:57 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:02, xx:32 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.56160277777778,47.09863055555556,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(704a) McChord Clinic</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/704a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:08, xx:28, xx:48 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:13, 19:33, 20:53, 22:13, 23:33 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5><p> 18:13, 19:33, 20:53, 22:53, 00:13, 01:33 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5><p> xx:28, xx:58 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49383055555556,47.13077222222222,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(308b) I Corps</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/308b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:01, xx:21, xx:41 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:47, 20:07, 21:27, 22:47 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:47, 20:07, 21:27, 23:27, 00:47 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:12, xx:42 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:01, xx:21, xx:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60364444444444,47.090297222222226,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(800a) North Gate External</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/800a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> 07:15, 07:35, 15:55, 16:15, 16:35, 16:55, 17:15, 17:35 </p><hr><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to McChord Lodging, Lakewood </h5><p> 06:57 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.48339722222222,47.15629444444444,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(212b) Stone Education</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/212b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:12, xx:32, xx:52 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:11, xx:31, xx:51 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.5765,47.09475833333334,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(311b) DFMWR</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/311b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:01, xx:21, xx:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60950555555554,47.091972222222225,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(112b) Fisher House</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/112b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:13, xx:33, xx:53 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5><p> 18:28, 19:48, 21:08, 22:28, 23:48 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5><p> 18:28, 19:48, 21:08, 23:08, 00:28, 01:48 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5><p> xx:18, xx:48 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.54383333333332,47.10158333333334,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(450c) Lewis North ACU</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/450c.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:00, 20:20, 21:40, 23:00 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:00, 20:20, 21:40, 23:40, 01:00 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:25, xx:55 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Post Exchange </h5><p> xx:18, xx:38, xx:58 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59889722222222,47.126044444444446,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(276b) Stryker &amp; 41st Division</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/276b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:10, 20:30, 21:50, 23:10 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:10, 20:30, 21:50, 23:50, 01:10 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:05, xx:35 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59336944444443,47.08170833333334,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(754a) MWR Craft Shop</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/754a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:10, xx:30, xx:50 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.4925638888889,47.14183333333333,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(481a) 2-2 SBCT Barracks</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/481a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:00, 20:20, 21:40, 23:00 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:00, 20:20, 21:40, 23:40, 01:00 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:25, xx:55 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Post Exchange </h5><p> xx:18, xx:38, xx:58 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60031111111111,47.12695277777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(766a) C-141 Memorial</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/766a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5><p> xx:11, xx:31, xx:51 </p><hr><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:04, xx:24, xx:44 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.486425,47.143575,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(228a) 2-75 Ranger Battalion</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/228a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:40, 20:00, 21:20, 22:40 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:40, 20:00, 21:20, 23:20, 00:40 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:05, xx:35 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:14, xx:34, xx:54 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57375833333333,47.07184166666667,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(225b) Soldiers Fieldhouse</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/225b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:15, 20:35, 21:55, 23:15 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:15, 20:35, 21:55, 23:55, 01:15 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:10, xx:40 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57025277777777,47.082169444444446,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(754b) MWR Craft Shop</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/754b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:05, xx:25, xx:45 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.4927111111111,47.14190555555555,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(276a) Stryker &amp; 41st Division</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/276a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:44, 20:04, 21:24, 22:44 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:44, 20:04, 21:24, 23:24, 00:44 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:09, xx:39 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:18, xx:38, xx:58 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59335,47.08181944444445,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(322a) McVeigh Fitness</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/322a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:08, 20:28, 21:48, 23:08 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:08, 20:28, 21:48, 23:48, 01:08 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:03, xx:33 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60096666666666,47.08813888888889,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(224b) DPTMS Training Branch</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/224b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:15, 20:35, 21:55, 23:15 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:15, 20:35, 21:55, 23:55, 01:15 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:10, xx:40 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57029166666666,47.084941666666666,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(300c) Post Exchange</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/300c.html</p><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:10, xx:30, xx:50 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58835833333333,47.09326111111111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(782b) North Gate Internal</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/782b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> 07:01, 07:21, 07:41, 16:01, 16:21, 16:41, 17:01, 17:21, 17:41 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.483625,47.154111111111106,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(275a) 1st Brigade Headquarters</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/275a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:43, 20:03, 21:23, 22:43 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:43, 20:03, 21:23, 23:23, 00:43 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:08, xx:38 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:18, xx:38, xx:58 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58955833333333,47.07945,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(275b) 1st Brigade Headquarters</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/275b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:11, 20:31, 21:51, 23:11 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:11, 20:31, 21:51, 23:51, 01:11 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:06, xx:36 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.59012222222222,47.07966944444445,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(212a) Stone Education</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/212a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:04, xx:24, xx:44 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.57643611111111,47.094905555555556,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(140b) Four Chaplains Chapel</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/140b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:16, xx:36, xx:56 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:18, 20:38, 21:58, 23:18 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:18, 20:38, 21:58, 23:58, 01:18 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:13, xx:43 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.55476666666667,47.10319166666667,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(272a) 2-3 Battalion HQ</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/272a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:42, 20:02, 21:22, 22:42 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:42, 20:02, 21:22, 23:22, 00:42 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:07, xx:37 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:16, xx:36, xx:56 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58292222222222,47.07353611111112,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(388a) ITAM</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/388a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5><p> xx:15, xx:35, xx:55 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.6218111111111,47.089111111111116,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(453a) Hawk Education</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/453a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:54, 20:14, 21:34, 22:54 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:54, 20:14, 21:34, 23:34, 00:54 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:19, xx:49 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Warrior Zone </h5><p> xx:16, xx:36, xx:56 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.604075,47.12633611111111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(274a) Sheridan Gym</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/274a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 18:43, 20:03, 21:23, 22:43 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 18:43, 20:03, 21:23, 23:23, 00:43 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:08, xx:38 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5><p> xx:17, xx:37, xx:57 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.58714166666667,47.07727777777778,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(451a) Lewis North Shoppette</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/451a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:00, 20:20, 21:40, 23:00 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:00, 20:20, 21:40, 23:40, 01:00 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:25, xx:55 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Post Exchange </h5><p> xx:18, xx:38, xx:58 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.60040277777777,47.124161111111114,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(730a) McChord DFAC</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/730a.html</p><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to McChord Dining </h5><p> 06:30, 06:40, 06:50 </p><hr><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to McChord Lodging, Lakewood </h5><p> 06:30, 06:40, 06:50 </p><hr>]]></description>
-      <styleUrl>#icon-503-777777</styleUrl>
-      <Point>
-        <coordinates>-122.49263055555555,47.12902777777778,0</coordinates>
+        <coordinates>-122.59788055555555,47.088166666666666,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
       <name>(480a) Warrior Zone</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/480a.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5><p> 19:00, 20:20, 21:40, 23:00 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:00, 20:20, 21:40, 23:00 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5><p> 19:00, 20:20, 21:40, 23:40, 01:00 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:00, 20:20, 21:40, 23:40, 01:00 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5><p> xx:25, xx:55 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:25, xx:55 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Warrior Zone </h5><p> xx:18, xx:38, xx:58 </p><hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Post Exchange </h5><p> xx:18, xx:38, xx:58 </p><hr>]]></description>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/480a.html</p><h5> Route 4 to Warrior Zone </h5>xx:18, xx:38, xx:58<hr><h5> Route 4 to Post Exchange </h5>xx:18, xx:38, xx:58<hr><h5> Route 10 to Lewis North </h5>19:00, 20:20, 21:40, 23:00<hr><h5> Route 10 to Madigan </h5>19:00, 20:20, 21:40, 23:00<hr><h5> Route 10 to Lewis North </h5>19:00, 20:20, 21:40, 23:40, 01:00<hr><h5> Route 10 to Madigan </h5>19:00, 20:20, 21:40, 23:40, 01:00<hr><h5> Route 10 to Lewis North </h5>xx:25, xx:55<hr><h5> Route 10 to Madigan </h5>xx:25, xx:55<hr>]]></description>
       <styleUrl>#icon-503-777777</styleUrl>
       <Point>
         <coordinates>-122.60281111111111,47.12853333333334,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>(741b) C ST &amp; 4TH ST</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/741b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:07, xx:27, xx:47 </p><hr>]]></description>
+      <name>(379a) Albanese Hall</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/379a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:14, xx:34, xx:54<hr>]]></description>
       <styleUrl>#icon-503-777777</styleUrl>
       <Point>
-        <coordinates>-122.49118888888889,47.133202777777775,0</coordinates>
+        <coordinates>-122.62551111111111,47.08792777777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(140a) Four Chaplains Chapel</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/140a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:01, xx:21, xx:41<hr><h5> Route 10 to Lewis North </h5>18:36, 19:56, 21:16, 22:36, 23:56<hr><h5> Route 10 to Lewis North </h5>18:36, 19:56, 21:16, 23:16, 00:36, 01:56<hr><h5> Route 10 to Lewis North </h5>xx:01, xx:31<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.55570833333333,47.10297777777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(101b) SFAC and WTB</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/101b.html</p><h5> Route 1 to Madigan </h5>xx:16, xx:36, xx:56<hr><h5> Route 10 to Madigan </h5>19:18, 20:38, 21:58, 23:18<hr><h5> Route 10 to Madigan </h5>19:18, 20:38, 21:58, 23:58, 01:18<hr><h5> Route 10 to Madigan </h5>xx:13, xx:43<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.55356944444443,47.105602777777776,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(313a) French Theatre</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/313a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:12, xx:32, xx:52<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.61281666666666,47.09303611111111,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(801a) 512 Park &amp; Ride</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/801a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>07:20, 07:40, 16:00, 16:20, 16:40, 17:00, 17:20, 17:40<hr><h5> Route 2 to Madigan </h5>07:00, 07:20, 07:40, 16:00, 16:20, 16:40, 17:00, 17:20, 17:40<hr><h5> Route 2 to Lakewood, McChord Lodging </h5>07:00<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48318333333333,47.160830555555556,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(320b) Jensen Gym</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/320b.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:01, xx:21, xx:41<hr><h5> Route 10 to Lewis North </h5>18:47, 20:07, 21:27, 22:47<hr><h5> Route 10 to Lewis North </h5>18:47, 20:07, 21:27, 23:27, 00:47<hr><h5> Route 10 to Lewis North </h5>xx:12, xx:42<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60511666666666,47.08893888888889,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(110a) Madigan HHC</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/110a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:01, xx:21, xx:41<hr><h5> Route 20 to McChord Lodging </h5>18:06, 19:26, 20:46, 22:06, 23:26<hr><h5> Route 20 to McChord Lodging </h5>18:06, 19:26, 20:46, 22:46, 00:06, 01:26<hr><h5> Route 20 to McChord Lodging </h5>xx:21, xx:51<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.54540277777778,47.10609166666667,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(450c) Lewis North ACU</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/450c.html</p><h5> Route 4 to Post Exchange </h5>xx:18, xx:38, xx:58<hr><h5> Route 10 to Madigan </h5>19:00, 20:20, 21:40, 23:00<hr><h5> Route 10 to Madigan </h5>19:00, 20:20, 21:40, 23:40, 01:00<hr><h5> Route 10 to Madigan </h5>xx:25, xx:55<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59889722222222,47.126044444444446,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(704b) McChord Clinic</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/704b.html</p><h5> Route 2 to Madigan </h5>xx:07, xx:27, xx:47<hr><h5> Route 20 to Madigan </h5>18:21, 19:41, 21:01, 22:21, 23:41<hr><h5> Route 20 to Madigan </h5>18:21, 19:41, 21:01, 23:01, 00:21, 01:41<hr><h5> Route 20 to Madigan </h5>xx:11, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49411944444445,47.130766666666666,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(100a) Madigan Hospital</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/100a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Joint Base Headquarters </h5>xx:00, xx:20, xx:40<hr><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5>xx:00, xx:20, xx:40<hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Lewis North </h5>18:35, 19:55, 21:15, 22:35, 23:55<hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5>18:05, 19:25, 20:45, 22:05, 23:25<hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5>19:25, 20:45, 22:05, 23:25<hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Lewis North </h5>18:35, 19:55, 21:15, 23:15, 00:35, 01:55<hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5>18:05, 19:25, 20:45, 22:45, 00:05, 01:25<hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5>19:25, 20:45, 22:05, 00:05, 01:25<hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Lewis North </h5>xx:00, xx:30<hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5>xx:20, xx:50<hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5>xx:20, xx:50<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.55411111111111,47.10863333333334,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(765a) Air Crew Life Support</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/765a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:10, xx:30, xx:50<hr><h5> Route 2 to Madigan </h5>xx:04, xx:24, xx:44<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48670833333334,47.142427777777776,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(750a) B ST &amp; 4TH ST</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/750a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:09, xx:29, xx:49<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.4889388888889,47.13611944444445,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(782b) North Gate Internal</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/782b.html</p><h5> Route 2 to Madigan </h5>07:01, 07:21, 07:41, 16:01, 16:21, 16:41, 17:01, 17:21, 17:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.483625,47.154111111111106,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(112b) Fisher House</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/112b.html</p><h5> Route 2 to Madigan </h5>xx:13, xx:33, xx:53<hr><h5> Route 20 to Madigan </h5>18:28, 19:48, 21:08, 22:28, 23:48<hr><h5> Route 20 to Madigan </h5>18:28, 19:48, 21:08, 23:08, 00:28, 01:48<hr><h5> Route 20 to Madigan </h5>xx:18, xx:48<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.54383333333332,47.10158333333334,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(201b) National Guard</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/201b.html</p><h5> Route 1 to Madigan </h5>xx:13, xx:33, xx:53<hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 3 to Army Airfield Loop </h5>xx:11, xx:31, xx:51<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57203333333332,47.09205555555556,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(313b) French Theatre</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/313b.html</p><h5> Route 1 to Madigan </h5>xx:00, xx:20, xx:40<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.61234444444443,47.09278333333334,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(744a) The Castle &amp; Customer Service Mall</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/744a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:09, xx:29, xx:49<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48717777777777,47.13385,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(310b) Public Works</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/310b.html</p><h5> Route 1 to Madigan </h5>xx:01, xx:21, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60718333333332,47.09130277777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(307a) Rainier Inn</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/307a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:11, xx:31, xx:51<hr><h5> Route 10 to Madigan </h5>19:07, 20:27, 21:47, 23:07<hr><h5> Route 10 to Madigan </h5>19:07, 20:27, 21:47, 23:47, 01:07<hr><h5> Route 10 to Madigan </h5>xx:02, xx:32<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.6001861111111,47.08996944444445,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(200b) 3rd Division &amp; Pendleton</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/200b.html</p><h5> Route 1 to Madigan </h5>xx:14, xx:34, xx:54<hr><h5> Route 10 to Madigan </h5>19:16, 20:36, 21:56, 23:16<hr><h5> Route 10 to Madigan </h5>19:16, 20:36, 21:56, 23:56, 01:16<hr><h5> Route 10 to Madigan </h5>xx:11, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.56904166666666,47.0919,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(113a) Madigan Annex</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/113a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:02, xx:22, xx:42<hr><h5> Route 20 to McChord Lodging </h5>18:07, 19:27, 20:47, 22:07, 23:27<hr><h5> Route 20 to McChord Lodging </h5>18:07, 19:27, 20:47, 22:47, 00:07, 01:27<hr><h5> Route 20 to McChord Lodging </h5>xx:22, xx:52<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.54009444444445,47.10096388888889,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(274a) Sheridan Gym</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/274a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:17, xx:37, xx:57<hr><h5> Route 10 to Lewis North </h5>18:43, 20:03, 21:23, 22:43<hr><h5> Route 10 to Lewis North </h5>18:43, 20:03, 21:23, 23:23, 00:43<hr><h5> Route 10 to Lewis North </h5>xx:08, xx:38<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58714166666667,47.07727777777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(327a) The Commons</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/327a.html</p><h5> Route 10 to Madigan </h5>19:09, 20:29, 21:49, 23:09<hr><h5> Route 10 to Madigan </h5>19:09, 20:29, 21:49, 23:49, 01:09<hr><h5> Route 10 to Madigan </h5>xx:04, xx:34<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59161944444443,47.087894444444444,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(780a) Passenger Terminal</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/780a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>08:00, 08:20, 08:40, 09:00, 09:20, 09:40, 10:00, 10:20, 10:40, 11:00, 11:20, 11:40, 12:00, 12:20, 12:40, 13:00, 13:20, 13:40, 14:00, 14:20, 14:40, 15:00, 15:20, 15:40, 18:00<hr><h5> Route 2 to Madigan </h5>xx:01, xx:21, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.4850388888889,47.15034166666666,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(276a) Stryker &amp; 41st Division</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/276a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:18, xx:38, xx:58<hr><h5> Route 10 to Lewis North </h5>18:44, 20:04, 21:24, 22:44<hr><h5> Route 10 to Lewis North </h5>18:44, 20:04, 21:24, 23:24, 00:44<hr><h5> Route 10 to Lewis North </h5>xx:09, xx:39<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59335,47.08181944444445,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(300c) Post Exchange</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/300c.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:10, xx:30, xx:50<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58835833333333,47.09326111111111,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(225a) Soldiers Fieldhouse</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/225a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:13, xx:33, xx:53<hr><h5> Route 10 to Lewis North </h5>18:39, 19:59, 21:19, 22:39, 23:59<hr><h5> Route 10 to Lewis North </h5>18:39, 19:59, 21:19, 23:19, 00:39, 01:59<hr><h5> Route 10 to Lewis North </h5>xx:04, xx:34<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57041666666666,47.08191666666667,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(272b) 2-3 Battalion HQ</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/272b.html</p><h5> Route 10 to Madigan </h5>19:12, 20:32, 21:52, 23:12<hr><h5> Route 10 to Madigan </h5>19:12, 20:32, 21:52, 23:52, 01:12<hr><h5> Route 10 to Madigan </h5>xx:07, xx:37<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58306388888889,47.073475,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(322a) McVeigh Fitness</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/322a.html</p><h5> Route 10 to Madigan </h5>19:08, 20:28, 21:48, 23:08<hr><h5> Route 10 to Madigan </h5>19:08, 20:28, 21:48, 23:48, 01:08<hr><h5> Route 10 to Madigan </h5>xx:03, xx:33<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60096666666666,47.08813888888889,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(201a) National Guard</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/201a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:03, xx:23, xx:43<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57184166666666,47.09203611111111,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(223a) 5th ASOS</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/223a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:12, xx:32, xx:52<hr><h5> Route 10 to Lewis North </h5>18:38, 19:58, 21:18, 22:38, 23:58<hr><h5> Route 10 to Lewis North </h5>18:38, 19:58, 21:18, 23:18, 00:38, 01:58<hr><h5> Route 10 to Lewis North </h5>xx:03, xx:33<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57087222222222,47.087425,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
       <name>(271b) 1-14 Squadron HQ</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/271b.html</p><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 10 to Madigan </h5><p> 19:13, 20:33, 21:53, 23:13 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 10 to Madigan </h5><p> 19:13, 20:33, 21:53, 23:53, 01:13 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 10 to Madigan </h5><p> xx:08, xx:38 </p><hr>]]></description>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/271b.html</p><h5> Route 10 to Madigan </h5>19:13, 20:33, 21:53, 23:13<hr><h5> Route 10 to Madigan </h5>19:13, 20:33, 21:53, 23:53, 01:13<hr><h5> Route 10 to Madigan </h5>xx:08, xx:38<hr>]]></description>
       <styleUrl>#icon-503-777777</styleUrl>
       <Point>
         <coordinates>-122.58170833333332,47.07102777777778,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
+      <name>(766a) C-141 Memorial</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/766a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:11, xx:31, xx:51<hr><h5> Route 2 to Madigan </h5>xx:04, xx:24, xx:44<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.486425,47.143575,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(212b) Stone Education</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/212b.html</p><h5> Route 1 to Madigan </h5>xx:12, xx:32, xx:52<hr><h5> Route 3 to Army Airfield Loop </h5>xx:11, xx:31, xx:51<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.5765,47.09475833333334,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(777b) Flight Simulator</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/777b.html</p><h5> Route 2 to Madigan </h5>xx:02, xx:22, xx:42<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49145,47.15221944444444,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(745a) F ST &amp; 3rd ST</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/745a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:09, xx:29, xx:49<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48655277777777,47.13509444444444,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(275a) 1st Brigade Headquarters</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/275a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:18, xx:38, xx:58<hr><h5> Route 10 to Lewis North </h5>18:43, 20:03, 21:23, 22:43<hr><h5> Route 10 to Lewis North </h5>18:43, 20:03, 21:23, 23:23, 00:43<hr><h5> Route 10 to Lewis North </h5>xx:08, xx:38<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58955833333333,47.07945,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(311a) DFMWR</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/311a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:12, xx:32, xx:52<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60951944444444,47.09213888888889,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(101a) SFAC and WTB</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/101a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:00, xx:20, xx:40<hr><h5> Route 10 to Lewis North </h5>18:35, 19:55, 21:15, 22:35, 23:55<hr><h5> Route 10 to Lewis North </h5>18:35, 19:55, 21:15, 23:15, 00:35, 01:55<hr><h5> Route 10 to Lewis North </h5>xx:00, xx:30<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.554025,47.10570277777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(772b) Evergreen McChord Lodging</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/772b.html</p><h5> Route 2 to Madigan </h5>xx:03, xx:23, xx:43<hr><h5> Route 2 to McChord Dining </h5>06:25, 06:35, 06:45<hr><h5> Route 20 to Madigan </h5>18:20, 19:40, 21:00, 22:20, 23:40<hr><h5> Route 20 to Madigan </h5>18:20, 19:40, 21:00, 23:00, 00:20, 01:40<hr><h5> Route 20 to Madigan </h5>xx:10, xx:40<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49400555555556,47.14445833333333,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(701b) McChord Exchange</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/701b.html</p><h5> Route 2 to Madigan </h5>xx:08, xx:28, xx:48<hr><h5> Route 20 to Madigan </h5>18:22, 19:42, 21:02, 22:22, 23:42<hr><h5> Route 20 to Madigan </h5>18:22, 19:42, 21:02, 23:02, 00:22, 01:42<hr><h5> Route 20 to Madigan </h5>xx:12, xx:42<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49410833333333,47.12656111111111,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(270a) 296 BSB and 23 BEB</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/270a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:15, xx:35, xx:55<hr><h5> Route 10 to Lewis North </h5>18:41, 20:01, 21:21, 22:41<hr><h5> Route 10 to Lewis North </h5>18:41, 20:01, 21:21, 23:21, 00:41<hr><h5> Route 10 to Lewis North </h5>xx:06, xx:36<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58099722222222,47.06952777777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(741b) C ST &amp; 4TH ST</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/741b.html</p><h5> Route 2 to Madigan </h5>xx:07, xx:27, xx:47<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49118888888889,47.133202777777775,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(110b) Madigan HHC</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/110b.html</p><h5> Route 2 to Madigan </h5>xx:14, xx:34, xx:54<hr><h5> Route 20 to Madigan </h5>18:28, 19:48, 21:08, 22:28, 23:48<hr><h5> Route 20 to Madigan </h5>18:28, 19:48, 21:08, 23:08, 00:28, 01:48<hr><h5> Route 20 to Madigan </h5>xx:18, xx:48<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.54525833333334,47.10617222222222,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(226b) 16th CAB HQ</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/226b.html</p><h5> Route 10 to Madigan </h5>19:15, 20:35, 21:55, 23:15<hr><h5> Route 10 to Madigan </h5>19:15, 20:35, 21:55, 23:55, 01:15<hr><h5> Route 10 to Madigan </h5>xx:10, xx:40<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57112222222221,47.07790000000001,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(308b) I Corps</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/308b.html</p><h5> Route 1 to Madigan </h5>xx:01, xx:21, xx:41<hr><h5> Route 3 to Army Airfield Loop </h5>xx:01, xx:21, xx:41<hr><h5> Route 10 to Lewis North </h5>18:47, 20:07, 21:27, 22:47<hr><h5> Route 10 to Lewis North </h5>18:47, 20:07, 21:27, 23:27, 00:47<hr><h5> Route 10 to Lewis North </h5>xx:12, xx:42<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60364444444444,47.090297222222226,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(481a) 2-2 SBCT Barracks</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/481a.html</p><h5> Route 4 to Post Exchange </h5>xx:18, xx:38, xx:58<hr><h5> Route 10 to Madigan </h5>19:00, 20:20, 21:40, 23:00<hr><h5> Route 10 to Madigan </h5>19:00, 20:20, 21:40, 23:40, 01:00<hr><h5> Route 10 to Madigan </h5>xx:25, xx:55<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60031111111111,47.12695277777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(388a) ITAM</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/388a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:15, xx:35, xx:55<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.6218111111111,47.089111111111116,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(701a) McChord Exchange</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/701a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:07, xx:27, xx:47<hr><h5> Route 20 to McChord Lodging </h5>18:12, 19:32, 20:52, 22:12, 23:32<hr><h5> Route 20 to McChord Lodging </h5>18:12, 19:32, 20:52, 22:52, 00:12, 01:32<hr><h5> Route 20 to McChord Lodging </h5>xx:27, xx:57<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49389166666667,47.12623333333333,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(273b) Soldiers Chapel</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/273b.html</p><h5> Route 10 to Madigan </h5>19:12, 20:32, 21:52, 23:12<hr><h5> Route 10 to Madigan </h5>19:12, 20:32, 21:52, 23:52, 01:12<hr><h5> Route 10 to Madigan </h5>xx:07, xx:37<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58525833333333,47.07543611111112,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(140b) Four Chaplains Chapel</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/140b.html</p><h5> Route 1 to Madigan </h5>xx:16, xx:36, xx:56<hr><h5> Route 10 to Madigan </h5>19:18, 20:38, 21:58, 23:18<hr><h5> Route 10 to Madigan </h5>19:18, 20:38, 21:58, 23:58, 01:18<hr><h5> Route 10 to Madigan </h5>xx:13, xx:43<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.55476666666667,47.10319166666667,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(745b) F ST &amp; 3rd ST</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/745b.html</p><h5> Route 2 to Madigan </h5>xx:06, xx:26, xx:46<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48672222222223,47.13511666666667,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(750b) B ST &amp; 4TH ST</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/750b.html</p><h5> Route 2 to Madigan </h5>xx:06, xx:26, xx:46<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48930277777778,47.136208333333336,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(320a) Jensen Gym</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/320a.html</p><h5> Route 10 to Madigan </h5>19:07, 20:27, 21:47, 23:07<hr><h5> Route 10 to Madigan </h5>19:07, 20:27, 21:47, 23:47, 01:07<hr><h5> Route 10 to Madigan </h5>xx:02, xx:32<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60519444444444,47.088794444444446,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(730a) McChord DFAC</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/730a.html</p><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to McChord Dining </h5>06:30, 06:40, 06:50<hr><h4>Monday - Friday | 06:25-07:00</h4><h5> Route 2 to Lakewood, McChord Lodging </h5>06:30, 06:40, 06:50<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49263055555555,47.12902777777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(271a) 1-14 Squadron HQ</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/271a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:15, xx:35, xx:55<hr><h5> Route 10 to Lewis North </h5>18:41, 20:01, 21:21, 22:41<hr><h5> Route 10 to Lewis North </h5>18:41, 20:01, 21:21, 23:21, 00:41<hr><h5> Route 10 to Lewis North </h5>xx:06, xx:36<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58156666666666,47.07107777777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(220a) Pendleton Shoppette</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/220a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:11, xx:31, xx:51<hr><h5> Route 10 to Lewis North </h5>18:38, 19:58, 21:18, 22:38, 23:58<hr><h5> Route 10 to Lewis North </h5>18:38, 19:58, 21:18, 23:18, 00:38, 01:58<hr><h5> Route 10 to Lewis North </h5>xx:03, xx:33<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57193333333333,47.09095833333333,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(705a) COL Joe Jackson &amp; Barnes</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/705a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:08, xx:28, xx:48<hr><h5> Route 20 to McChord Lodging </h5>18:13, 19:33, 20:53, 22:13, 23:33<hr><h5> Route 20 to McChord Lodging </h5>18:13, 19:33, 20:53, 22:53, 00:13, 01:33<hr><h5> Route 20 to McChord Lodging </h5>xx:28, xx:58<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49384166666667,47.132019444444445,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(228a) 2-75 Ranger Battalion</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/228a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:14, xx:34, xx:54<hr><h5> Route 10 to Lewis North </h5>18:40, 20:00, 21:20, 22:40<hr><h5> Route 10 to Lewis North </h5>18:40, 20:00, 21:20, 23:20, 00:40<hr><h5> Route 10 to Lewis North </h5>xx:05, xx:35<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57375833333333,47.07184166666667,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(305a) Waller Hall</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/305a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:10, xx:30, xx:50<hr><h5> Route 10 to Madigan </h5>19:06, 20:26, 21:46, 23:06<hr><h5> Route 10 to Madigan </h5>19:06, 20:26, 21:46, 23:46, 01:06<hr><h5> Route 10 to Madigan </h5>xx:01, xx:31<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59577777777777,47.09000555555556,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(274b) Sheridan Gym</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/274b.html</p><h5> Route 10 to Madigan </h5>19:11, 20:31, 21:51, 23:11<hr><h5> Route 10 to Madigan </h5>19:11, 20:31, 21:51, 23:51, 01:11<hr><h5> Route 10 to Madigan </h5>xx:06, xx:36<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58720555555556,47.07712777777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(220b) Pendleton Shoppette</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/220b.html</p><h5> Route 10 to Madigan </h5>19:16, 20:36, 21:56, 23:16<hr><h5> Route 10 to Madigan </h5>19:16, 20:36, 21:56, 23:56, 01:16<hr><h5> Route 10 to Madigan </h5>xx:11, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57195,47.090316666666666,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(375a) 9TH Division &amp; Mann AVE</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/375a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:14, xx:34, xx:54<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.6172111111111,47.08605555555556,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(754b) MWR Craft Shop</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/754b.html</p><h5> Route 2 to Madigan </h5>xx:05, xx:25, xx:45<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.4927111111111,47.14190555555555,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(325b) Cowan Stadium</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/325b.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:00, xx:20, xx:40<hr><h5> Route 10 to Lewis North </h5>18:46, 20:06, 21:26, 22:46<hr><h5> Route 10 to Lewis North </h5>18:46, 20:06, 21:26, 23:26, 00:46<hr><h5> Route 10 to Lewis North </h5>xx:11, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59508888888888,47.08813333333334,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(800a) North Gate External</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/800a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>07:15, 07:35, 15:55, 16:15, 16:35, 16:55, 17:15, 17:35<hr><h5> Route 2 to Lakewood, McChord Lodging </h5>06:57<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48339722222222,47.15629444444444,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(276b) Stryker &amp; 41st Division</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/276b.html</p><h5> Route 10 to Madigan </h5>19:10, 20:30, 21:50, 23:10<hr><h5> Route 10 to Madigan </h5>19:10, 20:30, 21:50, 23:50, 01:10<hr><h5> Route 10 to Madigan </h5>xx:05, xx:35<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59336944444443,47.08170833333334,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(217b) Hillside at Colorado</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/217b.html</p><h5> Route 1 to Madigan </h5>xx:11, xx:31, xx:51<hr><h5> Route 3 to Army Airfield Loop </h5>xx:10, xx:30, xx:50<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58414722222221,47.09715,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(309a) Reception Center</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/309a.html</p><h5> Route 1 to Madigan </h5>xx:01, xx:21, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60514166666665,47.09070277777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(224b) DPTMS Training Branch</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/224b.html</p><h5> Route 10 to Madigan </h5>19:15, 20:35, 21:55, 23:15<hr><h5> Route 10 to Madigan </h5>19:15, 20:35, 21:55, 23:55, 01:15<hr><h5> Route 10 to Madigan </h5>xx:10, xx:40<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57029166666666,47.084941666666666,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(378a) Pittman Complex</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/378a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:14, xx:34, xx:54<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.62300833333333,47.08724166666667,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(304b) Commissary</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/304b.html</p><h5> Route 1 to Madigan </h5>xx:02, xx:22, xx:42<hr><h5> Route 3 to Army Airfield Loop </h5>xx:02, xx:22, xx:42<hr><h5> Route 10 to Lewis North </h5>18:49, 20:09, 21:29, 22:49<hr><h5> Route 10 to Lewis North </h5>18:49, 20:09, 21:29, 23:29, 00:49<hr><h5> Route 10 to Lewis North </h5>xx:14, xx:44<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59220555555555,47.08977222222222,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(778a) 373rd Training Detachment</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/778a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:14, xx:34, xx:54<hr><h5> Route 2 to Lakewood, McChord Lodging </h5>06:56<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48755555555556,47.15205833333333,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(327b) The Commons</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/327b.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:19, xx:39, xx:59<hr><h5> Route 10 to Lewis North </h5>18:46, 20:06, 21:26, 22:46<hr><h5> Route 10 to Lewis North </h5>18:46, 20:06, 21:26, 23:26, 00:46<hr><h5> Route 10 to Lewis North </h5>xx:11, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59046666666666,47.087922222222225,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(316a) Main Chapel</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/316a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:13, xx:33, xx:53<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.61364722222221,47.09140555555556,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(704a) McChord Clinic</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/704a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:08, xx:28, xx:48<hr><h5> Route 20 to McChord Lodging </h5>18:13, 19:33, 20:53, 22:13, 23:33<hr><h5> Route 20 to McChord Lodging </h5>18:13, 19:33, 20:53, 22:53, 00:13, 01:33<hr><h5> Route 20 to McChord Lodging </h5>xx:28, xx:58<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49383055555556,47.13077222222222,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(325a) Cowan Stadium</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/325a.html</p><h5> Route 10 to Madigan </h5>19:08, 20:28, 21:48, 23:08<hr><h5> Route 10 to Madigan </h5>19:08, 20:28, 21:48, 23:48, 01:08<hr><h5> Route 10 to Madigan </h5>xx:03, xx:33<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59509444444444,47.08800277777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(212a) Stone Education</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/212a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:04, xx:24, xx:44<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57643611111111,47.094905555555556,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(777a) Flight Simulator</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/777a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:13, xx:33, xx:53<hr><h5> Route 2 to Lakewood, McChord Lodging </h5>06:55<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49098611111111,47.15205833333333,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(772a) Evergreen McChord Lodging</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/772a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:13, xx:33, xx:53<hr><h5> Route 2 to Lakewood, McChord Lodging </h5>06:35, 06:45, 06:55<hr><h5> Route 20 to McChord Lodging </h5>18:20, 19:40, 21:00, 22:20, 23:40<hr><h5> Route 20 to McChord Lodging </h5>18:20, 19:40, 21:00, 23:00, 00:20, 01:40<hr><h5> Route 20 to McChord Lodging </h5>xx:10, xx:40<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49375833333333,47.144425,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(778b) 373rd Training Detachment</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/778b.html</p><h5> Route 2 to Madigan </h5>xx:02, xx:22, xx:42<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48795555555556,47.15218888888889,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(310a) Public Works</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/310a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:12, xx:32, xx:52<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60743055555555,47.09153611111111,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(300d) Post Exchange</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/300d.html</p><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Warrior Zone </h5>xx:10, xx:30, xx:50<hr><h4>Monday - Friday | 08:00-18:00</h4><h5> Route 4 to Post Exchange </h5>xx:10, xx:30, xx:50<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58863888888888,47.093161111111115,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(451a) Lewis North Shoppette</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/451a.html</p><h5> Route 4 to Post Exchange </h5>xx:18, xx:38, xx:58<hr><h5> Route 10 to Madigan </h5>19:00, 20:20, 21:40, 23:00<hr><h5> Route 10 to Madigan </h5>19:00, 20:20, 21:40, 23:40, 01:00<hr><h5> Route 10 to Madigan </h5>xx:25, xx:55<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60040277777777,47.124161111111114,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(311b) DFMWR</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/311b.html</p><h5> Route 1 to Madigan </h5>xx:01, xx:21, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60950555555554,47.091972222222225,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(227b) Evergreen Theatre</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/227b.html</p><h5> Route 10 to Madigan </h5>19:14, 20:34, 21:54, 23:14<hr><h5> Route 10 to Madigan </h5>19:14, 20:34, 21:54, 23:54, 01:14<hr><h5> Route 10 to Madigan </h5>xx:09, xx:39<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.5721361111111,47.075452777777784,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(744b) The Castle &amp; Customer Service Mall</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/744b.html</p><h5> Route 2 to Madigan </h5>xx:06, xx:26, xx:46<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.487375,47.13381666666667,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(226a) 16th CAB HQ</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/226a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:13, xx:33, xx:53<hr><h5> Route 10 to Lewis North </h5>18:39, 19:59, 21:19, 22:39, 23:59<hr><h5> Route 10 to Lewis North </h5>18:39, 19:59, 21:19, 23:19, 00:39, 01:59<hr><h5> Route 10 to Lewis North </h5>xx:04, xx:34<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.5712361111111,47.07798888888889,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(113b) Madigan Annex</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/113b.html</p><h5> Route 2 to Madigan </h5>xx:13, xx:33, xx:53<hr><h5> Route 20 to Madigan </h5>18:27, 19:47, 21:07, 22:27, 23:47<hr><h5> Route 20 to Madigan </h5>18:27, 19:47, 21:07, 23:07, 00:27, 01:47<hr><h5> Route 20 to Madigan </h5>xx:17, xx:47<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.54028888888888,47.10107222222222,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(272a) 2-3 Battalion HQ</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/272a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:16, xx:36, xx:56<hr><h5> Route 10 to Lewis North </h5>18:42, 20:02, 21:22, 22:42<hr><h5> Route 10 to Lewis North </h5>18:42, 20:02, 21:22, 23:22, 00:42<hr><h5> Route 10 to Lewis North </h5>xx:07, xx:37<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58292222222222,47.07353611111112,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(453a) Hawk Education</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/453a.html</p><h5> Route 4 to Warrior Zone </h5>xx:16, xx:36, xx:56<hr><h5> Route 10 to Lewis North </h5>18:54, 20:14, 21:34, 22:54<hr><h5> Route 10 to Lewis North </h5>18:54, 20:14, 21:34, 23:34, 00:54<hr><h5> Route 10 to Lewis North </h5>xx:19, xx:49<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.604075,47.12633611111111,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(273a) Soldiers Chapel</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/273a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:17, xx:37, xx:57<hr><h5> Route 10 to Lewis North </h5>18:42, 20:02, 21:22, 22:42<hr><h5> Route 10 to Lewis North </h5>18:42, 20:02, 21:22, 23:22, 00:42<hr><h5> Route 10 to Lewis North </h5>xx:07, xx:37<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58531111111111,47.075675000000004,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(800b) North Gate External</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/800b.html</p><h5> Route 2 to Madigan </h5>07:00, 07:20, 07:40, 16:00, 16:20, 16:40, 17:00, 17:20, 17:40<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48366388888888,47.15656388888889,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(223b) 5th ASOS</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/223b.html</p><h5> Route 10 to Madigan </h5>19:16, 20:36, 21:56, 23:16<hr><h5> Route 10 to Madigan </h5>19:16, 20:36, 21:56, 23:56, 01:16<hr><h5> Route 10 to Madigan </h5>xx:11, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57077222222222,47.087697222222225,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(780c) Passenger Terminal</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/780c.html</p><h5> Route 2 to Madigan </h5>07:01, 07:21, 07:41, 16:01, 16:21, 16:41, 17:01, 17:21, 17:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48521944444444,47.15218055555555,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(200a) 3rd Division &amp; Pendleton</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/200a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:03, xx:23, xx:43<hr><h5> Route 10 to Lewis North </h5>18:38, 19:58, 21:18, 22:38, 23:58<hr><h5> Route 10 to Lewis North </h5>18:38, 19:58, 21:18, 23:18, 00:38, 01:58<hr><h5> Route 10 to Lewis North </h5>xx:03, xx:33<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.56929166666666,47.092108333333336,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(225b) Soldiers Fieldhouse</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/225b.html</p><h5> Route 10 to Madigan </h5>19:15, 20:35, 21:55, 23:15<hr><h5> Route 10 to Madigan </h5>19:15, 20:35, 21:55, 23:55, 01:15<hr><h5> Route 10 to Madigan </h5>xx:10, xx:40<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57025277777777,47.082169444444446,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(300a) Post Exchange</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/300a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:10, xx:30, xx:50<hr><h5> Route 10 to Madigan </h5>19:05, 20:25, 21:45, 23:05<hr><h5> Route 10 to Madigan </h5>19:05, 20:25, 21:45, 23:45, 01:05<hr><h5> Route 10 to Madigan </h5>xx:00, xx:30<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58870555555555,47.09334166666667,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(227a) Evergreen Theatre</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/227a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:14, xx:34, xx:54<hr><h5> Route 10 to Lewis North </h5>18:40, 20:00, 21:20, 22:40<hr><h5> Route 10 to Lewis North </h5>18:40, 20:00, 21:20, 23:20, 00:40<hr><h5> Route 10 to Lewis North </h5>xx:05, xx:35<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57229444444444,47.07545833333334,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(217a) Hillside at Colorado</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/217a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:04, xx:24, xx:44<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58324444444445,47.097033333333336,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(224a) DPTMS Training Branch</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/224a.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:12, xx:32, xx:52<hr><h5> Route 10 to Lewis North </h5>18:39, 19:59, 21:19, 22:39, 23:59<hr><h5> Route 10 to Lewis North </h5>18:39, 19:59, 21:19, 23:19, 00:39, 01:59<hr><h5> Route 10 to Lewis North </h5>xx:04, xx:34<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.5704611111111,47.08465833333334,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(275b) 1st Brigade Headquarters</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/275b.html</p><h5> Route 10 to Madigan </h5>19:11, 20:31, 21:51, 23:11<hr><h5> Route 10 to Madigan </h5>19:11, 20:31, 21:51, 23:51, 01:11<hr><h5> Route 10 to Madigan </h5>xx:06, xx:36<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59012222222222,47.07966944444445,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(112a) Fisher House</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/112a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:02, xx:22, xx:42<hr><h5> Route 20 to McChord Lodging </h5>18:07, 19:27, 20:47, 22:07, 23:27<hr><h5> Route 20 to McChord Lodging </h5>18:07, 19:27, 20:47, 22:47, 00:07, 01:27<hr><h5> Route 20 to McChord Lodging </h5>xx:22, xx:52<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.54395555555556,47.10152777777778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(304a) Commissary</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/304a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:10, xx:30, xx:50<hr><h5> Route 10 to Madigan </h5>19:06, 20:26, 21:46, 23:06<hr><h5> Route 10 to Madigan </h5>19:06, 20:26, 21:46, 23:46, 01:06<hr><h5> Route 10 to Madigan </h5>xx:01, xx:31<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.5925861111111,47.089955555555555,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(741a) C ST &amp; 4TH ST</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/741a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:08, xx:28, xx:48<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.491175,47.133069444444445,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(754a) MWR Craft Shop</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/754a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:10, xx:30, xx:50<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.4925638888889,47.14183333333333,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(315a) Joint Base Headquarters</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/315a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:00, xx:20, xx:40<hr><h5> Route 1 to Madigan </h5>xx:00, xx:20, xx:40<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.61457499999999,47.09246111111111,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
       <name>(100b) Madigan Hospital</name>
-      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/100b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5><p> xx:00, xx:20, xx:40 </p><hr><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5><p> xx:00, xx:20, xx:40 </p><hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5><p> 18:35, 19:55, 21:15, 22:35, 23:55 </p><hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5><p> 18:35, 19:55, 21:15, 23:15, 00:35, 01:55 </p><hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5><p> xx:00, xx:30 </p><hr>]]></description>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/100b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 1 to Madigan </h5>xx:00, xx:20, xx:40<hr><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5>xx:00, xx:20, xx:40<hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5>18:35, 19:55, 21:15, 22:35, 23:55<hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5>18:35, 19:55, 21:15, 23:15, 00:35, 01:55<hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5>xx:00, xx:30<hr>]]></description>
       <styleUrl>#icon-503-777777</styleUrl>
       <Point>
         <coordinates>-122.55395277777778,47.108669444444445,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(141b) Hillside at Jackson</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/141b.html</p><h5> Route 1 to Madigan </h5>xx:15, xx:35, xx:55<hr><h5> Route 10 to Madigan </h5>19:17, 20:37, 21:57, 23:17<hr><h5> Route 10 to Madigan </h5>19:17, 20:37, 21:57, 23:57, 01:17<hr><h5> Route 10 to Madigan </h5>xx:12, xx:42<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.56083611111112,47.09881111111111,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(782a) North Gate Internal</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/782a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>07:14, 07:34, 15:54, 16:14, 16:34, 16:54, 17:14, 17:34<hr><h5> Route 2 to Lakewood, McChord Lodging </h5>06:57<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.48345277777779,47.15428055555555,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(700a) Lincoln &amp; Barnes</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/700a.html</p><h5> Route 2 to McChord Field, Lakewood </h5>xx:07, xx:27, xx:47<hr><h5> Route 20 to McChord Lodging </h5>18:12, 19:32, 20:52, 22:12, 23:32<hr><h5> Route 20 to McChord Lodging </h5>18:12, 19:32, 20:52, 22:52, 00:12, 01:32<hr><h5> Route 20 to McChord Lodging </h5>xx:27, xx:57<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49385555555556,47.123047222222226,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(270b) 296 BSB and 23 BEB</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/270b.html</p><h5> Route 10 to Madigan </h5>19:13, 20:33, 21:53, 23:13<hr><h5> Route 10 to Madigan </h5>19:13, 20:33, 21:53, 23:53, 01:13<hr><h5> Route 10 to Madigan </h5>xx:08, xx:38<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.58113055555555,47.069475000000004,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(307b) Rainier Inn</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/307b.html</p><h5> Route 1 to Madigan </h5>xx:02, xx:22, xx:42<hr><h5> Route 3 to Army Airfield Loop </h5>xx:01, xx:21, xx:41<hr><h5> Route 10 to Lewis North </h5>18:48, 20:08, 21:28, 22:48<hr><h5> Route 10 to Lewis North </h5>18:48, 20:08, 21:28, 23:28, 00:48<hr><h5> Route 10 to Lewis North </h5>xx:13, xx:43<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60015277777777,47.08979166666667,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(700b) Lincoln &amp; Barnes</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/700b.html</p><h5> Route 2 to Madigan </h5>xx:08, xx:28, xx:48<hr><h5> Route 20 to Madigan </h5>18:22, 19:42, 21:02, 22:22, 23:42<hr><h5> Route 20 to Madigan </h5>18:22, 19:42, 21:02, 23:02, 00:22, 01:42<hr><h5> Route 20 to Madigan </h5>xx:12, xx:42<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49411388888889,47.12248888888889,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(141a) Hillside at Jackson</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/141a.html</p><h5> Route 1 to Joint Base Headquarters </h5>xx:02, xx:22, xx:42<hr><h5> Route 10 to Lewis North </h5>18:37, 19:57, 21:17, 22:37, 23:57<hr><h5> Route 10 to Lewis North </h5>18:37, 19:57, 21:17, 23:17, 00:37, 01:57<hr><h5> Route 10 to Lewis North </h5>xx:02, xx:32<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.56160277777778,47.09863055555556,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(228b) 2-75 Ranger Battalion</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/228b.html</p><h5> Route 10 to Madigan </h5>19:14, 20:34, 21:54, 23:14<hr><h5> Route 10 to Madigan </h5>19:14, 20:34, 21:54, 23:54, 01:14<hr><h5> Route 10 to Madigan </h5>xx:09, xx:39<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.57360555555555,47.07188611111111,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(305b) Waller Hall</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/305b.html</p><h5> Route 1 to Madigan </h5>xx:02, xx:22, xx:42<hr><h5> Route 3 to Army Airfield Loop </h5>xx:02, xx:22, xx:42<hr><h5> Route 10 to Lewis North </h5>18:48, 20:08, 21:28, 22:48<hr><h5> Route 10 to Lewis North </h5>18:48, 20:08, 21:28, 23:28, 00:48<hr><h5> Route 10 to Lewis North </h5>xx:13, xx:43<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59571666666666,47.08983611111111,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(465a) Sports Complex</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/465a.html</p><h5> Route 4 to Warrior Zone </h5>xx:17, xx:37, xx:57<hr><h5> Route 10 to Lewis North </h5>18:55, 20:15, 21:35, 22:55<hr><h5> Route 10 to Lewis North </h5>18:55, 20:15, 21:35, 23:35, 00:55<hr><h5> Route 10 to Lewis North </h5>xx:20, xx:50<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60818333333333,47.12891944444444,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(780b) Passenger Terminal</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/780b.html</p><h5> Route 2 to McChord Field, Lakewood </h5>07:14, 07:34, 15:54, 16:14, 16:34, 16:54, 17:14, 17:34<hr><h5> Route 2 to Lakewood, McChord Lodging </h5>06:56<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.4847861111111,47.15205833333333,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(324a) Carey Theater</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/324a.html</p><h5> Route 10 to Madigan </h5>19:08, 20:28, 21:48, 23:08<hr><h5> Route 10 to Madigan </h5>19:08, 20:28, 21:48, 23:48, 01:08<hr><h5> Route 10 to Madigan </h5>xx:03, xx:33<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.59783888888889,47.08804444444445,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(705b) COL Joe Jackson &amp; Barnes</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/705b.html</p><h5> Route 2 to Madigan </h5>xx:07, xx:27, xx:47<hr><h5> Route 20 to Madigan </h5>18:21, 19:41, 21:01, 22:21, 23:41<hr><h5> Route 20 to Madigan </h5>18:21, 19:41, 21:01, 23:01, 00:21, 01:41<hr><h5> Route 20 to Madigan </h5>xx:11, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.49408055555556,47.132025,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>(322b) McVeigh Fitness</name>
+      <description><![CDATA[<p>https://jblmmwr.com/golewismcchord/transit/stops/322b.html</p><h5> Route 3 to Army Airfield Loop </h5>xx:00, xx:20, xx:40<hr><h5> Route 10 to Lewis North </h5>18:46, 20:06, 21:26, 22:46<hr><h5> Route 10 to Lewis North </h5>18:46, 20:06, 21:26, 23:26, 00:46<hr><h5> Route 10 to Lewis North </h5>xx:11, xx:41<hr>]]></description>
+      <styleUrl>#icon-503-777777</styleUrl>
+      <Point>
+        <coordinates>-122.60093055555555,47.08827222222222,0</coordinates>
       </Point>
     </Placemark>
     <Style id="icon-503-777777-normal">
