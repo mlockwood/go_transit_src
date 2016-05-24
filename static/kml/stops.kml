@@ -76,8 +76,8 @@
     </Placemark>
     <Placemark>
       <name>(705b) COL Joe Jackson &amp; Barnes</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/705b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5>xx:07, xx:27, xx:47<hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5>18:21, 19:41, 21:01, 22:21, 23:41<hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5>18:21, 19:41, 21:01, 23:01, 00:21, 01:41<hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5>xx:11, xx:41<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/705b.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 741 at C ST and Col Joe Jackson.]]></description>
+      <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49408055555556,47.132025,0</coordinates>
       </Point>
@@ -132,8 +132,8 @@
     </Placemark>
     <Placemark>
       <name>(705a) COL Joe Jackson &amp; Barnes</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/705a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5>xx:08, xx:28, xx:48<hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5>18:13, 19:33, 20:53, 22:13, 23:33<hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5>18:13, 19:33, 20:53, 22:53, 00:13, 01:33<hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5>xx:28, xx:58<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/705a.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 741 at C ST and Col Joe Jackson.]]></description>
+      <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49384166666667,47.132019444444445,0</coordinates>
       </Point>
@@ -188,8 +188,8 @@
     </Placemark>
     <Placemark>
       <name>(701b) McChord Exchange</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/701b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5>xx:08, xx:28, xx:48<hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5>18:22, 19:42, 21:02, 22:22, 23:42<hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5>18:22, 19:42, 21:02, 23:02, 00:22, 01:42<hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5>xx:12, xx:42<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/701b.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 700 at Lincoln and Barnes.]]></description>
+      <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49410833333333,47.12656111111111,0</coordinates>
       </Point>
@@ -396,8 +396,8 @@
     </Placemark>
     <Placemark>
       <name>(701a) McChord Exchange</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/701a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5>xx:07, xx:27, xx:47<hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5>18:12, 19:32, 20:52, 22:12, 23:32<hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5>18:12, 19:32, 20:52, 22:52, 00:12, 01:32<hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5>xx:27, xx:57<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/701a.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 700 at Lincoln and Barnes.]]></description>
+      <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49389166666667,47.12623333333333,0</coordinates>
       </Point>
@@ -476,8 +476,8 @@
     </Placemark>
     <Placemark>
       <name>(704a) McChord Clinic</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/704a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5>xx:08, xx:28, xx:48<hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to McChord Lodging </h5>18:13, 19:33, 20:53, 22:13, 23:33<hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to McChord Lodging </h5>18:13, 19:33, 20:53, 22:53, 00:13, 01:33<hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to McChord Lodging </h5>xx:28, xx:58<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/704a.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 700 at Lincoln and Barnes.]]></description>
+      <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49383055555556,47.13077222222222,0</coordinates>
       </Point>
@@ -716,8 +716,8 @@
     </Placemark>
     <Placemark>
       <name>(704b) McChord Clinic</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/704b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5>xx:07, xx:27, xx:47<hr><h4>Sunday - Thursday | 18:00-00:00</h4><h5> Route 20 to Madigan </h5>18:21, 19:41, 21:01, 22:21, 23:41<hr><h4>Friday & Saturday | 18:00-02:00</h4><h5> Route 20 to Madigan </h5>18:21, 19:41, 21:01, 23:01, 00:21, 01:41<hr><h4>Saturday & Sunday | 10:00-18:00</h4><h5> Route 20 to Madigan </h5>xx:11, xx:41<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/704b.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 700 at Lincoln and Barnes.]]></description>
+      <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49411944444445,47.130766666666666,0</coordinates>
       </Point>
