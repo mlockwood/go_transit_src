@@ -11,11 +11,12 @@ import multiprocessing as mp
 
 # Entire scripts from src
 import src.scripts.transit.stop.stop as st
+import src.scripts.transit.route.route as rt
 import src.scripts.transit.ridership.errors as RidershipErrors
 
 # Classes and variables from src
 from src.scripts.transit.constants import PATH, BEGIN, BASELINE, INCREMENT
-from src.scripts.transit.ridership.constants import CHARS, HEADER, STANDARD, ORDER, META_MAP
+from src.scripts.transit.ridership.constants import HEADER, STANDARD, ORDER, META_MAP
 from src.scripts.utils.functions import csv_writer
 
 
@@ -33,6 +34,8 @@ class Sheet(object):
 
     objects = {}
     rewrite = {}
+    errors = []
+    warnings = []
 
     def __init__(self, file):
         self.file = file
@@ -51,17 +54,15 @@ class Sheet(object):
     @staticmethod
     def process():
         # obj_list = []
-        errors = []
-        warnings = []
 
         for dirpath, dirnames, filenames in os.walk(PATH + '/data/ridership'):
             if 'archive' in dirpath or 'archive' in dirnames:
                 continue
-            for filename in [f for f in filenames if re.search('\d{6}_S\d', f)]:
+            for filename in [f for f in filenames if re.search('\d{6}[_|\-]S\d', f)]:
                 obj = Sheet((str(dirpath) + '/' + str(filename)))
                 output = obj.read_sheet()
-                errors += output[0]
-                warnings += output[1]
+                Sheet.errors += output[0]
+                Sheet.warnings += output[1]
 
         """
         # This section is not working, it is attempting to multithread the
@@ -71,8 +72,8 @@ class Sheet(object):
         results = pool.map_async(Sheet.read_sheet, obj_list)
         """
 
-        csv_writer('{}/reports/ridership/'.format(PATH), 'errors', errors)
-        csv_writer('{}/reports/ridership/'.format(PATH), 'warnings', warnings)
+        csv_writer('{}/reports/ridership/'.format(PATH), 'errors', Sheet.errors)
+        csv_writer('{}/reports/ridership/'.format(PATH), 'warnings', Sheet.warnings)
 
         return True
 
@@ -134,7 +135,7 @@ class Sheet(object):
             # Weekdays
             else:
                 # Early morning Route 2 service only
-                if int(re.sub(':', '', self.meta['end_shift'])) <= 700:
+                if int(re.sub(':', '', self.meta['end_shift'])) <= 700 or self.meta['sheet'].lower() == 's5z':
                     self.meta['route'] = '2'
                 # Otherwise Routes 1&2
                 else:
@@ -148,7 +149,7 @@ class Sheet(object):
             # Weekdays
             else:
                 # Early morning Route 2 service only
-                if int(re.sub(':', '', self.meta['end_shift'])) <= 700:
+                if int(re.sub(':', '', self.meta['end_shift'])) <= 700 or self.meta['sheet'].lower() == 's5z':
                     self.meta['route'] = '2'
                 # Otherwise Routes 1&2
                 else:
@@ -312,7 +313,7 @@ class Sheet(object):
                 count = 0
 
             # Set record
-            record = Record(self.meta['year'], self.meta['month'], self.meta['day'], self.meta['sheet'],
+            record = Record(self.file, self.meta['year'], self.meta['month'], self.meta['day'], self.meta['sheet'],
                             self.meta['route'], self.meta['driver'], self.meta['schedule'], self.meta['license'],
                             on, off, time, count)
             self.records[(on, off, time)] = record
@@ -336,8 +337,10 @@ class Record(object):
                      'On_Stop', 'Off_Stop', 'Count']
     matrix = [matrix_header]
 
-    def __init__(self, year, month, day, sheet, route, driver, schedule, veh_license, on_stop, off_stop, time, count):
+    def __init__(self, file, year, month, day, sheet, route, driver, schedule, veh_license, on_stop, off_stop, time,
+                 count):
         # Default values
+        self.file = file
         self.year = int(year)
         self.month = int(month)
         self.day = int(day)
@@ -350,17 +353,51 @@ class Record(object):
         self.off_stop = off_stop
         self.time = time
         self.count = count
-        # Processing functions
+
+        # Processing attributes
         self.datestr = '{}/{}/{}'.format(*[str(s) for s in [self.year, self.month, self.day]])
-        self.date = datetime.date(self.year, self.month, self.day)
+        self.date = datetime.datetime(self.year, self.month, self.day)
         self.week = Week.get_name(self.date)
         self.dow = str(self.date.isocalendar()[2])
+        self.on_pseudo = self.get_pseudo(on_stop)
+        self.off_pseudo = self.get_pseudo(off_stop)
+
+        # Final attributions
         self.ID = hex(Record.ID_generator)
         Record.ID_generator += 1
         Record.objects[self.ID] = self
         self.append_record()
         # Add record to the date it pertains
         Day.add_count(self.date, self.dow, self.week, self.count)
+
+    def get_pseudo(self, stop):
+        if str(stop) == '100':
+            return 'Madigan'
+
+        elif str(stop) == '300':
+            return 'PX'
+
+        elif re.sub('[A-Za-z]', '', self.schedule) in ['8', '9']:
+            return 'Evening'
+
+        elif self.sheet.lower() == 's5z':
+            return 'Morning'
+
+        elif self.date >= datetime.datetime(2016, 4, 25) and self.sheet.lower() == 's5a':
+            return 'Morning'
+
+        else:
+            routes = re.split('&', self.route)
+            for route_id in routes:
+                route = rt.Route.objects[route_id]
+                for sheet in route.sheets:
+                    for stop_id in sheet.stops:
+                        if str(stop) == str(stop_id):
+                            return route_id
+
+        if self.date >= datetime.datetime(2016, 4, 25):
+            Sheet.errors += [[self.file] + list(RidershipErrors.StopUnavailableForRouteError.get(stop, self.route))]
+        return 'Unmatched'
 
     def append_record(self):
         Record.matrix.append([self.ID, self.year, self.month, self.day, self.dow, self.sheet, self.route, self.driver,
@@ -652,16 +689,17 @@ def publish():
     return True
 
 
-Sheet.process()
-
 if __name__ == "__main__":
+    Sheet.process()
+
     publish()
 
-    start = datetime.date(2015, 8, 31)
-    end = datetime.date(2016, 12, 31)
+    start = datetime.datetime(2015, 8, 31)
+    end = datetime.datetime(2016, 12, 31)
 
     Report.generate(['week', 'route'], start=start, end=end)
     Report.generate(['year', 'month', 'route'], start=start, end=end)
+    Report.generate(['year', 'month', 'on_pseudo', 'off_pseudo'], start=start, end=end)
     Report.generate(['week', 'dow'], start=start, end=end)
     Report.generate(['dow', 'on_stop', 'off_stop'], start=start, end=end)
     Report.generate(['year', 'month', 'day', 'route'], start=start, end=end)

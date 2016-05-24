@@ -139,6 +139,7 @@ class Sheet(object):
 
         # Set a Segment object for the sheet
         self.segment = Segment(route, self)
+        self.stops = {}
 
         # Process
         self.set_entries()
@@ -193,6 +194,10 @@ class Sheet(object):
                 self.segment.add_stop_seq(StopSeq(*args))
 
             i += 1
+
+        # Save a collection of stop IDs here for reference
+        for stop_seq in self.segment.stop_seqs:
+            self.stops[stop_seq.stop] = True
 
         # Set actual timing orders
         self.segment.set_order()

@@ -56,6 +56,14 @@ class CountValidationError(ErrorManager):
             count, row)).get_error_message()
 
 
+class StopUnavailableForRouteError(ErrorManager):
+
+    @staticmethod
+    def get(stop, route):
+        return StopUnavailableForRouteError('StopUnavailableForRouteError',
+            'The stop {} is not a part of any routes within joint route {}'.format(stop, route)).get_error_message()
+
+
 class WarningManager(object):
 
     def __init__(self, warning_type, message):

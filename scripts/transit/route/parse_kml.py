@@ -1,9 +1,12 @@
 import copy
+import math
 import re
 import sys
 
 from pykml import parser
 
+import src.scripts.transit.route.route as rt
+import src.scripts.transit.stop.stop as st
 from src.scripts.transit.constants import PATH
 
 
@@ -14,95 +17,125 @@ class Shape(object):
     def __init__(self, name):
         self.name = name
         self.paths = {}
+        self.nodes = {}
         self.distances = {}
         self.best = sys.maxsize
         self.order = []
+        self.final_node = None
         self.index = 0
+        self.origin = self.set_shape_node(st.Point.objects[(rt.Direction.objects[name].origin[:3],
+                                                            rt.Direction.objects[name].origin[3:])])
+        self.destination = self.set_shape_node(st.Point.objects[(rt.Direction.objects[name].destination[:3],
+                                                                 rt.Direction.objects[name].destination[3:])])
         Shape.objects[name] = self
 
-    def add_path(self, coords):
-        self.paths[Path(self, Path.convert_coord_to_dict(coords[0]), Path.convert_coord_to_dict(coords[-1]),
-                        coords)] = True
-        return True
+    def set_shape_node(self, node):
+        new_node = Node(self, '', st.convert_gps_dms_to_dd(node.gps_n), st.convert_gps_dms_to_dd(node.gps_w))
+        self.nodes[new_node] = True
+        return new_node
 
-    def order_paths(self):
-        # No need to order if there is only one path
-        if len(self.paths) == 1:
-            self.order = [k for k in self.paths.keys()]
-            return True
-
-        for path in self.paths:
-            self.distances[path] = {}
-            for to_path in [x for x in self.paths.keys() if x != path]:
-                self.distances[path][to_path] = Shape.euclidean(path.destination, to_path.origin)
-
-        self.select_best_order(self.paths)
+    def add_path(self, points):
+        self.paths[Path(self, points)] = True
         return True
 
     @staticmethod
-    def euclidean(x, y):
+    def haversine(x, y):
         if not isinstance(x, dict):
-            raise TypeError('Euclidean function\'s x parameter is not a dictionary.')
+            raise TypeError('Haversine function\'s x parameter is not a dictionary.')
         if not isinstance(y, dict):
-            raise TypeError('Euclidean function\'s y parameter is not a dictionary.')
+            raise TypeError('Haversine function\'s y parameter is not a dictionary.')
 
-        # Calculate euclidean distance by add the squared distance of all matched dimensions and the squared distance
-        # away from the origin in mismatched dimensions.
-        distance = 0
-        for d in x:
-            if d in y:
-                distance += (float(x[d]) - float(y[d])) ** 2
-            else:
-                distance += float(x[d]) ** 2
-        for d in [d for d in y.keys() if d not in x]:
-            distance += float(y[d]) ** 2
+        # Set lat/lng for haversine
+        lat = y['lat'] - x['lat']
+        lng = y['lng'] - x['lng']
 
-        return distance ** 0.5
+        # Calculate haversine
+        a = math.sin(lat/2) ** 2 + math.cos(x['lat']) * math.cos(y['lat']) * math.sin(lng/2) ** 2
+        c = 2 * math.asin(a ** 0.5)
 
-    def select_best_order(self, unseen, order=[], distance=0, prev=None):
+        # Return haversine distance in kilometers
+        return c * 6371
+
+    def order_paths(self):
+        for node in self.nodes:
+            self.distances[node] = {}
+            for to_node in [x for x in self.nodes.keys() if x != node and x.contra != node]:
+                self.distances[node][to_node] = Shape.haversine(node.coords, to_node.coords)
+
+        self.select_best_order(self.paths, self.origin, [], [])
+        print(self.order)
+        print('Shape {} had a final distance from the destination of {}\n\n'.format(self.name, Shape.haversine(
+            self.final_node.coords, self.destination.coords)))
+        return True
+
+    def select_best_order(self, unseen, prev, order, reverse, distance=0):
         # Base case where there is only one unseen path
         if len(unseen) == 1:
             # If this order is less than any distance on record set as best
-            key = [k for k in unseen.keys()][0]
-            if distance + self.distances[prev][key] < self.best:
-                self.best = distance + self.distances[prev][key]
-                self.order = order
+            path = [k for k in unseen.keys()][0]
+            for node in path.nodes:
+                if distance + self.distances[prev][node] < self.best:
+                    self.best = distance + self.distances[prev][node]
+                    self.final_node = node.contra
+                    self.order = [x for x in zip(order+[path], reverse+[node.reverse])]
 
-            # Otherwise use tiebreaking
-            elif distance + self.distances[prev][key] == self.best:
-                if self.order[0].coords < order[0].coords:
-                    self.order = order
 
-        # Case where no processing has begun, init by starting to recurse each path combination
-        elif not prev:
-            for path in unseen:
-                new_unseen = copy.copy(unseen)
-                del new_unseen[path]
-                return self.select_best_order(new_unseen, order=[path], prev=path)
+                # Otherwise use tiebreaking
+                elif distance + self.distances[prev][node] == self.best:
+                    if len(self.order[0][0].points) < len(order[0].points):
+                        self.order = [x for x in zip(order+[path], reverse+[node.reverse])]
 
         # All other cases
         else:
             for path in unseen:
-                if distance + self.distances[prev][path] < self.best:
-                    new_unseen = copy.copy(unseen)
-                    del new_unseen[path]
-                    return self.select_best_order(new_unseen, distance=distance+self.distances[prev][path],
-                                                  order=order+[path], prev=path)
-
-        return True
+                for node in path.nodes:
+                    if distance + self.distances[prev][node] < self.best:
+                        new_unseen = copy.copy(unseen)
+                        del new_unseen[path]
+                        self.select_best_order(new_unseen, distance=distance+self.distances[prev][node],
+                                               order=order+[path], reverse=reverse+[node.reverse], prev=node.contra)
 
 
 class Path(object):
 
-    def __init__(self, shape, origin, destination, coords):
+    def __init__(self, shape, points):
         self.shape = shape
-        self.origin = origin if isinstance(origin, dict) else None
-        self.destination = destination if isinstance(destination, dict) else None
-        self.coords = coords
+        self.points = points
+        print(shape.name, len(points))
+        self.nodes = (Node(shape, self, points[0][1], points[0][0]),
+                      Node(shape, self, points[-1][1], points[-1][0], reverse=True))
+        self.nodes[0].contra = self.nodes[1]
+        self.nodes[1].contra = self.nodes[0]
 
-    @staticmethod
-    def convert_coord_to_dict(coord):
-        return {'lat': coord[1], 'long': coord[2]}
+    def __repr__(self):
+        return '<Path for {} with points ({}, {}) & ({}, {})>'.format(self.shape.name, self.points[0][1],
+                                                                      self.points[0][0], self.points[-1][1],
+                                                                      self.points[-1][0])
+
+    def get_points(self, reverse):
+        if reverse:
+            return list(reversed(self.points))
+        else:
+            return self.points
+
+
+class Node(object):
+
+    def __init__(self, shape, path, lat, lng, reverse=False):
+        self.shape = shape
+        self.path = path
+        self.lat = lat
+        self.lng = lng
+        self.reverse = reverse
+        self.coords = self.convert_coord_to_dict()
+        self.contra = None
+        shape.nodes[self] = True
+
+    def __repr__(self):
+        return '<Node at {} {}>'.format(self.lat, self.lng)
+
+    def convert_coord_to_dict(self):
+        return {'lat': math.radians(float(self.lat)), 'lng': math.radians(float(self.lng))}
 
 
 def process():
@@ -111,12 +144,14 @@ def process():
     with open('{}/data/routes/system.kml'.format(PATH)) as file:
         doc = parser.parse(file)
         shape = None
-        index = {}
         for t in doc.getiterator():
 
             # If the tag is a name, set name equal to the text contents of the name tag
             if re.sub('\{.*\}', '', t.tag).lower() == 'name':
-                shape = Shape(t.text) if t.text not in Shape.objects else Shape.objects[t.text]
+                if t.text in rt.Direction.objects:
+                    shape = Shape(t.text) if t.text not in Shape.objects else Shape.objects[t.text]
+                else:
+                    print('Shape {} did not process'.format(t.text))
 
             # Save coordinates
             if re.sub('\{.*\}', '', t.tag).lower() == 'coordinates':
@@ -131,9 +166,9 @@ def process():
         shape = Shape.objects[obj]
         shape.order_paths()
 
-        for path in shape.order:
-            for coord in path.coords:
-                writer.write('{}\n'.format(','.join([str(s) for s in [shape.name, coord[1], coord[0], shape.index]])))
+        for path, reverse in shape.order:
+            for point in path.get_points(reverse):
+                writer.write('{}\n'.format(','.join([str(s) for s in [shape.name, point[1], point[0], shape.index]])))
                 shape.index += 1
 
 if __name__ == "__main__":

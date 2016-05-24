@@ -3,10 +3,10 @@ import datetime
 import re
 
 
-VERSION1 = datetime.date(2015, 8, 31)
-VERSION2 = datetime.date(2015, 9, 8)
-VERSION3 = datetime.date(2015, 10, 30)
-CHARS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T']
+VERSION1 = datetime.datetime(2015, 8, 31)
+VERSION2 = datetime.datetime(2015, 9, 8)
+VERSION3 = datetime.datetime(2015, 10, 30)
+CHARS = list(map(chr, range(65, 91)))
 HEADER = ['Boarding', 'Time', 'Count', 'Destination']
 
 
