@@ -76,7 +76,7 @@
     </Placemark>
     <Placemark>
       <name>(705b) COL Joe Jackson &amp; Barnes</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/705b.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 741 at C ST and Col Joe Jackson.]]></description>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/705b.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskegee Airman Ave.]]></description>
       <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49408055555556,47.132025,0</coordinates>
@@ -132,7 +132,7 @@
     </Placemark>
     <Placemark>
       <name>(705a) COL Joe Jackson &amp; Barnes</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/705a.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 741 at C ST and Col Joe Jackson.]]></description>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/705a.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskegee Airman Ave.]]></description>
       <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49384166666667,47.132019444444445,0</coordinates>
@@ -188,7 +188,7 @@
     </Placemark>
     <Placemark>
       <name>(701b) McChord Exchange</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/701b.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 700 at Lincoln and Barnes.]]></description>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/701b.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskegee Airman Ave or see stop 700 at Lincoln and Barnes.]]></description>
       <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49410833333333,47.12656111111111,0</coordinates>
@@ -212,8 +212,8 @@
     </Placemark>
     <Placemark>
       <name>(741b) C ST &amp; 4TH ST</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/741b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to Madigan </h5>xx:07, xx:27, xx:47<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/741b.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskegee Airman Ave or see stop 744 at the Customer Service Mall/Castle.]]></description>
+      <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49118888888889,47.133202777777775,0</coordinates>
       </Point>
@@ -396,7 +396,7 @@
     </Placemark>
     <Placemark>
       <name>(701a) McChord Exchange</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/701a.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 700 at Lincoln and Barnes.]]></description>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/701a.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskegee Airman Ave or see stop 700 at Lincoln and Barnes.]]></description>
       <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49389166666667,47.12623333333333,0</coordinates>
@@ -476,7 +476,7 @@
     </Placemark>
     <Placemark>
       <name>(704a) McChord Clinic</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/704a.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 700 at Lincoln and Barnes.]]></description>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/704a.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskegee Airman Ave or see stop 700 at Lincoln and Barnes.]]></description>
       <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49383055555556,47.13077222222222,0</coordinates>
@@ -716,7 +716,7 @@
     </Placemark>
     <Placemark>
       <name>(704b) McChord Clinic</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/704b.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskeegee or see stop 700 at Lincoln and Barnes.]]></description>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/704b.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskegee Airman Ave or see stop 700 at Lincoln and Barnes.]]></description>
       <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.49411944444445,47.130766666666666,0</coordinates>
@@ -964,8 +964,8 @@
     </Placemark>
     <Placemark>
       <name>(741a) C ST &amp; 4TH ST</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/741a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5> Route 2 to McChord Field, Lakewood </h5>xx:08, xx:28, xx:48<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/741a.html</p>Stop has temporarily closed due to construction. A temporary stop is at Tuskegee Airman Ave or see stop 744 at the Customer Service Mall/Castle.]]></description>
+      <styleUrl>icon-503-ffA9445A</styleUrl>
       <Point>
         <coordinates>-122.491175,47.133069444444445,0</coordinates>
       </Point>
