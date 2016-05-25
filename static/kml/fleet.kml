@@ -12,7 +12,7 @@
     </Placemark>
     <Placemark>
       <name>4-23 Infantry Barracks</name>
-      <description><![CDATA[<h5>BLDG 2021</h5><hr><p>24 hour check-out 7 days a week</p>]]></description>
+      <description><![CDATA[<p>24 hour check-out 7 days a week</p>]]></description>
       <styleUrl>#icon-503-ff777777</styleUrl>
       <Point>
         <coordinates>-122.6033878326416,47.1243957504529,0</coordinates>
@@ -28,7 +28,7 @@
     </Placemark>
     <Placemark>
       <name>Madigan HHC at WTB</name>
-      <description><![CDATA[No information available]]></description>
+      <description><![CDATA[<h5>BLDG 9058</h5><hr><p>24 hour check-out 7 days a week</p>]]></description>
       <styleUrl>#icon-503-ff777777</styleUrl>
       <Point>
         <coordinates>-122.55301058292389,47.10562415071745,0</coordinates>
