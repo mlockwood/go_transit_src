@@ -1,8 +1,6 @@
-"""
-This section contains functions that organize an excel based version of the
-timetable. Originally in schedule.py.
-"""
 
+
+# This section contains functions that organize an excel based version of the timetable. Originally in schedule.py.
 class Stop:
     
     @staticmethod
@@ -106,3 +104,103 @@ class Stop:
                 # Close workbook
                 workbook.close()
         return True
+
+
+# This section contains functions that organize csv pivot tables of the ridership data.
+class Report(object):
+
+    @staticmethod
+    def prepare(features, start, end):
+        # If no features, return total only
+        if not features:
+            count = 0
+            for record in Record.objects:
+                count += Record.objects[record].count
+            return {'Total': count}
+
+        # If features, produce variable data structure
+        data = {}
+        for record in Record.objects:
+            obj = Record.objects[record]
+
+            # If outside of the daterange, continue
+            if obj.date < start or obj.date > end:
+                continue
+
+            # If inside the daterange, process count information
+            i = 0
+            DS = 'data'
+
+            # Process all except the last feature
+            while i < (len(features) - 1):
+                try:
+                    if eval('obj.' + features[i]) not in eval(DS):
+                        exec(DS + '[\'' + eval('obj.' + features[i]) + '\']={}')
+                    DS += '[\'' + eval('obj.' + features[i]) + '\']'
+                except TypeError:
+                    if eval('obj.' + features[i]) not in eval(DS):
+                        exec(DS + '[' + str(eval('obj.' + features[i])) + ']={}')
+                    DS += '[' + str(eval('obj.' + features[i])) + ']'
+                i += 1
+
+            # Process the counts of the last feature
+            try:
+                exec(DS + '[\'' + eval('obj.' + features[-1]) + '\']=' + DS + '.get(\'' + eval('obj.' + features[-1]) +
+                     '\', 0) + obj.count')
+            # Except if boolean
+            except TypeError:
+                exec(DS + '[' + str(eval('obj.' + features[-1])) + ']=' + DS + '.get(' +
+                     str(eval('obj.' + features[-1])) + ', 0) + obj.count')
+        return data
+
+    @staticmethod
+    def dict_to_matrix(data):
+        # Set outer and inner keys
+        outer_keys = sorted(data.keys())
+        inner_keys_D = {}
+        # Find all inner key values
+        for o_key in outer_keys:
+            for i_key in data[o_key]:
+                inner_keys_D[i_key] = True
+        inner_keys = sorted(inner_keys_D.keys())
+        # Set matrix
+        matrix = [[''] + inner_keys]
+        for o_key in outer_keys:
+            row = [o_key]
+            for i_key in inner_keys:
+                # If inner key is found for the outer key, set amount
+                if i_key in data[o_key]:
+                    row.append(data[o_key][i_key])
+                # Otherwise inner key DNE for outer key, set to 0
+                else:
+                    row.append(0)
+            matrix.append(row)
+        return matrix
+
+    @staticmethod
+    def recurse_data(data, features, writer, prev=[], i=0, limit=2):
+        if i == (len(features) - limit):
+            matrix = Report.dict_to_matrix(data)
+            # Write title by previous values
+            writer.writerow(prev)
+            # Write matrix rows
+            for row in matrix:
+                writer.writerow(row)
+            # Write empty row
+            writer.writerow([])
+        else:
+            for key in sorted(data.keys()):
+                Report.recurse_data(data[key], features, writer, prev + [str(features[i]).title() + ': ' + str(key)],
+                                     i+1, limit=limit)
+        return True
+
+    @staticmethod
+    def generate(features, start=datetime.date(2015, 8, 31), end=datetime.date.today()):
+        data = Report.prepare(features, start, end)
+        if not os.path.isdir(PATH + '/reports/ridership/custom'):
+            os.makedirs(PATH + '/reports/ridership/custom')
+        writer = csv.writer(open(PATH + '/reports/ridership/custom/Ridership_' + '_'.join(features).title() +
+                                 '.csv', 'w', newline=''), delimiter=',', quotechar='|')
+        Report.recurse_data(data, features, writer)
+        return True
+

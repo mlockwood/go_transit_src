@@ -333,8 +333,8 @@ class Record(object):
 
     objects = {}
     ID_generator = 1
-    matrix_header = ['ID', 'Year', 'Month', 'Day', 'Weekday', 'Sheet', 'Route', 'Driver', 'Schedule', 'License', 'Time',
-                     'On_Stop', 'Off_Stop', 'Count']
+    matrix_header = ['ID', 'Year', 'Month', 'Day', 'Weekday', 'Sheet', 'Route', 'On_Route', 'Off_Route', 'Driver',
+                     'Schedule', 'License', 'Time', 'On_Stop', 'Off_Stop', 'Count']
     matrix = [matrix_header]
 
     def __init__(self, file, year, month, day, sheet, route, driver, schedule, veh_license, on_stop, off_stop, time,
@@ -359,8 +359,20 @@ class Record(object):
         self.date = datetime.datetime(self.year, self.month, self.day)
         self.week = Week.get_name(self.date)
         self.dow = str(self.date.isocalendar()[2])
+
+        # Set pseudo route values
         self.on_pseudo = self.get_pseudo(on_stop)
         self.off_pseudo = self.get_pseudo(off_stop)
+
+        if not self.on_pseudo and self.off_pseudo:
+            self.on_pseudo = self.off_pseudo
+
+        elif self.on_pseudo and not self.off_pseudo:
+            self.off_pseudo = self.on_pseudo
+
+        if not self.on_pseudo and not self.off_pseudo:
+            self.on_pseudo = re.split('&', self.route)[0]
+            self.off_pseudo = re.split('&', self.route)[-1]
 
         # Final attributions
         self.ID = hex(Record.ID_generator)
@@ -371,11 +383,8 @@ class Record(object):
         Day.add_count(self.date, self.dow, self.week, self.count)
 
     def get_pseudo(self, stop):
-        if str(stop) == '100':
-            return 'Madigan'
-
-        elif str(stop) == '300':
-            return 'PX'
+        if str(stop) in ['100', '300']:
+            return None
 
         elif re.sub('[A-Za-z]', '', self.schedule) in ['8', '9']:
             return 'Evening'
@@ -400,8 +409,9 @@ class Record(object):
         return 'Unmatched'
 
     def append_record(self):
-        Record.matrix.append([self.ID, self.year, self.month, self.day, self.dow, self.sheet, self.route, self.driver,
-                              self.schedule, self.license, self.time, self.on_stop, self.off_stop, self.count])
+        Record.matrix.append([self.ID, self.year, self.month, self.day, self.dow, self.sheet, self.route,
+                              self.on_pseudo, self.off_pseudo, self.driver, self.schedule, self.license, self.time,
+                              self.on_stop, self.off_stop, self.count])
         return True
 
     @staticmethod
@@ -581,104 +591,6 @@ class Month(object):
         return True
 
 
-class Report(object):
-
-    @staticmethod
-    def prepare(features, start, end):
-        # If no features, return total only
-        if not features:
-            count = 0
-            for record in Record.objects:
-                count += Record.objects[record].count
-            return {'Total': count}
-
-        # If features, produce variable data structure
-        data = {}
-        for record in Record.objects:
-            obj = Record.objects[record]
-
-            # If outside of the daterange, continue
-            if obj.date < start or obj.date > end:
-                continue
-
-            # If inside the daterange, process count information
-            i = 0
-            DS = 'data'
-
-            # Process all except the last feature
-            while i < (len(features) - 1):
-                try:
-                    if eval('obj.' + features[i]) not in eval(DS):
-                        exec(DS + '[\'' + eval('obj.' + features[i]) + '\']={}')
-                    DS += '[\'' + eval('obj.' + features[i]) + '\']'
-                except TypeError:
-                    if eval('obj.' + features[i]) not in eval(DS):
-                        exec(DS + '[' + str(eval('obj.' + features[i])) + ']={}')
-                    DS += '[' + str(eval('obj.' + features[i])) + ']'
-                i += 1
-
-            # Process the counts of the last feature
-            try:
-                exec(DS + '[\'' + eval('obj.' + features[-1]) + '\']=' + DS + '.get(\'' + eval('obj.' + features[-1]) +
-                     '\', 0) + obj.count')
-            # Except if boolean
-            except TypeError:
-                exec(DS + '[' + str(eval('obj.' + features[-1])) + ']=' + DS + '.get(' +
-                     str(eval('obj.' + features[-1])) + ', 0) + obj.count')
-        return data
-
-    @staticmethod
-    def dict_to_matrix(data):
-        # Set outer and inner keys
-        outer_keys = sorted(data.keys())
-        inner_keys_D = {}
-        # Find all inner key values
-        for o_key in outer_keys:
-            for i_key in data[o_key]:
-                inner_keys_D[i_key] = True
-        inner_keys = sorted(inner_keys_D.keys())
-        # Set matrix
-        matrix = [[''] + inner_keys]
-        for o_key in outer_keys:
-            row = [o_key]
-            for i_key in inner_keys:
-                # If inner key is found for the outer key, set amount
-                if i_key in data[o_key]:
-                    row.append(data[o_key][i_key])
-                # Otherwise inner key DNE for outer key, set to 0
-                else:
-                    row.append(0)
-            matrix.append(row)
-        return matrix
-
-    @staticmethod
-    def recurse_data(data, features, writer, prev=[], i=0, limit=2):
-        if i == (len(features) - limit):
-            matrix = Report.dict_to_matrix(data)
-            # Write title by previous values
-            writer.writerow(prev)
-            # Write matrix rows
-            for row in matrix:
-                writer.writerow(row)
-            # Write empty row
-            writer.writerow([])
-        else:
-            for key in sorted(data.keys()):
-                Report.recurse_data(data[key], features, writer, prev + [str(features[i]).title() + ': ' + str(key)],
-                                     i+1, limit=limit)
-        return True
-
-    @staticmethod
-    def generate(features, start=datetime.date(2015, 8, 31), end=datetime.date.today()):
-        data = Report.prepare(features, start, end)
-        if not os.path.isdir(PATH + '/reports/ridership/custom'):
-            os.makedirs(PATH + '/reports/ridership/custom')
-        writer = csv.writer(open(PATH + '/reports/ridership/custom/Ridership_' + '_'.join(features).title() +
-                                 '.csv', 'w', newline=''), delimiter=',', quotechar='|')
-        Report.recurse_data(data, features, writer)
-        return True
-
-
 def publish():
     # Records
     Record.publish_matrix()
@@ -693,15 +605,3 @@ if __name__ == "__main__":
     Sheet.process()
 
     publish()
-
-    start = datetime.datetime(2015, 8, 31)
-    end = datetime.datetime(2016, 12, 31)
-
-    Report.generate(['week', 'route'], start=start, end=end)
-    Report.generate(['year', 'month', 'route'], start=start, end=end)
-    Report.generate(['year', 'month', 'on_pseudo', 'off_pseudo'], start=start, end=end)
-    Report.generate(['week', 'dow'], start=start, end=end)
-    Report.generate(['dow', 'on_stop', 'off_stop'], start=start, end=end)
-    Report.generate(['year', 'month', 'day', 'route'], start=start, end=end)
-    Report.generate(['on_stop', 'off_stop'], start=start, end=end)
-    Report.generate(['time', 'route'], start=start, end=end)
