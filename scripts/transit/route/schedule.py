@@ -275,6 +275,7 @@ def publish():
         shutil.copyfile('{}/reports/routes/schedules/{}.html'.format(PATH, re.sub(' ', '', route.name)),
                         '{}/reports/website/transit/routes/{}.html'.format(PATH, re.sub(' ', '', route.name)))
 
+
 def stop_schedule():
     table = {}
 
