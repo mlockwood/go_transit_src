@@ -58,7 +58,7 @@ class Sheet(object):
         for dirpath, dirnames, filenames in os.walk(PATH + '/data/ridership'):
             if 'archive' in dirpath or 'archive' in dirnames:
                 continue
-            for filename in [f for f in filenames if re.search('\d{6}[_|\-]S\d', f)]:
+            for filename in [f for f in filenames if re.search('\d{6}[_|\-]S\d+[A-Z]?\.csv', f)]:
                 obj = Sheet((str(dirpath) + '/' + str(filename)))
                 output = obj.read_sheet()
                 Sheet.errors += output[0]
@@ -161,7 +161,7 @@ class Sheet(object):
             return True
 
     def read_sheet(self):
-        reader = csv.reader(open(self.file, 'r', newline=''), delimiter=',', quotechar='|')
+        reader = csv.reader(open(self.file, 'r', newline='', encoding="utf8"), delimiter=',', quotechar='|')
         meta = False
         data = False
 

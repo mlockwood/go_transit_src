@@ -45,6 +45,8 @@ def stack(a, n, divisible='rows', structure='rows'):
 
 
 def csv_writer(path, file, matrix):
+    if not matrix or len(matrix) == 1:
+        return False
 
     # Set up directories and files
     if not os.path.isdir(path):
