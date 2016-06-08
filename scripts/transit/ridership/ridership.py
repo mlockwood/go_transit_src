@@ -60,7 +60,10 @@ class Sheet(object):
                 continue
             for filename in [f for f in filenames if re.search('\d{6}[_|\-]S\d+[A-Z]?\.csv', f)]:
                 obj = Sheet((str(dirpath) + '/' + str(filename)))
-                output = obj.read_sheet()
+                try:
+                    output = obj.read_sheet()
+                except Exception as e:
+                    print('{} cannot be read due to: {}'.format(filename, e))
                 Sheet.errors += output[0]
                 Sheet.warnings += output[1]
 
