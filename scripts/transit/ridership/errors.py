@@ -1,5 +1,6 @@
 class ErrorManager(object):
 
+
     def __init__(self, file, error_type, message):
         self.file = file
         self.error_type = error_type
