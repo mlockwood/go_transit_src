@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns:atom="http://www.w3.org/2005/Atom" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>GO Bike Fleets</name>
+    <Placemark>
+      <name>Reception Center</name>
+      <description><![CDATA[<h5>BLDG 2021</h5><hr><p>24 hour check-out 7 days a week</p>]]></description>
+      <styleUrl>#icon-503-ff777777</styleUrl>
+      <Point>
+        <coordinates>-122.60558724403381,47.0900527923576,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>4-23 Infantry Barracks</name>
+      <description><![CDATA[<h5>BLDG 11664</h5><hr><p>24 hour check-out 7 days a week</p>]]></description>
+      <styleUrl>#icon-503-ff777777</styleUrl>
+      <Point>
+        <coordinates>-122.6033878326416,47.1243957504529,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>373rd Training Detachment Squadron</name>
+      <description><![CDATA[<h5>BLDG 1315</h5><hr><p>Monday - Friday from 0800 until 1500</p>]]></description>
+      <styleUrl>#icon-503-ff777777</styleUrl>
+      <Point>
+        <coordinates>-122.48838543891907,47.15252978965348,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Madigan HHC at WTB</name>
+      <description><![CDATA[<h5>BLDG 9058</h5><hr><p>24 hour check-out 7 days a week</p>]]></description>
+      <styleUrl>#icon-503-ff777777</styleUrl>
+      <Point>
+        <coordinates>-122.55301058292389,47.10562415071745,0</coordinates>
+      </Point>
+    </Placemark>
+    <Style id="icon-503-ff777777-normal">
+      <IconStyle>
+        <color>ff777777</color>
+        <scale>1.1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotspot x="16" xunits="pixels" y="31" yunits="insetPixels"></hotspot>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1.1</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-503-ff555555-highlight">
+      <IconStyle>
+        <color>ff555555</color>
+        <scale>1.1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="16" xunits="pixels" y="31" yunits="insetPixels"></hotSpot>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1.1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-503-ff777777">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-503-ff777777-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-503-ff555555-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-503-ffA9445A-normal">
+      <IconStyle>
+        <color>ffA9445A</color>
+        <scale>1.1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotspot x="16" xunits="pixels" y="31" yunits="insetPixels"></hotspot>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1.1</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-503-fff2dede-highlight">
+      <IconStyle>
+        <color>fff2dede</color>
+        <scale>1.1</scale>
+        <Icon>
+          <href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="16" xunits="pixels" y="31" yunits="insetPixels"></hotSpot>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1.1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-503-ffA9445A">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-503-ffA9445A-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-503-fff2dede-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+  </Document>
+</kml>

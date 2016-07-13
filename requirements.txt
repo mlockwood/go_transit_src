@@ -1,0 +1,3 @@
+XlsxWriter = 0.8
+lxml = 3.6.0
+pyKML = 0.1.0

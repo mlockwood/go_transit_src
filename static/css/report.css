@@ -1,0 +1,223 @@
+body {
+  background-color: #252525;
+  background-image: url('Report_Background.jpg');
+  background-repeat: no-repeat;
+  background-position: center top;
+}
+
+/* General Page Classes */
+.pageContent {
+  position: absolute;
+  top: 400px;
+  margin: auto;
+  overflow: scroll;
+  width: 1100px;
+  height: 980px;
+}
+
+.pageOffset {
+  position: relative;
+  float: left;
+  width: 1px;
+  margin-bottom: -490px;
+  height: 50%;
+}
+
+.pagePadding {
+  width: auto;
+  min-width: 1050px;
+  clear: both;
+  padding: 0px;
+}
+
+.pageAlignment {
+  position: relative;
+  margin: auto;
+  width: 1050px;
+  min-height: 980px;
+  z-index: 0;
+}
+
+.simpleRectangle{
+	border-style: none;
+	border-color: none;
+}
+
+/* Navigation Classes */
+.nav{
+	top: 16px;
+	position: absolute;
+}
+
+.blackNav {
+  left: 0px;
+  top: 0px;
+  position: absolute;
+  height: 12px;
+  width: 1051px;
+  z-index: 75;
+  background-color: #252525;
+  background-color: rgba(37, 37, 37, 0.8);
+}
+
+.whiteNav {
+  left: 178px;
+  top: 12px;
+  position: absolute;
+  height: 44px;
+  width: 873px;
+  z-index: 61;
+  background-color: #ffffff;
+}
+
+/* Social Media Icon Classes */
+.email {
+  left: 56px;
+  top: 26px;
+  position: absolute;
+  height: 17px;
+  width: 24px;
+  z-index: 80;
+  display: block;
+  opacity: 1.0;
+}
+
+.facebook {
+  left: 123px;
+  top: 23px;
+  position: absolute;
+  height: 23px;
+  width: 23px;
+  z-index: 79;
+  display: block;
+  opacity: 1.0;
+}
+
+.twitter{
+  left: 92px;
+  top: 24px;
+  position: absolute;
+  height: 23px;
+  width: 23px;
+  z-index: 78;
+  display: block;
+  opacity: 1.0;
+}
+
+/* Title Classes */
+.title {
+  left: 0px;
+  top: 50px;
+  position: absolute;
+  padding: 2px;
+  width: 1051px;
+  height: 25px;
+  font-family: Verdana;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 74.0px;
+  text-align: left;
+  color: #ffffff;
+  z-index: 58;
+  text-align: center;
+}
+
+.subtitle {
+  top: 96px;
+  position: absolute;
+  padding: 2px;
+  width: 1051px;
+  height: 28px;
+  font-family: Georgia;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 27.0px;
+  text-align: center;
+  color: #989898;
+  z-index: 59;
+}
+
+.whiteBar {
+  left: 0px;
+  top: 160px;
+  position: absolute;
+  height: 2px;
+  width: 1051px;
+  z-index: 104;
+  background-color: #ffffff;
+}
+
+/* Summary Classes */
+.summary{
+	padding: 0px 0px 0px 0px;
+	margin:0px 0px 0px 0px;
+	top: 175px;
+	position: absolute;
+	width: 1051px;
+	height: 210px;
+	background-color: #ffffff;
+	opacity: 0.85;
+	text-align: center;
+	vertical-align: top;
+	color: #669900;
+}
+
+.summaryText{
+	padding: 0px 10px 0px 10px;
+	text-align: left;
+	color: #565a5c;
+}
+
+/* Overlay Box Classes */
+.insertUnderlay {
+  margin-bottom: 15px;
+  position: relative;
+  height: 316px;
+  width: 1051px;
+  z-index: 81;
+  background-color: #ffffff;
+  opacity: 0.85;
+}
+
+.insertName {
+  left: 0px;
+  top: -28px;
+  padding: 5px 10px 0px 10px;
+  position: absolute;
+  width: 1051px;
+  height: 32px;
+  font-family: Verdana;
+  font-size: 22px;
+  font-weight: 400;
+  text-align: left;
+  color: #669900;
+  z-index: 83;
+}
+
+.insertText {
+  left: 0px;
+  top: 72px;
+  position: absolute;
+  padding: 0px 10px 0px 10px;
+  width: 711px;
+  height: 215px;
+  font-family: Georgia;
+  font-size: 9px;
+  line-height: 1.25;
+  text-align: left;
+  color: #565a5c;
+  z-index: 84;
+  word-wrap: break-word;
+}
+
+.insertImg {
+  left: 730px;
+  top: 82px;
+  position: absolute;
+  padding: 0px 16px 0px 0px;
+  height: 215px;
+  width: 300px;
+  z-index: 105;
+  display: block;
+  opacity: 1.0;
+}
