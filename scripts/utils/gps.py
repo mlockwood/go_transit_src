@@ -3,7 +3,8 @@ import re
 
 
 def validate_dms(gps):
-    if parse_dms(gps)
+    if parse_dms(gps):
+        pass
 
 
 def parse_dms(gps):

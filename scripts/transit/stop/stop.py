@@ -9,9 +9,9 @@ import multiprocessing as mp
 GO Imports------------------------------------------------------
 """
 
-from .errors import *
+from scripts.transit.stop.errors import *
 
-from ..constants import PATH
+from scripts.transit.constants import PATH
 
 
 class Stop(object):

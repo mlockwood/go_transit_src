@@ -2,23 +2,20 @@
 # -*- coding: utf-8 -*-
 
 # Python libraries and packages
-import copy
-import csv
 import datetime
 import math
-import os
 import re
 
 # Entire scripts from src
-from ..stop.stop import Stop, Point
-from .errors import *
+from scripts.transit.stop.stop import Stop, Point
+from scripts.transit.route.errors import *
 
 # Classes and variables from src
 from ..constants import PATH
 from .constants import DATE, STOP_TIME_HEADER
 from ...utils.IOutils import load_json, export_json
 
-from .segment import Segment, StopSeq
+from .segment import Segment, StopSeq, Direction
 from .service import Service
 from .trip import Trip, StopTime
 
@@ -26,10 +23,13 @@ from .trip import Trip, StopTime
 from ...utils.functions import stitch_dicts
 
 # Import variables from src
-from .constants import LAX
+from scripts.transit.route.constants import LAX
 
 # Load dependent data
 Point.process()
+Direction.load()
+Segment.load()
+StopSeq.load()
 
 
 class Route(object):
@@ -126,7 +126,7 @@ class Sheet(object):
         for time in sorted(self.segment.trips):
             # Instantiate a Trip object
             self.segment.trips[time] = Trip(self.route.id, self.service.id, self.direction.id,
-                                            self.route.trip_id, self.segment)
+                                            self.segment)
 
             # Increment route's Trip id generator
             self.route.trip_id += 1
@@ -153,11 +153,23 @@ class Joint(object):
         self.service = Service.objects[int(service_id)]
         self.service_id = int(service_id)
         self.headway = int(headway)
-        self.segments = {}  # {'0700-0745': {0: <Segment>, 1: <Segment>, ... } ... }  RENAME TO AVOID RG CONFUSION
-        """
-        self.route_graphs = {}  # {time: RouteGraph}
-        """
+        self.schedules = {}  # {schedule_id: {0: <Segment>, 1: <Segment>, ... } ... }
+        self.graphs = {}  # {time: RouteGraph}
         Joint.objects[int(id)] = self
+
+    @staticmethod
+    def process():
+        # Iterate over Segments and set them to the correct Joint
+        for obj in Segment.objects:
+            segment = Segment.objects[obj]
+            joint = Joint.objects[segment.joint]
+            if segment.time not in joint.schedules:
+                joint.schedules[segment.time] = {}
+            joint.schedules[segment.time][segment.dir_order] = segment
+
+        # Process RouteGraphs for each schedule in Joint.schedules
+
+        return True
 
     @classmethod
     def load(cls):
@@ -170,52 +182,28 @@ class Joint(object):
     def get_json(self):
         return dict([(k, getattr(self, k)) for k in ['id', 'desc', 'routes', 'service_id', 'headway']])
 
-    @staticmethod
-    def process(date):
-        # Set up self.segments
 
-        # Iterate through JointRoute objects and process
-        for joint in sorted(JointRoute.objects):
-            joint = JointRoute.objects[joint]
-            joint.set_service_order()
-            prev = None
+class Schedule(object):
 
-            # Process each service within the JointRoute object in order
-            for service in joint.service_order:
-                segments = [sheet.segment for sheet in joint.sheets[service]]
-                joint.route_graphs[service] = RouteGraph(joint.id, service, segments, prev)
-                joint.headway = joint.route_graphs[service].headway
-                prev = joint.route_graphs[service]
+    objects = {}
 
-                # After processing the RouteGraph and assigning drivers to trips
-                route_graph = joint.route_graphs[service]
-                for driver in route_graph.schedules:
-                    # Set the correct start location for each of the drivers based on the first trip
-                    trip = route_graph.schedules[driver][sorted(route_graph.schedules[driver].keys())[0]]
-                    if service == joint.service_order[0]:
-                        JointRoute.locations[driver] = trip.stop_times[sorted(trip.stop_times.keys())[0]]
+    def __init__(self, id, start, end, offset):
+        self.id = int(id)
+        self.start = datetime.time(hour=start[:2], minute=start[2:])
+        self.end = datetime.time(hour=end[:2], minute=end[2:])
+        self.offset = int(offset)
+        Schedule.objects[int(id)] = self
 
-                    # Disseminate driver values to Trip and StopTime objects
-                    for trip in route_graph.schedules[driver]:
-                        trip = route_graph.schedules[driver][trip]
-                        trip.driver = driver
-                        for seq in trip.stop_times:
-                            StopTime.objects[(trip.id, seq)].driver = driver
-                            StopTime.objects[(trip.id, seq)].joint = joint.id
-
-        return True
 
 
 class RouteGraph(object):
 
     objects = {}
 
-    def __init__(self, joint, time, segments, prev=None):
+    def __init__(self, joint, schedule, segments, prev=None):
         # Initialized attributes
         self.joint = joint
-        self.time = time
-        self.start = datetime.time(hour=re.split('-', time)[0][:2], minute=re.split('-', time)[0][2:])
-        self.end = datetime.time(hour=re.split('-', time)[1][:2], minute=re.split('-', time)[1][2:])
+        self.schedule = schedule
         self.segments = segments  # {0: <Segment>, 1: <Segment>, 2: <Segment> ... }
 
         # Setup attributes
@@ -230,7 +218,7 @@ class RouteGraph(object):
         self.set_schedules()
 
         # Add to objects
-        RouteGraph.objects[(joint, time)] = self
+        RouteGraph.objects[(joint, schedule)] = self
 
     def check_prev(self, prev):
         if prev:
@@ -443,3 +431,14 @@ class Driver:
 
 Joint.load()
 # Joint.export()
+
+"""
+self.start_time = copy.deepcopy(self.start_date).replace(hour=int(start_time[:-2]), minute=int(start_time[-2:]))
+# Handle times that are at or after midnight (24 + hour scale for GTFS)
+if int(end_time[:-2]) >= 24:
+    self.end_time = copy.deepcopy(self.start_date.replace(hour=int(end_time[:-2]) - 24,
+                                                          minute=int(end_time[-2:]))) + datetime.timedelta(
+        days=1)
+else:
+    self.end_time = copy.deepcopy(self.start_date).replace(hour=int(end_time[:-2]), minute=int(end_time[-2:]))
+"""

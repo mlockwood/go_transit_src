@@ -2,24 +2,18 @@
 # -*- coding: utf-8 -*-
 
 # Python libraries and packages
-import copy
-import csv
 import datetime
-import math
-import os
-import re
 
 # Import scripts from src
 import scripts.transit.stop.stop as st
-from .direction import Direction
-from .errors import *
-from ...utils.IOutils import load_json, export_json
+from scripts.transit.route.direction import Direction
+from scripts.transit.route.errors import *
+from scripts.utils.IOutils import load_json, export_json
 
 # Import variables from src
-from ...transit.constants import PATH
+from scripts.transit.constants import PATH
 
-
-# Call Direction.load() to access all direction objects
+# Load dependent data
 Direction.load()
 
 
@@ -28,16 +22,15 @@ class Segment(object):
     objects = {}
     id_generator = 1
 
-    def __init__(self, joint, time, dir_order, route, name, direction_id, offset):
+    def __init__(self, joint, time, dir_order, route, name, direction_id):
         # Initialized attributes
-        self.joint = joint
-        self.time = time
+        self.joint = int(joint)
+        self.time = int(time)
         self.dir_order = dir_order
-        self.route = route
+        self.route = int(route)
         self.name = name
         self.direction = Direction.objects[int(direction_id)]
         self.direction_id = int(direction_id)
-        self.offset = offset
 
         # Attributes set after initialization
         self.trip_length = 0
@@ -89,8 +82,7 @@ class Segment(object):
         export_json('{}/data/routes/segments.json'.format(PATH), cls)
 
     def get_json(self):
-        return dict([(k, getattr(self, k)) for k in ['joint', 'time', 'dir_order', 'route', 'name', 'direction_id',
-                                                     'offset']])
+        return dict([(k, getattr(self, k)) for k in ['joint', 'time', 'dir_order', 'route', 'name', 'direction_id']])
 
     def set_order(self):
         # List of stop_ids in order of travel_time
@@ -181,16 +173,5 @@ class StopSeq(object):
 
 Segment.load()
 StopSeq.load()
-
-
-
-"""
-self.start_time = copy.deepcopy(self.start_date).replace(hour=int(start_time[:-2]), minute=int(start_time[-2:]))
-# Handle times that are at or after midnight (24 + hour scale for GTFS)
-if int(end_time[:-2]) >= 24:
-    self.end_time = copy.deepcopy(self.start_date.replace(hour=int(end_time[:-2]) - 24,
-                                                          minute=int(end_time[-2:]))) + datetime.timedelta(
-        days=1)
-else:
-    self.end_time = copy.deepcopy(self.start_date).replace(hour=int(end_time[:-2]), minute=int(end_time[-2:]))
-"""
+print(len(Segment.objects))
+Segment.export()

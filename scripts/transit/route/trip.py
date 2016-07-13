@@ -9,12 +9,17 @@ from .constants import STOP_TIME_HEADER
 class Trip(object):
 
     objects = {}
+    id_generator = {}
 
-    def __init__(self, route_id, service_id, direction_id, trip_seq, segment):
+    def __init__(self, route_id, service_id, direction_id, segment):
+        # Increment route's trip_seq
+        Trip.id_generator[route_id] = Trip.id_generator.get(route_id, 0) + 1
+
+        # Initialized attributes
         self.route_id = route_id
         self.service_id = service_id
         self.direction_id = direction_id
-        self.trip_seq = str(trip_seq)
+        self.trip_seq = Trip.id_generator[route_id]
         self.id = '-'.join([route_id, service_id, direction_id, self.trip_seq])
         self.segment = segment
         self.stop_times = {}

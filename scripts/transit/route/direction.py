@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 # Import classes and functions from src
-from ...utils.IOutils import load_json, export_json
+from scripts.utils.IOutils import load_json, export_json
 
 # Import variables from src
-from ..constants import PATH
+from scripts.transit.constants import PATH
 
 
 class Direction(object):
