@@ -11,7 +11,7 @@ GO Imports------------------------------------------------------
 
 from .errors import *
 
-from ...transit.constants import PATH
+from ..constants import PATH
 
 
 class Stop(object):

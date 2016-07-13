@@ -214,18 +214,17 @@ class RouteGraph(object):
         # Initialized attributes
         self.joint = joint
         self.time = time
+        self.start = datetime.time(hour=re.split('-', time)[0][:2], minute=re.split('-', time)[0][2:])
+        self.end = datetime.time(hour=re.split('-', time)[1][:2], minute=re.split('-', time)[1][2:])
         self.segments = segments  # {0: <Segment>, 1: <Segment>, 2: <Segment> ... }
 
-        # Attributes set after initialization
-        self.headway = joint.headway  # PERHAPS REFACTOR THIS TO CALL FROM self.joint?----------------------------------
+        # Setup attributes
         self.roundtrip = 0
-
-        # Set attributes
         self.prev = self.check_prev(prev)
-        self.drivers = Driver.get_drivers(math.ceil(self.roundtrip / self.headway)) if not prev else prev.drivers
+        self.drivers = Driver.get_drivers(math.ceil(self.roundtrip / self.joint.headway)) if not prev else prev.drivers
         self.order = self.get_order()
 
-        # Make schedules
+        # Schedule attributes
         self.schedules = {}
         self.hidden_key = {}
         self.set_schedules()
@@ -236,7 +235,7 @@ class RouteGraph(object):
     def check_prev(self, prev):
         if prev:
             # If the number of driver shifts between this and the previous schedule do not match
-            if len(prev.drivers) != math.ceil(self.roundtrip / self.headway):
+            if len(prev.drivers) != math.ceil(self.roundtrip / self.joint.headway):
                 # Raise an error because they should match
                 raise JointRouteMismatchedDriverCount('JointRoute {} has mismatched driver counts for {} and {}'.format(
                     self.joint.id, self.prev.time, self.time))
@@ -321,8 +320,8 @@ class RouteGraph(object):
         # Set ordered drivers
         drivers = sorted([driver.id for driver in self.drivers])
 
-        adjustment = (self.headway - self.segments[0].offset) % self.headway
-        origin_time = self.segments[0].sheet.start - (datetime.timedelta(seconds=adjustment))
+        adjustment = (self.joint.headway - self.segments[0].offset) % self.joint.headway
+        origin_time = self.start - (datetime.timedelta(seconds=adjustment))
 
         try:
             trip_starts = [(drivers[0], self.segments[0].trips[origin_time], origin_time)]
@@ -442,32 +441,5 @@ class Driver:
         return [Driver() for driver in range(n)]
 
 
-def convert_to_24_plus_time(date0, date1, seconds=True):
-    if date0.day != date1.day:
-        if seconds:
-            return ':'.join(pad_time(t) for t in [date1.hour + 24, date1.minute, date1.second])
-        else:
-            return ':'.join(pad_time(t) for t in [date1.hour + 24, date1.minute])
-    else:
-        if seconds:
-            return date1.strftime('%H:%M:%S')
-        else:
-            return date1.strftime('%H:%M')
-
-
-def convert_to_24_time(time, seconds=True):
-    time = re.split(':', time)
-    hour = int(time[0])
-    hour %= 24
-    if seconds:
-        return ':'.join(pad_time(t) for t in [hour] + time[1:])
-    else:
-        return ':'.join(pad_time(t) for t in [hour, time[1]])
-
-
-def pad_time(time_unit):
-    return '0' + str(time_unit) if len(str(time_unit)) == 1 else str(time_unit)
-
-
-JointRoute.load()
-# JointRoute.export()
+Joint.load()
+# Joint.export()

@@ -9,7 +9,7 @@ from ...transit.route.errors import *
 from ...utils.IOutils import load_json, export_json
 
 # Import variables from src
-from ...transit.constants import PATH
+from ..constants import PATH
 
 
 class Service(object):

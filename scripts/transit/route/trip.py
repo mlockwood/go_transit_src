@@ -1,34 +1,28 @@
+import csv
+import os
+
+from ..constants import PATH
+from ...utils.time import convert_to_24_plus_time
+from .constants import STOP_TIME_HEADER
 
 
 class Trip(object):
 
     objects = {}
 
-    def __init__(self, route_id, service_id, direction_id, trip_seq, segment=None):
+    def __init__(self, route_id, service_id, direction_id, trip_seq, segment):
         self.route_id = route_id
         self.service_id = service_id
         self.direction_id = direction_id
         self.trip_seq = str(trip_seq)
         self.id = '-'.join([route_id, service_id, direction_id, self.trip_seq])
-        self.route = Route.objects[route_id]
-        self.direction = Direction.objects[direction_id]
         self.segment = segment
         self.stop_times = {}
         self.driver = None
         Trip.objects[self.id] = self
 
     def __repr__(self):
-        return '<Trip for {} with service {} and direction {}>'.format(self.route.name, self.service_id,
-                                                                       self.direction.name)
-
-    @staticmethod
-    def get_trip_id(route_id, direction_id, service_id, seq):
-        if '-'.join([route_id, direction_id, service_id, seq]) not in Trip.objects:
-            Trip(route_id, direction_id, service_id, seq)
-        return Trip.objects[(route_id, direction_id, service_id, seq)]
-
-    def parse(self):
-        return re.split('-', self.id)
+        return '<Trip {} with Segment {}>'.format(self.id, self.segment)
 
 
 class StopTime(object):
@@ -82,3 +76,4 @@ class StopTime(object):
             writer.writerow(StopTime.objects[stop_time].get_record())
         return True
 
+    # Export JSON instead?
