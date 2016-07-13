@@ -10,13 +10,13 @@ import os
 import re
 
 # Import scripts from src
-import src.scripts.transit.stop.stop as st
-from src.scripts.transit.route.direction import Direction
-from src.scripts.transit.route.errors import *
-from src.scripts.utils.IOutils import load_json, export_json
+import scripts.transit.stop.stop as st
+from .direction import Direction
+from .errors import *
+from ...utils.IOutils import load_json, export_json
 
 # Import variables from src
-from src.scripts.transit.constants import PATH
+from ...transit.constants import PATH
 
 
 # Call Direction.load() to access all direction objects

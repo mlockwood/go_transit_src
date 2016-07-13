@@ -9,9 +9,9 @@ import multiprocessing as mp
 GO Imports------------------------------------------------------
 """
 
-import src.scripts.transit.stop.errors as StopErrors
+from .errors import *
 
-from src.scripts.transit.constants import PATH
+from ...transit.constants import PATH
 
 
 class Stop(object):
@@ -92,77 +92,6 @@ class Point(object):
         # Develop object map for stops
         Stop.map_objects()
         return True
-
-
-class Historic(object):
-
-    objects = {}
-    header_0 = 'start_date'
-    header_1 = 'stop_id'
-
-    def __init__(self, start_date, end_date, file):
-        self.start_date = start_date
-        self.end_date = end_date
-        self.file = file
-        self.stops = self.load_historic_stops()
-        Historic.objects[(start_date, end_date)] = self
-
-    @staticmethod
-    def process():
-        # Load metadata.csv
-        reader = csv.reader(open(PATH + '/data/stops/historic/metadata.csv', 'r', newline=''), delimiter=',',
-                            quotechar='|')
-
-        # Initialize and process historic sheets
-        for row in reader:
-            if row[0] == Historic.header_0:
-                continue
-            # Add all rows as Historic objects
-            Historic(datetime.datetime.strptime(row[0], '%Y%m%d'), datetime.datetime.strptime(row[1], '%Y%m%d'), row[2])
-        return True
-
-    @staticmethod
-    def historic_conversion(date, stop):
-        """
-        Convert a historic stop name to the current stop object.
-        :param date: a date string with format '%Y%m%d'
-        :param stop: the historic stop name
-        :return: Stop object
-        """
-        # Find the historic file for which the date belongs
-        date = datetime.datetime.strptime(date, '%Y%m%d')
-        for date_range in Historic.objects:
-            if date_range[0] <= date <= date_range[1]:
-                obj = Historic.objects[date_range]
-
-                # Convert the stop to the current stop object
-                if stop in obj.stops:
-                    return Stop.objects[obj.stops[stop]]
-
-                # If stop not in the historic file raise an error
-                raise StopErrors.StopNotInHistoricDateError('Stop {} is not available for date {}'.format(stop, date))
-
-    def load_historic_stops(self):
-        stops = {}
-
-        # Load metadata.csv for all historic time periods
-        if self.file != '*':
-            reader = csv.reader(open(PATH + '/data/stops/historic/' + self.file, 'r', newline=''), delimiter=',',
-                                quotechar='|')
-
-            # Process the historic file
-            for row in reader:
-                if not re.sub(' ', '', ''.join(row)):
-                    continue
-
-                # Add historic stop to historic object stops
-                stops[row[0]] = row[1]
-
-        # For the current time period set self.stops equal to Stops.objects
-        else:
-            for stop in Stop.objects:
-                stops[stop] = stop
-        return stops
 
 
 class Inventory(object):
@@ -255,7 +184,6 @@ def convert_gps_dms_to_dd(gps):
 
 
 Point.process()
-Historic.process()
 
 if __name__ == '__main__':
     Inventory.process()

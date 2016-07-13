@@ -10,23 +10,26 @@ import os
 import re
 
 # Entire scripts from src
-import src.scripts.transit.stop.stop as st
-from src.scripts.transit.route.errors import *
+from ..stop.stop import Stop, Point
+from .errors import *
 
 # Classes and variables from src
-from src.scripts.transit.constants import PATH
-from src.scripts.transit.route.constants import DATE, STOP_TIME_HEADER
-from src.scripts.utils.IOutils import load_json, export_json
+from ..constants import PATH
+from .constants import DATE, STOP_TIME_HEADER
+from ...utils.IOutils import load_json, export_json
 
-from src.scripts.transit.route.segment import Segment, StopSeq
-from src.scripts.transit.route.service import Service
-from src.scripts.transit.route.trip import Trip, StopTime
+from .segment import Segment, StopSeq
+from .service import Service
+from .trip import Trip, StopTime
 
 # Import classes and functions from src
-from src.scripts.utils.functions import stitch_dicts
+from ...utils.functions import stitch_dicts
 
 # Import variables from src
-from src.scripts.transit.route.constants import LAX
+from .constants import LAX
+
+# Load dependent data
+Point.process()
 
 
 class Route(object):
