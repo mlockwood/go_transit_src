@@ -1,9 +1,10 @@
 import csv
+import datetime
 import os
 
-from ..constants import PATH
-from ...utils.time import convert_to_24_plus_time
-from .constants import STOP_TIME_HEADER
+from scripts.transit.constants import PATH
+from scripts.utils.time import convert_to_24_plus_time
+from scripts.transit.route.constants import STOP_TIME_HEADER
 
 
 class Trip(object):
@@ -11,60 +12,64 @@ class Trip(object):
     objects = {}
     id_generator = {}
 
-    def __init__(self, route_id, service_id, direction_id, segment):
-        # Increment route's trip_seq
-        Trip.id_generator[route_id] = Trip.id_generator.get(route_id, 0) + 1
-
-        # Initialized attributes
-        self.route_id = route_id
-        self.service_id = service_id
-        self.direction_id = direction_id
-        self.trip_seq = Trip.id_generator[route_id]
-        self.id = '-'.join([route_id, service_id, direction_id, self.trip_seq])
+    def __init__(self, joint, schedule, segment, stop_seqs, start_loc, end_loc, start_time, driver):
+        # Establish id
+        self.joint = joint
+        self.schedule = schedule
         self.segment = segment
-        self.stop_times = {}
-        self.driver = None
+        self.trip_seq = segment.trip_generator
+        self.id = '-'.join([joint.id, schedule.id, segment.name, self.trip_seq])
+        segment.trip_generator += 1
+
+        # Develop times, stop_times, and driver
+        self.start_loc = start_loc  # This is Segment loc not RouteGraph loc
+        self.end_loc = end_loc  # This is Segment loc not RouteGraph loc
+        self.base_time = start_time - datetime.timedelta(seconds=start_loc)
+        self.start_time = start_time  # This must have gone to the next date if it passed midnight
+        self.end_time = self.base_time + datetime.timedelta(seconds=end_loc)
+        self.stop_times = dict((StopTime(self, stop_seq, self.base_time, driver), True) for stop_seq in stop_seqs)
+        self.driver = driver
         Trip.objects[self.id] = self
 
     def __repr__(self):
-        return '<Trip {} with Segment {}>'.format(self.id, self.segment)
+        return '<Trip {} with Segment {}>'.format(self.id, self.segment.name)
 
 
 class StopTime(object):
 
     objects = {}
 
-    def __init__(self, trip_id, stop_seq, arrive):
+    def __init__(self, trip, stop_seq, base_time, driver):
         # Attributes from __init__
-        self.trip = Trip.objects[trip_id]
+        self.trip = trip
+        self.trip_id = trip.id
         self.stop_seq = stop_seq
+        self.driver = driver
 
         # Attributes from stop_seq
         self.stop_id = stop_seq.stop
         self.gps_ref = stop_seq.gps_ref
 
-        self.arrive = arrive.strftime('%H:%M:%S')
-        self.depart = (arrive + stop_seq.timedelta).strftime('%H:%M:%S')
-        self.gtfs_depart = (arrive + stop_seq.gtfs_timedelta).strftime('%H:%M:%S')
-        self.arrive_24p = convert_to_24_plus_time(self.trip.segment.start, arrive)
-        self.depart_24p = convert_to_24_plus_time(self.trip.segment.start, (arrive + stop_seq.timedelta))
-        self.gtfs_depart_24p = convert_to_24_plus_time(self.trip.segment.start, (arrive + stop_seq.gtfs_timedelta))
+        self.arrive = (base_time + datetime.timedelta(seconds=stop_seq.arrive)).strftime('%H:%M:%S')
+        self.depart = (base_time + datetime.timedelta(seconds=stop_seq.depart)).strftime('%H:%M:%S')
+        self.gtfs_depart = (base_time + datetime.timedelta(seconds=stop_seq.gtfs_depart)).strftime('%H:%M:%S')
+        self.arrive_24p = convert_to_24_plus_time(self.trip.joint.service.start_date, self.arrive)
+        self.depart_24p = convert_to_24_plus_time(self.trip.segment.start, self.depart)
+        self.gtfs_depart_24p = convert_to_24_plus_time(self.trip.segment.start, self.gtfs_depart)
 
         self.order = stop_seq.order
         self.timepoint = stop_seq.timed
         self.pickup = 3 if not self.timepoint else 0
         self.dropoff = 3 if not self.timepoint else 0
         self.display = stop_seq.display
-        self.driver = 0
-        self.joint = None
 
-        # Attributes from trip_id
-        self.route = self.trip.route
-        self.direction = Trip.objects[trip_id].direction
+        # Attributes from trip
+        self.joint = trip.joint.id
+        self.route = trip.segment.route
+        self.direction = trip.segment.direction_id
 
         # Set records
-        self.trip.stop_times[self.order] = self.stop_id
-        StopTime.objects[(trip_id, self.order)] = self
+        StopTime.objects[(trip.id, self.order)] = self
 
     def get_record(self):
         return [self.trip.id, self.stop_id, self.gps_ref, self.direction.name, self.arrive, self.gtfs_depart,

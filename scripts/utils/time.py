@@ -1,5 +1,6 @@
 import re
 
+
 def convert_to_24_plus_time(date0, date1, seconds=True):
     if date0.day != date1.day:
         if seconds:

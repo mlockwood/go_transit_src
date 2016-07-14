@@ -34,6 +34,7 @@ class Segment(object):
         self.direction_id = int(direction_id)
 
         # Attributes set after initialization
+        self.trip_generator = 1
         self.trip_length = 0
         self.seq_order = {}  # {StopSeq.order: StopSeq}
         self.stops = {}  # {StopSeq.stop: True}
