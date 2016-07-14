@@ -3,7 +3,7 @@ import datetime
 DATE = datetime.datetime(2016, 4, 25)
 LAX = 300
 STOP_TIME_HEADER = ['trip_id', 'stop_id', 'gps_ref', 'direction', 'arrival', 'departure', 'stop_seq', 'timepoint',
-                    'pickup', 'dropoff', 'display', 'driver', 'joint']
+                    'pickup', 'dropoff', 'display', 'driver']
 DISPLAY_ALL = True
 
 SCHEDULE_HEADER = '<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t<meta charset="UTF-8">\n\

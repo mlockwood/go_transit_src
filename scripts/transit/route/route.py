@@ -91,58 +91,6 @@ class Route(object):
         return False
 
 
-class Sheet(object):
-
-    def set_entries(self):
-        # Set stop_times
-        for stop_seq in self.segment.stop_seqs:
-            self.set_stop_time(self.segment, self.segment.stop_seqs[stop_seq], self.start, self.end)
-
-        # Set trips by converting origin_time value in stop_time to trip_id
-        self.set_trip_ids()
-        return True
-
-    def set_stop_time(self, segment, stop_seq, start, end):
-        # Base time is start + spread + offset
-        base = start + datetime.timedelta(seconds=(stop_seq.arrive + segment.offset))
-
-        # If spread + offset >= headway then reduce base by headway time
-        if stop_seq.arrive + segment.offset >= self.headway:
-            base = base - datetime.timedelta(seconds=self.headway)
-
-        # Add stop_times until end time
-        while base < end:
-            origin = base - datetime.timedelta(seconds=stop_seq.arrive)
-
-            # stop_seq.stop_times[time] = origin_time
-            stop_seq.stop_times[base] = origin
-
-            # segment.trips[origin_time] = True
-            segment.trips[origin] = True
-
-            base = base + datetime.timedelta(seconds=self.headway)
-        return True
-
-    def set_trip_ids(self):
-        # For each origin time of the segment set a unique Trip id
-        for time in sorted(self.segment.trips):
-            # Instantiate a Trip object
-            self.segment.trips[time] = Trip(self.route.id, self.service.id, self.direction.id,
-                                            self.segment)
-
-            # Increment route's Trip id generator
-            self.route.trip_id += 1
-
-        # Instantiate StopTime objects for each stop_time
-        for stop_seq in self.segment.stop_seqs:
-            stop_seq = self.segment.stop_seqs[stop_seq]
-            for arrive in stop_seq.stop_times:
-
-                # Set a StopTime object with all attributes
-                StopTime(self.segment.trips[stop_seq.stop_times[arrive]].id, stop_seq, arrive)
-        return True
-
-
 class Joint(object):
 
     objects = {}
@@ -155,14 +103,24 @@ class Joint(object):
         self.service = Service.objects[int(service_id)]
         self.service_id = int(service_id)
         self.headway = int(headway)
-        self.schedules = {}  # {<Schedule>: {0: <Segment>, 1: <Segment>, ... } ... }
-        self.graphs = {}  # {time: RouteGraph}
+        self.schedules = {}
         Joint.objects[int(id)] = self
+
+    def __repr__(self):
+        return '<Joint {}>'.format(self.id)
 
     @staticmethod
     def process():
-
-        # Process RouteGraphs for each schedule in Joint.schedules
+        for obj in Joint.objects:
+            joint = Joint.objects[obj]
+            # Create trips for each schedule in order
+            prev = None
+            for schedule in sorted(joint.schedules.keys()):
+                schedule.prev = schedule.check_prev(prev)
+                schedule.drivers = Driver.get_drivers(math.ceil(schedule.roundtrip / joint.headway)
+                                                      ) if not prev else prev.drivers
+                schedule.set_trips()
+                prev = schedule
 
         return True
 
@@ -191,16 +149,23 @@ class Schedule(object):
         self.offset = int(offset)
 
         self.start = self.joint.service.start_date.replace(hour=int(start_str[:2]), minute=int(start_str[2:]))
-        # Handle times that are at or after midnight (24+ hour scale for GTFS)
+        # Handle times that are at or after midnight (24+ hour scale for GTFS) remember to use start_date for end
         if int(end_str[:2]) >= 24:
-            self.end = copy.deepcopy(self.joint.service.end_date
+            self.end = copy.deepcopy(self.joint.service.start_date
                 ).replace(hour=int(end_str[:2]) - 24, minute=int(end_str[2:])) + datetime.timedelta(days=1)
         else:
-            self.end = copy.deepcopy(self.joint.service.end_date).replace(hour=int(end_str[:2]),
-                                                                          minute=int(end_str[2:]))
+            self.end = copy.deepcopy(self.joint.service.start_date).replace(hour=int(end_str[:2]),
+                                                                            minute=int(end_str[2:]))
 
+        self.prev = None
+        self.drivers = []
+        self.trips = {}
         self.segments = self.get_segments()
-        self.joint.schedules[self] = self.segments
+        self.roundtrip = self.get_roundtrip()
+        self.order = self.get_order()
+        self.joint.schedules[self] = True
+        self.end_locs = {}
+
         Schedule.objects[int(id)] = self
 
     def __repr__(self):
@@ -208,6 +173,27 @@ class Schedule(object):
 
     def __str__(self):
         return '<Schedule {}>'.format(self.id)
+
+    def __lt__(self, other):
+        return (self.start, self.end) < (other.start, other.end)
+
+    def __le__(self, other):
+        return (self.start, self.end) <= (other.start, other.end)
+
+    def __eq__(self, other):
+        return (self.start, self.end) == (other.start, other.end)
+
+    def __ne__(self, other):
+        return (self.start, self.end) != (other.start, other.end)
+
+    def __gt__(self, other):
+        return (self.start, self.end) > (other.start, other.end)
+
+    def __ge__(self, other):
+        return (self.start, self.end) >= (other.start, other.end)
+
+    def __hash__(self):
+        return hash((self.start, self.end))
 
     @classmethod
     def load(cls):
@@ -223,46 +209,22 @@ class Schedule(object):
     def get_segments(self):
         return dict((segment.dir_order, segment) for segment in Segment.schedule_query[self.id])
 
-
-class RouteGraph(object):
-
-    objects = {}
-
-    def __init__(self, joint, schedule, segments, prev=None):
-        # Initialized attributes
-        self.joint = joint
-        self.schedule = schedule
-        self.segments = segments  # {0: <Segment>, 1: <Segment>, 2: <Segment> ... }
-
-        # Setup attributes
-        self.roundtrip = 0
-        self.prev = self.check_prev(prev)
-        self.drivers = Driver.get_drivers(math.ceil(self.roundtrip / self.joint.headway)) if not prev else prev.drivers
-        self.order = self.get_order()
-
-        # Schedule attributes
-        self.schedules = {}
-        self.hidden_key = {}
-        self.set_schedules()
-
-        # Add to objects
-        RouteGraph.objects[(joint, schedule)] = self
-
     def check_prev(self, prev):
         if prev:
             # If the number of driver shifts between this and the previous schedule do not match
             if len(prev.drivers) != math.ceil(self.roundtrip / self.joint.headway):
                 # Raise an error because they should match
                 raise JointRouteMismatchedDriverCount('JointRoute {} has mismatched driver counts for {} and {}'.format(
-                    self.joint.id, self.prev.schedule, self.schedule))
+                    self.joint.id, self.prev.id, self.id))
 
         return prev
 
     def get_roundtrip(self):
         # Find joint roundtrip for current time schedule
+        roundtrip = 0
         for segment in self.segments:
-            self.roundtrip += segment.trip_length
-        return True
+            roundtrip += self.segments[segment].trip_length
+        return roundtrip
 
     def get_order(self):
         order = {}
@@ -270,7 +232,7 @@ class RouteGraph(object):
             # Segment_key represents the next segment, which is dir_order + 1 or if the final dir_order the next is 0
             segment_key = segment + 1 if segment + 1 in self.segments else 0
             # Set dir_order as key and value
-            order[segment] = segment_key
+            # order[segment] = segment_key
             # Set Segment object as key and value
             order[self.segments[segment]] = self.segments[segment_key]
         return order
@@ -306,31 +268,34 @@ class RouteGraph(object):
 
         return trip_length % self.roundtrip
 
-    def get_time_locations(self, origin, trips, order, minimum=True):
-        time_locs = {}
-        for trip in trips:
+    def get_segment_loc(self, loc):
+        """
+        Input is the absolute schedule location and the result is the
+        relative segment location along with the Segment object
+        :param loc: absolute schedule location
+        :return: (Segment, relative_location)
+        """
+        loc %= self.roundtrip
+        distance = 0
+        segment = self.segments[0]
+        while (distance + segment.trip_length) < loc:
+            distance += segment.trip_length
+            segment = self.order[segment]
+        return segment, loc - distance
 
-            # Add the prev_trip_length time for connected segments after the origin before this trip if applicable
-            # Then set the result as the key for the travel time since the origin for the start of the trip
-            stop_time = min(trip.stop_times) if minimum else max(trip.stop_times)
-            time_locs[self.get_trip_length(origin, trip.segment.stop_seqs[stop_time], order)] = trip
-
-        return time_locs
-
-    def get_trip_order(self, trips, order):
-        time_locs = self.get_time_locations(self.trips[0][0], trips, order)
-        # Convert dict to list ordered by key of arrival time but value set to trip
-        trip_order = []
-        for key in sorted(time_locs.keys()):
-            trip_order.append(time_locs[key])
-        return trip_order
-
-    def trip_start_helper(self, origin_time, cur_segment):
-        while origin_time not in Segment.objects[cur_segment].trips:
-            origin_time = origin_time + datetime.timedelta(seconds=Segment.objects[cur_segment].trip_length)
-            cur_segment = self.order[cur_segment]
-
-        return Segment.objects[cur_segment].trips[origin_time], origin_time
+    def get_schedule_loc(self, segment, loc):
+        """
+        Input is the relative segment location and the result is the
+        absolute schedule location
+        :param segment: Segment object of the current location
+        :param loc: relative segment location
+        :return: (Segment, relative_location)
+        """
+        distance = -loc
+        while segment != self.segments[0]:
+            distance += segment.trip_length
+            segment = self.order[segment]
+        return (self.roundtrip - distance) % self.roundtrip
 
     def get_start_locs(self):
         """
@@ -340,7 +305,7 @@ class RouteGraph(object):
         """
         start_locs = {}
         drivers = sorted([driver.id for driver in self.drivers]) # sort driver ids
-        last = self.schedule.offset  # starting position is equal to the schedule's offset
+        last = self.offset  # starting position is equal to the schedule's offset
         d = 0  # index of the current driver position
 
         while d < len(self.drivers):
@@ -357,58 +322,63 @@ class RouteGraph(object):
         return start_locs
 
     def stitch_prev(self, start_locs):
-        # Get end_locs from prev and add closest min trip to origin + roundtrip to create the idea of a circular graph
-        self.prev.end_locs[min(self.prev.end_locs) + self.prev.roundtrip] = self.prev.end_locs[min(self.prev.end_locs)]
-
-        # Stitch A and B trips together
+        # Stitch prev and current drivers together
         stitch = stitch_dicts(self.prev.end_locs, start_locs)
 
         # Check for errors
+        # print(self.prev.end_locs, start_locs)
         if stitch == 'Sizes incongruent problem':
             raise IncongruentSchedulesError('Joint route {} has schedules that are incongruent:'.format(self.joint) +
-                                            ' {} and {}'.format(self.prev.schedule.id, self.schedule.id))
+                                            ' {} and {}'.format(self.prev.id, self.id))
 
         elif stitch == 'Duplicate problem':
             raise MismatchedJointSchedulesTimingError('Joint route {} has schedules with '.format(self.joint) +
                                                       'mismatched timing likely to do significant differences in ' +
-                                                      'route design: {} {}'.format(self.prev.schedule.id,
-                                                                                   self.schedule.id))
+                                                      'route design: {} {}'.format(self.prev.id, self.id))
 
         elif stitch == 'Lax problem':
             raise LaxConstraintFailureError('Joint route {} has schedules that violate the LAX '.format(self.joint) +
-                                            'constraint: {} {}'.format(self.prev.schedule.id, self.schedule.id))
+                                            'constraint: {} {}'.format(self.prev.id, self.id))
 
         return stitch
 
-    def set_schedules(self):
-        trip_starts = self.get_start_locs()
+    def generate_trips(self, loc, driver):
+        segment, start_loc = self.get_segment_loc(loc)
+        end_loc = start_loc
+        start = copy.deepcopy(self.start)
+        end = copy.deepcopy(self.end)
+        while start < end:
 
-        # If previous, use stitch to reconfigure drivers
-        if self.prev:
-            trip_starts = self.stitch_prev(trip_starts)
+            # Calculate end_loc
+            # Find the end time which is the start time + Segment.trip_length - start_loc time
+            trip_end = start + datetime.timedelta(seconds=(segment.trip_length-start_loc))
+            if trip_end > end:
+                end_loc = start_loc + (end - start).total_seconds()
+            else:
+                end_loc = segment.trip_length
 
-        # Initialize schedule for each driver
-        for position in trip_starts:
-            self.schedules[position[0]] = {position[2]: position[1]}
-            self.hidden_key[position[0]] = (position[1].segment.id, position[2])
+            # Set trip
+            Trip(self.joint, self, segment, segment.query_stop_seqs(start_loc, end_loc), start_loc, end_loc, start,
+                 driver)
 
-        # Forward path -- (Backward path was deprecated)
-        for driver in self.schedules:
-            cur_segment = self.hidden_key[driver][0]  # order should always be a Segment id
-            time = self.hidden_key[driver][1]
-            while True:
+            # Calculate next start
+            start_loc = 0
+            start = trip_end
+            segment = self.order[segment] if trip_end < end else segment
+            end_loc = 0 if trip_end == end else end_loc
 
-                # Find the time to reach the next segment from the current segment
-                time = time + datetime.timedelta(seconds=Segment.objects[cur_segment].trip_length)
-                if time >= Segment.objects[cur_segment].end:
-                    break
+        # Set self.end_locs
+        self.end_locs[self.get_schedule_loc(segment, end_loc)] = driver
 
-                # Find the next segment from the current segment
-                cur_segment = self.order[cur_segment]
+    def set_trips(self):
+        start_locs = self.get_start_locs()
 
-                # Convert time to trip id from next segment
-                # self.schedules[driver][time] = Trip
-                self.schedules[driver][time] = Segment.objects[cur_segment].trips[time]
+        # Iterate through each driver and set their trips
+        for loc in start_locs:
+            self.generate_trips(loc, start_locs[loc])
+
+        # Take min loc from origin and add key of loc + roundtrip to create the idea of a circular graph
+        self.end_locs[min(self.end_locs) + self.roundtrip] = self.end_locs[min(self.end_locs)]
 
 
 class Driver:
@@ -430,4 +400,4 @@ Joint.load()
 Schedule.load()
 Joint.process()
 # Joint.export()
-
+StopTime.publish_matrix()

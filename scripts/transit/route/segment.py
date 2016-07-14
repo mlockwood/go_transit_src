@@ -49,7 +49,7 @@ class Segment(object):
         return '<Segment {}>'.format(self.name)
 
     def __str__(self):
-        return 'Segment {} for route {} and direction {}'.format(self.name, self.route, self.direction)
+        return 'Segment {} for joint {}'.format(self.name, self.joint)
 
     def __lt__(self, other):
         return (self.joint, self.schedule_id, self.name) < (other.joint, other.schedule_id, other.name)

@@ -18,7 +18,7 @@ class Trip(object):
         self.schedule = schedule
         self.segment = segment
         self.trip_seq = segment.trip_generator
-        self.id = '-'.join([joint.id, schedule.id, segment.name, self.trip_seq])
+        self.id = '-'.join(str(s) for s in [joint.id, schedule.id, segment.name, self.trip_seq])
         segment.trip_generator += 1
 
         # Develop times, stop_times, and driver
@@ -50,12 +50,13 @@ class StopTime(object):
         self.stop_id = stop_seq.stop
         self.gps_ref = stop_seq.gps_ref
 
-        self.arrive = (base_time + datetime.timedelta(seconds=stop_seq.arrive)).strftime('%H:%M:%S')
-        self.depart = (base_time + datetime.timedelta(seconds=stop_seq.depart)).strftime('%H:%M:%S')
-        self.gtfs_depart = (base_time + datetime.timedelta(seconds=stop_seq.gtfs_depart)).strftime('%H:%M:%S')
+        # Times for the StopTime, the first three can be made to strings with .strftime('%H:%M:%S')
+        self.arrive = base_time + datetime.timedelta(seconds=stop_seq.arrive)
+        self.depart = base_time + datetime.timedelta(seconds=stop_seq.depart)
+        self.gtfs_depart = base_time + datetime.timedelta(seconds=stop_seq.gtfs_depart)
         self.arrive_24p = convert_to_24_plus_time(self.trip.joint.service.start_date, self.arrive)
-        self.depart_24p = convert_to_24_plus_time(self.trip.segment.start, self.depart)
-        self.gtfs_depart_24p = convert_to_24_plus_time(self.trip.segment.start, self.gtfs_depart)
+        self.depart_24p = convert_to_24_plus_time(self.trip.joint.service.start_date, self.depart)
+        self.gtfs_depart_24p = convert_to_24_plus_time(self.trip.joint.service.start_date, self.gtfs_depart)
 
         self.order = stop_seq.order
         self.timepoint = stop_seq.timed
@@ -66,14 +67,15 @@ class StopTime(object):
         # Attributes from trip
         self.joint = trip.joint.id
         self.route = trip.segment.route
-        self.direction = trip.segment.direction_id
+        self.direction = trip.segment.direction.name
 
         # Set records
         StopTime.objects[(trip.id, self.order)] = self
 
     def get_record(self):
-        return [self.trip.id, self.stop_id, self.gps_ref, self.direction.name, self.arrive, self.gtfs_depart,
-                self.order, self.timepoint, self.pickup, self.dropoff, self.display, self.driver, self.joint]
+        return [self.trip.id, self.stop_id, self.gps_ref, self.direction, self.arrive.strftime('%H:%M:%S'),
+                self.gtfs_depart.strftime('%H:%M:%S'), self.order, self.timepoint, self.pickup, self.dropoff,
+                self.display, self.driver]
 
     @staticmethod
     def publish_matrix():
