@@ -36,3 +36,7 @@ class MismatchedJointSchedulesTimingError(RouteError):
 
 class LaxConstraintFailureError(RouteError):
     pass
+
+
+class SegmentNameDoesNotHaveStopSeqs(RouteError):
+    pass
