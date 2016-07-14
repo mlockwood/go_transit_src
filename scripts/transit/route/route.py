@@ -1,7 +1,8 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 
-# Python libraries and packages
+# Python libraries and packagesa
+import copy
 import datetime
 import math
 import re
@@ -11,16 +12,16 @@ from scripts.transit.stop.stop import Stop, Point
 from scripts.transit.route.errors import *
 
 # Classes and variables from src
-from ..constants import PATH
-from .constants import DATE, STOP_TIME_HEADER
-from ...utils.IOutils import load_json, export_json
+from scripts.transit.constants import PATH
+from scripts.transit.route.constants import DATE, STOP_TIME_HEADER
+from scripts.utils.IOutils import load_json, export_json
 
-from .segment import Segment, StopSeq, Direction
-from .service import Service
-from .trip import Trip, StopTime
+from scripts.transit.route.segment import Segment, StopSeq, Direction
+from scripts.transit.route.service import Service
+from scripts.transit.route.trip import Trip, StopTime
 
 # Import classes and functions from src
-from ...utils.functions import stitch_dicts
+from scripts.utils.functions import stitch_dicts
 
 # Import variables from src
 from scripts.transit.route.constants import LAX
@@ -30,6 +31,7 @@ Point.process()
 Direction.load()
 Segment.load()
 StopSeq.load()
+Service.load()
 
 
 class Route(object):
@@ -153,19 +155,12 @@ class Joint(object):
         self.service = Service.objects[int(service_id)]
         self.service_id = int(service_id)
         self.headway = int(headway)
-        self.schedules = {}  # {schedule_id: {0: <Segment>, 1: <Segment>, ... } ... }
+        self.schedules = {}  # {<Schedule>: {0: <Segment>, 1: <Segment>, ... } ... }
         self.graphs = {}  # {time: RouteGraph}
         Joint.objects[int(id)] = self
 
     @staticmethod
     def process():
-        # Iterate over Segments and set them to the correct Joint
-        for obj in Segment.objects:
-            segment = Segment.objects[obj]
-            joint = Joint.objects[segment.joint]
-            if segment.time not in joint.schedules:
-                joint.schedules[segment.time] = {}
-            joint.schedules[segment.time][segment.dir_order] = segment
 
         # Process RouteGraphs for each schedule in Joint.schedules
 
@@ -187,13 +182,46 @@ class Schedule(object):
 
     objects = {}
 
-    def __init__(self, id, start, end, offset):
+    def __init__(self, id, joint_id, start_str, end_str, offset):
         self.id = int(id)
-        self.start = datetime.time(hour=start[:2], minute=start[2:])
-        self.end = datetime.time(hour=end[:2], minute=end[2:])
+        self.joint_id = int(joint_id)
+        self.joint = Joint.objects[joint_id]
+        self.start_str = start_str
+        self.end_str = end_str
         self.offset = int(offset)
+
+        self.start = self.joint.service.start_date.replace(hour=int(start_str[:2]), minute=int(start_str[2:]))
+        # Handle times that are at or after midnight (24+ hour scale for GTFS)
+        if int(end_str[:2]) >= 24:
+            self.end = copy.deepcopy(self.joint.service.end_date
+                ).replace(hour=int(end_str[:2]) - 24, minute=int(end_str[2:])) + datetime.timedelta(days=1)
+        else:
+            self.end = copy.deepcopy(self.joint.service.end_date).replace(hour=int(end_str[:2]),
+                                                                          minute=int(end_str[2:]))
+
+        self.segments = self.get_segments()
+        self.joint.schedules[self] = self.segments
         Schedule.objects[int(id)] = self
 
+    def __repr__(self):
+        return '<Schedule {}>'.format(self.id)
+
+    def __str__(self):
+        return '<Schedule {}>'.format(self.id)
+
+    @classmethod
+    def load(cls):
+        load_json(PATH + '/data/routes/schedules.json', cls)
+
+    @classmethod
+    def export(cls):
+        export_json(PATH + '/data/routes/schedules.json', cls)
+
+    def get_json(self):
+        return dict([(k, getattr(self, k)) for k in ['id', 'joint_id', 'start_str', 'end_str', 'offset']])
+
+    def get_segments(self):
+        return dict((segment.dir_order, segment) for segment in Segment.schedule_query[self.id])
 
 
 class RouteGraph(object):
@@ -226,7 +254,7 @@ class RouteGraph(object):
             if len(prev.drivers) != math.ceil(self.roundtrip / self.joint.headway):
                 # Raise an error because they should match
                 raise JointRouteMismatchedDriverCount('JointRoute {} has mismatched driver counts for {} and {}'.format(
-                    self.joint.id, self.prev.time, self.time))
+                    self.joint.id, self.prev.schedule, self.schedule))
 
         return prev
 
@@ -247,7 +275,7 @@ class RouteGraph(object):
             order[self.segments[segment]] = self.segments[segment_key]
         return order
 
-    def get_trip_length(self, a, b, order):
+    def get_trip_length(self, a, b):
         """
 
         :param a: The origin of the trip; MUST be a Segment id OR a
@@ -262,21 +290,21 @@ class RouteGraph(object):
         # If the origin is a StopSeq subtract the departure time from the trip_length
         if re.search('stopseq', str(a.__class__).lower()):
             trip_length -= a.depart
-            a = a.segment.id
+            a = Segment.objects[a.segment]
 
         # If the destination is a StopSeq add the departure time to the trip_length
         if re.search('stopseq', str(b.__class__).lower()):
             trip_length += b.depart
-            b = b.segment.id
+            b = Segment.objects[b.segment]
 
         # Continue traveling the order until the cur_segment and final_segment are the same
         while a != b:
             # Add current segment's trip length to the prev_trip_length
-            trip_length += Segment.objects[order[a]].trip_length
+            trip_length += self.order[a].trip_length
             # Shift the cur_segment forward
-            a = order[a]
+            a = self.order[a]
 
-        return trip_length if trip_length != self.roundtrip else 0
+        return trip_length % self.roundtrip
 
     def get_time_locations(self, origin, trips, order, minimum=True):
         time_locs = {}
@@ -304,87 +332,56 @@ class RouteGraph(object):
 
         return Segment.objects[cur_segment].trips[origin_time], origin_time
 
-    def get_trip_starts(self):
-        # Set ordered drivers
-        drivers = sorted([driver.id for driver in self.drivers])
+    def get_start_locs(self):
+        """
+        Find all of the driver starting locations; remember location is
+        time from the origin and not a physical location
+        :return: {start_loc: driver}
+        """
+        start_locs = {}
+        drivers = sorted([driver.id for driver in self.drivers]) # sort driver ids
+        last = self.schedule.offset  # starting position is equal to the schedule's offset
+        d = 0  # index of the current driver position
 
-        adjustment = (self.joint.headway - self.segments[0].offset) % self.joint.headway
-        origin_time = self.start - (datetime.timedelta(seconds=adjustment))
+        while d < len(self.drivers):
+            start_locs[last] = drivers[d]
+            # Increment the last location distance by the headway % the roundtrip in case the origin is passed
+            last = (last + self.joint.headway) % self.roundtrip
+            d += 1
 
-        try:
-            trip_starts = [(drivers[0], self.segments[0].trips[origin_time], origin_time)]
+        # If prev return stitched dictionary
+        if self.prev:
+            return self.stitch_prev(start_locs)
 
-        except KeyError:
-                trip, origin_time = self.trip_start_helper(origin_time, self.trips[0][0])
-                trip_starts = [(drivers[0], trip, origin_time)]
+        # Otherwise return start_locs as-is
+        return start_locs
 
-        mid_trip_distance = (self.headway - self.segments[0].offset) % self.headway
-        cur_segment = self.trips[0][0]  # IS self.trips[0][0] == self.segments[0]?--------------------------------------
-
-        for driver in drivers[1:]:
-            mid_trip_distance += self.headway
-
-            # Continue to rotate segments and reduce the length mid_trip if mid_trip >= current segment trip length
-            while mid_trip_distance >= Segment.objects[cur_segment].trip_length:
-                mid_trip_distance -= Segment.objects[cur_segment].trip_length
-                cur_segment = self.order[cur_segment]
-
-            # Add final mid_trip_distance to the trip_starts list
-            origin_time = Segment.objects[cur_segment].start - datetime.timedelta(seconds=mid_trip_distance)
-
-            # Try to add as-is, but if a key error then progress. See documentation #X ---------------------------------
-            try:
-                trip_starts += [(driver, Segment.objects[cur_segment].trips[origin_time], origin_time)]
-
-            except KeyError:
-                trip, origin_time = self.trip_start_helper(origin_time, cur_segment)
-                trip_starts += [(driver, trip, origin_time)]
-
-        return trip_starts
-
-    def stitch_prev(self, starting):
-        # Collect trip_origins from previous schedule
-        a = []
-        for driver in self.prev.schedules:
-            a.append(self.prev.schedules[driver][max(self.prev.schedules[driver])])
-        a = self.get_time_locations(self.prev.trips[0][0], a, self.prev.order, minimum=False)
-        # Add in the minimum trip at the other end to create the idea of a circular list/graph
-        a[min(a) + self.roundtrip] = a[min(a)]
-
-        # Collect trip_origins from current starts
-        b = []
-        for position in starting:
-            b.append(position[1])
-        b = self.get_time_locations(self.trips[0][0], b, self.order)
+    def stitch_prev(self, start_locs):
+        # Get end_locs from prev and add closest min trip to origin + roundtrip to create the idea of a circular graph
+        self.prev.end_locs[min(self.prev.end_locs) + self.prev.roundtrip] = self.prev.end_locs[min(self.prev.end_locs)]
 
         # Stitch A and B trips together
-        stitch = stitch_dicts(a, b)
+        stitch = stitch_dicts(self.prev.end_locs, start_locs)
 
         # Check for errors
         if stitch == 'Sizes incongruent problem':
             raise IncongruentSchedulesError('Joint route {} has schedules that are incongruent:'.format(self.joint) +
-                                            ' {} and {}'.format(self.prev.service.id, self.service.id))
+                                            ' {} and {}'.format(self.prev.schedule.id, self.schedule.id))
 
         elif stitch == 'Duplicate problem':
             raise MismatchedJointSchedulesTimingError('Joint route {} has schedules with '.format(self.joint) +
                                                       'mismatched timing likely to do significant differences in ' +
-                                                      'route design: {} {}'.format(self.prev.service.id,
-                                                                                   self.service.id))
+                                                      'route design: {} {}'.format(self.prev.schedule.id,
+                                                                                   self.schedule.id))
 
         elif stitch == 'Lax problem':
             raise LaxConstraintFailureError('Joint route {} has schedules that violate the LAX '.format(self.joint) +
-                                            'constraint: {} {}'.format(self.prev.service.id, self.service.id))
+                                            'constraint: {} {}'.format(self.prev.schedule.id, self.schedule.id))
 
-        # Assign drivers from A to B
-        new_start = []
-        for position in starting:
-            # Set the position's driver to the prev driver
-            new_start += [(stitch[position[1]].driver, position[1], position[2])]
-
-        return new_start
+        return stitch
 
     def set_schedules(self):
-        trip_starts = self.get_trip_starts()
+        trip_starts = self.get_start_locs()
 
         # If previous, use stitch to reconfigure drivers
         if self.prev:
@@ -430,15 +427,7 @@ class Driver:
 
 
 Joint.load()
+Schedule.load()
+Joint.process()
 # Joint.export()
 
-"""
-self.start_time = copy.deepcopy(self.start_date).replace(hour=int(start_time[:-2]), minute=int(start_time[-2:]))
-# Handle times that are at or after midnight (24 + hour scale for GTFS)
-if int(end_time[:-2]) >= 24:
-    self.end_time = copy.deepcopy(self.start_date.replace(hour=int(end_time[:-2]) - 24,
-                                                          minute=int(end_time[-2:]))) + datetime.timedelta(
-        days=1)
-else:
-    self.end_time = copy.deepcopy(self.start_date).replace(hour=int(end_time[:-2]), minute=int(end_time[-2:]))
-"""

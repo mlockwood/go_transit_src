@@ -20,6 +20,7 @@ Direction.load()
 class Segment(object):
 
     objects = {}
+    schedule_query = {}
     id_generator = 1
 
     def __init__(self, joint, schedule_id, dir_order, route, name, direction_id):
@@ -34,12 +35,14 @@ class Segment(object):
 
         # Attributes set after initialization
         self.trip_length = 0
-        self.stop_seqs = {}
-        self.seq_order = {}
-        self.stops = {}
+        self.seq_order = {}  # {StopSeq.order: StopSeq}
+        self.stops = {}  # {StopSeq.stop: True}
 
         # Add to objects
         Segment.objects[(joint, schedule_id, name)] = self
+        if schedule_id not in Segment.schedule_query:
+            Segment.schedule_query[schedule_id] = {}
+        Segment.schedule_query[schedule_id][self] = True
 
     def __repr__(self):
         return '<Segment {}>'.format(self.name)
@@ -80,23 +83,20 @@ class Segment(object):
             # Examine and extract all StopSeqs related to Segment name
             for stop_seq in StopSeq.segment_query[segment.name]:
 
-                # Ensure the StopSeq object is added to segment.stop_seqs
-                segment.stop_seqs[stop_seq] = True
-
-                # Add the StopSeq stop to segment.stops
-                segment.stops[stop_seq.stop] = True
-
                 # Verify that a duplicate arrival is not present
                 if stop_seq.arrive in segment.seq_order:
                     raise DuplicateTimingSpreadError('{} duplicate arrival time of {}'.format(segment.name,
                                                                                               stop_seq.arrive))
 
                 # Add order[arrival] = i
-                segment.seq_order[stop_seq.arrive] = stop_seq.load_seq
+                segment.seq_order[stop_seq.arrive] = stop_seq
 
                 # If the destination is true, set current StopSeq's depart as the trip_length for the segment
                 if stop_seq.destination:
                     segment.trip_length = stop_seq.depart
+
+                # Add the StopSeq stop to segment.stops
+                segment.stops[stop_seq.stop] = True
 
             segment.set_order()
 
@@ -119,22 +119,26 @@ class Segment(object):
         # Convert temp list to dictionary of segment order
         order = {}
         i = 0
-        for row_id in temp:
-            order[row_id] = i
+        for stop_seq in temp:
+            order[i] = stop_seq  # set self.order[StopSeq.order] = StopSeq object
+            stop_seq.order = i  # transfer order to StopSeq objects
             i += 1
         self.seq_order = order
-
-        # Transfer order to StopSeq objects
-        for stop_seq in self.stop_seqs:
-            stop_seq.order = self.seq_order[stop_seq.load_seq]
-
-        # Convert stop_seqs to stop_seqs[stop_seq] = StopSeq
-        temp = {}
-        for stop_seq in self.stop_seqs:
-            temp[stop_seq.order] = stop_seq
-        self.stop_seqs = temp
-
         return True
+
+    def query_stop_seqs(self, start_loc, end_loc):
+        """
+        Select all StopSeqs that occur between the start_loc and
+        end_loc times. NotImplemented: Binary Tree version.
+        :param start_loc: time location for when the trip started
+        :param end_loc: time locations for when the trip ended
+        :return: {StopSeq: True}
+        """
+        query = {}
+        for key in sorted(self.seq_order.keys()):
+            if start_loc <= self.seq_order[key].depart and self.seq_order[key].arrive <= end_loc:
+                query[self.seq_order[key]] = True
+        return query
 
 
 class StopSeq(object):
@@ -179,30 +183,3 @@ class StopSeq(object):
     def get_json(self):
         return dict([(k, getattr(self, k)) for k in ['segment', 'stop', 'gps_ref', 'arrive', 'depart', 'timed',
                                                      'display', 'load_seq', 'destination']])
-
-    def connect_segment(self):
-        self.segment = Segment.objects[self.segment]
-
-        # Ensure the StopSeq object is added to segment.stop_seqs
-        self.segment.stop_seqs[self] = True
-
-        # Add the StopSeq stop to segment.stops
-        self.segment.stops[self.stop] = True
-
-        # Verify that a duplicate arrival is not present
-        if self.arrive in self.segment.seq_order:
-            raise DuplicateTimingSpreadError('{} duplicate arrival time of {}'.format(self.segment.name, self.arrive))
-
-        # Add order[arrival] = i
-        self.segment.seq_order[self.arrive] = self.load_seq
-
-        # If the destination is true, set current StopSeq's depart as the trip_length for the segment
-        if self.destination:
-            self.segment.trip_length = self.depart
-        return True
-
-
-Segment.load()
-StopSeq.load()
-print(len(Segment.objects))
-Segment.export()

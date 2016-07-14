@@ -21,9 +21,8 @@ def stitch_dicts(a, b, lax=None):
             return 'Duplicate problem'
         if lax or lax == 0:
             if abs(key - a_key) > lax:
-                print(a, b)
                 return 'Lax problem'
-        stitch[b[key]] = a[a_key]
+        stitch[key] = a[a_key]
     return stitch
 
 

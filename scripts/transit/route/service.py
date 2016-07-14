@@ -5,11 +5,11 @@
 import datetime
 
 # Import scripts from src
-from ...transit.route.errors import *
-from ...utils.IOutils import load_json, export_json
+from scripts.transit.route.errors import *
+from scripts.utils.IOutils import load_json, export_json
 
 # Import variables from src
-from ..constants import PATH
+from scripts.transit.constants import PATH
 
 
 class Service(object):
@@ -56,6 +56,3 @@ class Service(object):
             self.segments[segment] = True
         else:
             raise DuplicateServiceSheetError('Duplicate segment {} found in service {}'.format(segment, self.id))
-
-
-Service.load()
