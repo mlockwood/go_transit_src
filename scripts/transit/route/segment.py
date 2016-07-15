@@ -13,9 +13,6 @@ from scripts.utils.IOutils import load_json, export_json
 # Import variables from src
 from scripts.transit.constants import PATH
 
-# Load dependent data
-Direction.load()
-
 
 class Segment(object):
 
@@ -103,6 +100,7 @@ class Segment(object):
 
     @classmethod
     def load(cls):
+        Direction.load()
         load_json('{}/data/routes/segments.json'.format(PATH), cls)
 
     @classmethod

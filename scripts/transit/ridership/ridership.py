@@ -14,14 +14,14 @@ import xlsxwriter
 import multiprocessing as mp
 
 # Entire scripts from src
-import src.scripts.transit.stop.stop as st
-import src.scripts.transit.route.route as rt
-import src.scripts.transit.ridership.errors as RidershipErrors
+import scripts.transit.stop.stop as st
+import scripts.transit.route.route as rt
+import scripts.transit.ridership.errors as RidershipErrors
 
 # Classes and variables from src
-from src.scripts.transit.constants import PATH, BEGIN, BASELINE, INCREMENT
-from src.scripts.transit.ridership.constants import CHARS, DATA_HEADER, META_HEADER, INJECT_HEADER
-from src.scripts.utils.functions import csv_writer
+from scripts.transit.constants import PATH, BEGIN, BASELINE, INCREMENT
+from scripts.transit.ridership.constants import CHARS, DATA_HEADER, META_HEADER, INJECT_HEADER
+from scripts.utils.IOutils import csv_writer
 
 
 __author__ = 'Michael Lockwood'
@@ -312,7 +312,7 @@ class Record(object):
         else:
             routes = re.split('&', self.route)
             for route_id in routes:
-                if rt.Route.query_validation(route_id, self.date, stop):
+                if rt.Route.query_route(int(route_id), self.date, stop):
                     return route_id
 
             if stop != 'None' and stop:

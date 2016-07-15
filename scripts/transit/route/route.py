@@ -1,19 +1,18 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 
-# Python libraries and packagesa
+# Python libraries and packages
 import copy
 import datetime
 import math
 import re
 
 # Entire scripts from src
-from scripts.transit.stop.stop import Stop, Point
+from scripts.transit.stop.stop import Point
 from scripts.transit.route.errors import *
 
 # Classes and variables from src
 from scripts.transit.constants import PATH
-from scripts.transit.route.constants import DATE, STOP_TIME_HEADER
 from scripts.utils.IOutils import load_json, export_json
 
 from scripts.transit.route.segment import Segment, StopSeq, Direction
@@ -34,59 +33,38 @@ StopSeq.load()
 Service.load()
 
 
-class Route(object):
+class Route:
 
-    objects = {}
-    validate = {}
-    header_0 = 'sheet'
-
-    def __init__(self, name, id, short, desc, color, text_color, miles, path, config):
-        # Attributes from metadata
-        self.name = name
-        self.id = id
-        self.short = short
-        self.desc = desc
-        self.color = color
-        self.text_color = text_color
-        self.miles = float(miles)
-        self.path = path
-
-        # Additional attributes
-        self.trip_id = 1
-        self.stop_times = {}
-        self.dirnums = {}
-
-        # Set objects
-        Route.objects[self.id] = self
-
-        # Load sheets from data
-        self.sheets = {}
-        for sheet in config:
-            new_sheet = sheet + [self]
-            self.sheets[Sheet(*new_sheet)] = True
-
-    def __repr__(self):
-        return '<Route {}>'.format(self.name)
-
+    route_query = {}
 
     @staticmethod
-    def set_route_validation():
-        for route in Route.objects:
-            if route not in Route.validate:
-                Route.validate[route] = {}
-            for sheet in Route.objects[route].sheets:
-                if (sheet.service.start_date, sheet.service.end_date) not in Route.validate[route]:
-                    Route.validate[route][(sheet.service.start_date, sheet.service.end_date)] = {}
-                for stop in sheet.stops:
-                    Route.validate[route][(sheet.service.start_date, sheet.service.end_date)][stop] = True
+    def set_route_query():
+        for obj in Schedule.objects:
+            schedule = Schedule.objects[obj]
+
+            for dir_order in schedule.segments:
+                segment = schedule.segments[dir_order]
+
+                if segment.route not in Route.route_query:
+                    Route.route_query[segment.route] = {}
+
+                start = schedule.joint.service.start_date
+                end = schedule.joint.service.end_date
+
+                if (start, end) not in Route.route_query[segment.route]:
+                    Route.route_query[segment.route][(start, end)] = {}
+
+                for stop in segment.stops:
+                    Route.route_query[segment.route][(start, end)][stop] = True
+
         return True
 
     @staticmethod
-    def query_validation(route, date, stop):
-        if route in Route.objects:
-            for key in Route.validate[route]:
+    def query_route(route, date, stop):
+        if route in Route.route_query:
+            for key in Route.route_query[route]:
                 if key[0] <= date <= key[1]:
-                    if stop in Route.validate[route][key].keys():
+                    if stop in Route.route_query[route][key]:
                         return True
         return False
 
@@ -239,12 +217,11 @@ class Schedule(object):
 
     def get_trip_length(self, a, b):
         """
-
+        DEPRECATED but still a potentially useful function
         :param a: The origin of the trip; MUST be a Segment id OR a
             StopSeq object
         :param b: The destination of the trip; MUST be a Segment id OR a
             StopSeq object
-        :param order: Order for segment ordering
         :return: The trip length
         """
         trip_length = 0
@@ -399,5 +376,7 @@ class Driver:
 Joint.load()
 Schedule.load()
 Joint.process()
-# Joint.export()
-StopTime.publish_matrix()
+Route.set_route_query()
+
+if __name__ == "__main__":
+    StopTime.publish_matrix()
