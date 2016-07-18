@@ -57,6 +57,9 @@ class StopTime(object):
         self.arrive_24p = convert_to_24_plus_time(self.trip.joint.service.start_date, self.arrive)
         self.depart_24p = convert_to_24_plus_time(self.trip.joint.service.start_date, self.depart)
         self.gtfs_depart_24p = convert_to_24_plus_time(self.trip.joint.service.start_date, self.gtfs_depart)
+        self.arrive = self.arrive.strftime('%H:%M:%S')
+        self.depart = self.depart.strftime('%H:%M:%S')
+        self.gtfs_depart = self.gtfs_depart.strftime('%H:%M:%S')
 
         self.order = stop_seq.order
         self.timepoint = stop_seq.timed
@@ -73,9 +76,8 @@ class StopTime(object):
         StopTime.objects[(trip.id, self.order)] = self
 
     def get_record(self):
-        return [self.trip.id, self.stop_id, self.gps_ref, self.direction, self.arrive.strftime('%H:%M:%S'),
-                self.gtfs_depart.strftime('%H:%M:%S'), self.order, self.timepoint, self.pickup, self.dropoff,
-                self.display, self.driver]
+        return [self.trip.id, self.stop_id, self.gps_ref, self.direction, self.arrive, self.gtfs_depart, self.order,
+                self.timepoint, self.pickup, self.dropoff, self.display, self.driver]
 
     @staticmethod
     def publish_matrix():

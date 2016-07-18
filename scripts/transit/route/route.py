@@ -338,6 +338,9 @@ class Schedule(object):
             Trip(self.joint, self, segment, segment.query_stop_seqs(start_loc, end_loc), start_loc, end_loc, start,
                  driver)
 
+            # Set driver start location
+            Driver.set_start(driver, segment.query_min_stop_seq(start_loc, end_loc))
+
             # Calculate next start
             start_loc = 0
             start = trip_end
@@ -366,11 +369,17 @@ class Driver:
     def __init__(self):
         self.id = Driver.id_generator
         Driver.id_generator += 1
+        self.start = None
         Driver.objects[self.id] = self
 
     @staticmethod
     def get_drivers(n):
         return [Driver() for driver in range(n)]
+
+    @staticmethod
+    def set_start(id, stop):
+        if not Driver.objects[id].start:
+            Driver.objects[id].start = stop
 
 
 Joint.load()

@@ -134,10 +134,23 @@ class Segment(object):
         :return: {StopSeq: True}
         """
         query = {}
-        for key in sorted(self.seq_order.keys()):
+        for key in self.seq_order.keys():
             if start_loc <= self.seq_order[key].depart and self.seq_order[key].arrive <= end_loc:
                 query[self.seq_order[key]] = True
         return query
+
+    def query_min_stop_seq(self, start_loc, end_loc):
+        """
+        Select the minimum StopSeq between the start_loc and
+        end_loc times if there are StopSeqs that qualify.
+        :param start_loc: time location for when the trip started
+        :param end_loc: time locations for when the trip ended
+        :return: stop_id
+        """
+        for key in sorted(self.seq_order.keys()):
+            if start_loc <= self.seq_order[key].depart and self.seq_order[key].arrive <= end_loc:
+                return self.seq_order[key].stop
+        return None
 
 
 class StopSeq(object):

@@ -2,22 +2,17 @@
 # -*- coding: utf-8 -*-
 
 # Python libraries and packages
-import copy
-import csv
-import datetime
-import math
 import os
-import re
 import xlsxwriter
 
 # Entire scripts from src
-import src.scripts.transit.route.route as rt
-import src.scripts.transit.stop.stop as st
-import src.scripts.transit.route.constants as RouteConstants
-import src.scripts.transit.route.errors as RouteErrors
+import scripts.transit.route.route as rt
+import scripts.transit.stop.stop as st
+import scripts.transit.route.constants as RouteConstants
+import scripts.transit.route.errors as RouteErrors
 
 # Classes and variables from src
-from src.scripts.transit.constants import PATH
+from scripts.transit.constants import PATH
 
 
 def build_master_table():
@@ -33,7 +28,7 @@ def build_master_table():
             if stoptime.driver not in master_table:
                 master_table[stoptime.driver] = []
             master_table[stoptime.driver] = master_table.get(stoptime.driver) + [
-                [stoptime.stop_id, st.Stop.obj_map[stoptime.stop_id].name, 'TO {}'.format(stoptime.direction.name),
+                [stoptime.stop_id, st.Stop.obj_map[stoptime.stop_id].name, 'TO {}'.format(stoptime.direction),
                  stoptime.depart]]
 
     return master_table
@@ -73,9 +68,10 @@ def publish():
                                            })
 
         # Write header
+        start = rt.Driver.objects[driver].start
         worksheet.merge_range('A1:D1', 'Vehicle Schedule for Driver {}'.format(driver), merge_format)
-        worksheet.merge_range('A2:D2', 'Starting Location: {} {}'.format(rt.JointRoute.locations[driver],
-            st.Stop.obj_map[rt.JointRoute.locations[driver]].name), start_format)
+        worksheet.merge_range('A2:D2', 'Starting Location: {} {}'.format(start, st.Stop.obj_map[start].name),
+                              start_format)
         worksheet.write_row('A3', ['Stop ID', 'Stop Name', 'Direction', 'Departure'], bold_format)
 
         # Write data
