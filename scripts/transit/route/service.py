@@ -5,11 +5,11 @@
 import datetime
 
 # Import scripts from src
-from scripts.transit.route.errors import *
-from scripts.utils.IOutils import load_json, export_json
+from src.scripts.transit.route.errors import *
+from src.scripts.utils.IOutils import load_json, export_json
 
 # Import variables from src
-from scripts.transit.constants import PATH
+from src.scripts.transit.constants import PATH
 
 
 class Service(object):

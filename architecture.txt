@@ -1,0 +1,16 @@
+go/src/
+
+.git/
+
+.idea/
+
+apps/
+
+  django/
+  react/
+
+gtfs/
+
+scripts/
+  
+  

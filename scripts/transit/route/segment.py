@@ -5,13 +5,13 @@
 import datetime
 
 # Import scripts from src
-import scripts.transit.stop.stop as st
-from scripts.transit.route.direction import Direction
-from scripts.transit.route.errors import *
-from scripts.utils.IOutils import load_json, export_json
+import src.scripts.transit.stop.stop as st
+from src.scripts.transit.route.direction import Direction
+from src.scripts.transit.route.errors import *
+from src.scripts.utils.IOutils import load_json, export_json
 
 # Import variables from src
-from scripts.transit.constants import PATH
+from src.scripts.transit.constants import PATH
 
 
 class Segment(object):

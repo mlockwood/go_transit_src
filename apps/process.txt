@@ -1,0 +1,36 @@
+DESIGN
+------------
+Scope goals and needs of app
+Design data structure and fit with existing products
+Draft scope and timeline
+
+DJANGO
+------------
+Build models
+Construct serializers
+Construct API Views/ API router URLs
+Set authorizations
+Set administration
+
+POSTGRESQL
+------------
+Setup database and tables
+Connect to django via settings and psycopg2
+Convert any model structure to PostgreSQL
+
+REACTJS
+------------
+Build webpack and setup from boilerplate
+Set main components
+Set actions/reducers for redux
+Load django API and check authentication
+Wire API data to components
+
+DEPLOYMENT
+------------
+User review via heroku deployment (preview)
+Modifications from user feedback
+Administration and user review (alpha)
+Modifications from administration review
+Final review from all parties with data entry and checking (beta)
+Final deployment

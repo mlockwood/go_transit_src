@@ -14,14 +14,14 @@ import xlsxwriter
 import multiprocessing as mp
 
 # Entire scripts from src
-import scripts.transit.stop.stop as st
-import scripts.transit.route.route as rt
-import scripts.transit.ridership.errors as RidershipErrors
+import src.scripts.transit.stop.stop as st
+import src.scripts.transit.route.route as rt
+import src.scripts.transit.ridership.errors as RidershipErrors
 
 # Classes and variables from src
-from scripts.transit.constants import PATH, BEGIN, BASELINE, INCREMENT
-from scripts.transit.ridership.constants import CHARS, DATA_HEADER, META_HEADER, INJECT_HEADER
-from scripts.utils.IOutils import csv_writer
+from src.scripts.transit.constants import PATH, BEGIN, BASELINE, INCREMENT
+from src.scripts.transit.ridership.constants import CHARS, DATA_HEADER, META_HEADER, INJECT_HEADER
+from src.scripts.utils.IOutils import csv_writer
 
 
 __author__ = 'Michael Lockwood'

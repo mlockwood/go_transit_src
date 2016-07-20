@@ -2,9 +2,9 @@ import csv
 import datetime
 import os
 
-from scripts.transit.constants import PATH
-from scripts.utils.time import convert_to_24_plus_time
-from scripts.transit.route.constants import STOP_TIME_HEADER
+from src.scripts.transit.constants import PATH
+from src.scripts.utils.time import convert_to_24_plus_time
+from src.scripts.transit.route.constants import STOP_TIME_HEADER
 
 
 class Trip(object):

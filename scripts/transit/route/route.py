@@ -8,22 +8,19 @@ import math
 import re
 
 # Entire scripts from src
-from scripts.transit.stop.stop import Point
-from scripts.transit.route.errors import *
+from src.scripts.transit.stop.stop import Point
+from src.scripts.transit.route.errors import *
 
 # Classes and variables from src
-from scripts.transit.constants import PATH
-from scripts.utils.IOutils import load_json, export_json
+from src.scripts.transit.constants import PATH
+from src.scripts.utils.IOutils import load_json, export_json
 
-from scripts.transit.route.segment import Segment, StopSeq, Direction
-from scripts.transit.route.service import Service
-from scripts.transit.route.trip import Trip, StopTime
+from src.scripts.transit.route.segment import Segment, StopSeq, Direction
+from src.scripts.transit.route.service import Service
+from src.scripts.transit.route.trip import Trip, StopTime
 
 # Import classes and functions from src
-from scripts.utils.functions import stitch_dicts
-
-# Import variables from src
-from scripts.transit.route.constants import LAX
+from src.scripts.utils.functions import stitch_dicts
 
 # Load dependent data
 Point.process()
