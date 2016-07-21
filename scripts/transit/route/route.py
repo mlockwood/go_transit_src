@@ -71,10 +71,10 @@ class Joint(object):
     objects = {}
     locations = {}
 
-    def __init__(self, id, routes, desc, service_id, headway):
+    def __init__(self, id, routes, description, service_id, headway):
         self.id = int(id)
         self.routes = routes
-        self.desc = desc
+        self.description = description
         self.service = Service.objects[int(service_id)]
         self.service_id = int(service_id)
         self.headway = int(headway)
@@ -172,11 +172,11 @@ class Schedule(object):
 
     @classmethod
     def load(cls):
-        load_json(PATH + '/data/routes/schedules.json', cls)
+        load_json(PATH + '/data/routes/schedule.json', cls)
 
     @classmethod
     def export(cls):
-        export_json(PATH + '/data/routes/schedules.json', cls)
+        export_json(PATH + '/data/routes/schedule.json', cls)
 
     def get_json(self):
         return dict([(k, getattr(self, k)) for k in ['id', 'joint_id', 'start_str', 'end_str', 'offset']])
@@ -385,4 +385,6 @@ Joint.process()
 Route.set_route_query()
 
 if __name__ == "__main__":
+    Trip.export()
+    StopTime.export()
     StopTime.publish_matrix()

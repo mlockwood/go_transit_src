@@ -101,11 +101,11 @@ class Segment(object):
     @classmethod
     def load(cls):
         Direction.load()
-        load_json('{}/data/routes/segments.json'.format(PATH), cls)
+        load_json('{}/data/routes/segment.json'.format(PATH), cls)
 
     @classmethod
     def export(cls):
-        export_json('{}/data/routes/segments.json'.format(PATH), cls)
+        export_json('{}/data/routes/segment.json'.format(PATH), cls)
 
     def get_json(self):
         return dict([(k, getattr(self, k)) for k in ['joint', 'schedule_id', 'dir_order', 'route', 'name',
@@ -185,12 +185,12 @@ class StopSeq(object):
 
     @classmethod
     def load(cls):
-        load_json(PATH + '/data/routes/stop_seqs.json', cls)
+        load_json(PATH + '/data/routes/stop_seq.json', cls)
         Segment.set_segments()
 
     @classmethod
     def export(cls):
-        export_json(PATH + '/data/routes/stop_seqs.json', cls)
+        export_json(PATH + '/data/routes/stop_seq.json', cls)
 
     def get_json(self):
         return dict([(k, getattr(self, k)) for k in ['segment', 'stop', 'gps_ref', 'arrive', 'depart', 'timed',

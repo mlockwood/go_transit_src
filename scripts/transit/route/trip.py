@@ -40,8 +40,10 @@ class Trip(object):
         export_json('{}/data/routes/trip.json'.format(PATH), cls)
 
     def get_json(self):
-        attrs = dict([(k, getattr(self, k)) for k in ['joint', 'schedule', 'segment', 'trip_seq', 'id', 'start_loc',
-                                                      'end_loc', 'driver']])
+        attrs = dict([(k, getattr(self, k)) for k in ['trip_seq', 'id', 'start_loc', 'end_loc', 'driver']])
+        attrs['joint'] = self.joint.id
+        attrs['schedule'] = self.schedule.id
+        attrs['segment'] = self.segment.name
         attrs['base_time'] = self.base_time.strftime('%Y%m%d-%H%M%S')
         attrs['start_time'] = self.start_time.strftime('%Y%m%d-%H%M%S')
         attrs['end_time'] = self.end_time.strftime('%Y%m%d-%H%M%S')
@@ -105,10 +107,11 @@ class StopTime(object):
 
     @classmethod
     def export(cls):
-        export_json('{}/data/routes/trip.json'.format(PATH), cls)
+        export_json('{}/data/routes/stop_time.json'.format(PATH), cls)
 
     def get_json(self):
-        return dict([(k, getattr(self, k)) for k in ['trip_id', 'stop_seq', 'driver', 'arrive', 'depart', 'gtfs_depart',
+        # NEED TO ADD STOP ---------------------------------------------------------------------------------------------
+        return dict([(k, getattr(self, k)) for k in ['trip_id', 'driver', 'arrive', 'depart', 'gtfs_depart',
                                                      'arrive_24p', 'depart_24p', 'gtfs_depart_24p', 'order',
                                                      'timepoint', 'pickup', 'dropoff', 'display', 'joint', 'route',
                                                      'direction']])

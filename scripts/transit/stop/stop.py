@@ -1,5 +1,4 @@
 import csv
-import datetime
 import os
 import re
 
@@ -9,9 +8,9 @@ import multiprocessing as mp
 GO Imports------------------------------------------------------
 """
 
-from scripts.transit.stop.errors import *
+from src.scripts.transit.stop.errors import *
 
-from scripts.transit.constants import PATH
+from src.scripts.transit.constants import PATH
 
 
 class Stop(object):
