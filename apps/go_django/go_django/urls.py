@@ -16,9 +16,13 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from rest_framework import routers
+
+from rider import views
+
 
 urlpatterns = [
-    url(r'^rider_entry/', include('rider_entry.urls')),
+    url(r'^rider/', include('rider.urls')),
     url(r'^admin/', admin.site.urls),
 ]
 

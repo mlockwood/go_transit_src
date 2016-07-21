@@ -5,6 +5,7 @@ import os
 from src.scripts.transit.constants import PATH
 from src.scripts.utils.time import convert_to_24_plus_time
 from src.scripts.transit.route.constants import STOP_TIME_HEADER
+from src.scripts.utils.IOutils import load_json, export_json
 
 
 class Trip(object):
@@ -33,6 +34,18 @@ class Trip(object):
 
     def __repr__(self):
         return '<Trip {} with Segment {}>'.format(self.id, self.segment.name)
+
+    @classmethod
+    def export(cls):
+        export_json('{}/data/routes/trip.json'.format(PATH), cls)
+
+    def get_json(self):
+        attrs = dict([(k, getattr(self, k)) for k in ['joint', 'schedule', 'segment', 'trip_seq', 'id', 'start_loc',
+                                                      'end_loc', 'driver']])
+        attrs['base_time'] = self.base_time.strftime('%Y%m%d-%H%M%S')
+        attrs['start_time'] = self.start_time.strftime('%Y%m%d-%H%M%S')
+        attrs['end_time'] = self.end_time.strftime('%Y%m%d-%H%M%S')
+        return attrs
 
 
 class StopTime(object):
@@ -90,4 +103,13 @@ class StopTime(object):
             writer.writerow(StopTime.objects[stop_time].get_record())
         return True
 
-    # Export JSON instead?
+    @classmethod
+    def export(cls):
+        export_json('{}/data/routes/trip.json'.format(PATH), cls)
+
+    def get_json(self):
+        return dict([(k, getattr(self, k)) for k in ['trip_id', 'stop_seq', 'driver', 'arrive', 'depart', 'gtfs_depart',
+                                                     'arrive_24p', 'depart_24p', 'gtfs_depart_24p', 'order',
+                                                     'timepoint', 'pickup', 'dropoff', 'display', 'joint', 'route',
+                                                     'direction']])
+
