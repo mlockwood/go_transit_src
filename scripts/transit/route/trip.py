@@ -37,7 +37,7 @@ class Trip(object):
 
     @classmethod
     def export(cls):
-        export_json('{}/data/routes/trip.json'.format(PATH), cls)
+        export_json('{}/data/trip.json'.format(PATH), cls)
 
     def get_json(self):
         attrs = dict([(k, getattr(self, k)) for k in ['trip_seq', 'id', 'start_loc', 'end_loc', 'driver']])
@@ -62,8 +62,7 @@ class StopTime(object):
         self.driver = driver
 
         # Attributes from stop_seq
-        self.stop_id = stop_seq.stop
-        self.gps_ref = stop_seq.gps_ref
+        self.stop = stop_seq.stop
 
         # Times for the StopTime, the first three can be made to strings with .strftime('%H:%M:%S')
         self.arrive = base_time + datetime.timedelta(seconds=stop_seq.arrive)
@@ -91,8 +90,8 @@ class StopTime(object):
         StopTime.objects[(trip.id, self.order)] = self
 
     def get_record(self):
-        return [self.trip.id, self.stop_id, self.gps_ref, self.direction, self.arrive, self.gtfs_depart, self.order,
-                self.timepoint, self.pickup, self.dropoff, self.display, self.driver]
+        return [self.trip.id, self.stop, self.direction, self.arrive, self.gtfs_depart, self.order, self.timepoint,
+                self.pickup, self.dropoff, self.display, self.driver]
 
     @staticmethod
     def publish_matrix():
@@ -107,11 +106,10 @@ class StopTime(object):
 
     @classmethod
     def export(cls):
-        export_json('{}/data/routes/stop_time.json'.format(PATH), cls)
+        export_json('{}/data/stop_time.json'.format(PATH), cls)
 
     def get_json(self):
-        # NEED TO ADD STOP ---------------------------------------------------------------------------------------------
-        return dict([(k, getattr(self, k)) for k in ['trip_id', 'driver', 'arrive', 'depart', 'gtfs_depart',
+        return dict([(k, getattr(self, k)) for k in ['trip_id', 'stop', 'driver', 'arrive', 'depart', 'gtfs_depart',
                                                      'arrive_24p', 'depart_24p', 'gtfs_depart_24p', 'order',
                                                      'timepoint', 'pickup', 'dropoff', 'display', 'joint', 'route',
                                                      'direction']])

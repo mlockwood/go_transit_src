@@ -26,9 +26,9 @@ class Direction(object):
 
     @classmethod
     def load(cls):
-        load_json('{}/data/routes/direction.json'.format(PATH), cls)
+        load_json('{}/data/direction.json'.format(PATH), cls)
 
     @classmethod
     def export(cls):
-        export_json('{}/data/routes/direction.json'.format(PATH), cls)
+        export_json('{}/data/direction.json'.format(PATH), cls)
 

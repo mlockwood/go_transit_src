@@ -9,88 +9,61 @@ GO Imports------------------------------------------------------
 """
 
 from src.scripts.transit.stop.errors import *
-
+from src.scripts.utils.IOutils import load_json, export_json
 from src.scripts.transit.constants import PATH
 
 
 class Stop(object):
 
     objects = {}
-    obj_map = {}
-    header = {}
+    locations = {}
 
-    def __init__(self, stop_id):
-        self.stop_id = stop_id
-        Stop.objects[stop_id] = self
+    def __init__(self, stop, name, location, description, geography, lat, lng, signage, shelter, operating, speed,
+                 available):
+        self.id = stop
+        self.name = name
+        self.location = location
+        self.description = description
+        self.geography = geography
+        self.lat = lat
+        self.lng = lng
+        self.signage = signage
+        self.shelter = shelter
+        self.operating = operating
+        self.speed = speed
+        self.available = available
+        Stop.objects[stop] = self
+        if location not in Stop.locations:
+            Stop.locations[location] = {}
+        Stop.locations[location][stop[3]] = self
 
-    @staticmethod
-    def map_objects():
-        for stop in Stop.objects:
-            obj = Stop.objects[stop]
-            Stop.obj_map[str(obj.stop_id)] = obj
-            try:
-                if obj.name:
-                    Stop.obj_map[obj.name] = obj
-            except:
-                raise ValueError('The name for stop ' + str(stop) + ' does not match between points.')
-        return True
+    @classmethod
+    def load(cls):
+        load_json('{}/data/stop.json'.format(PATH), cls)
+
+    @classmethod
+    def export(cls):
+        export_json('{}/data/stop.json'.format(PATH), cls)
 
 
-class Point(object):
-    
+class Geography(object):
+
     objects = {}
-    header = {}
 
-    def __init__(self, data):
-        i = 0
-        while i < len(data):
-            try:
-                exec('self.' + str(Point.header[i]) + '=\'' + data[i] + '\'')
-            except SyntaxError:
-                exec('self.' + str(Point.header[i]) + '=\'' + re.escape(data[i]) + '\'')
-            i += 1
-        Point.objects[(self.stop_id, self.gps_ref)] = self
+    def __init__(self, id, name, minimum, maximum):
+        self.id = id
+        self.name = name
+        self.minimum = minimum
+        self.maximum = maximum
+        Geography.objects[id] = self
 
-    @staticmethod
-    def process():
-        reader = csv.reader(open(PATH + '/data/stops/stops.csv', 'r', newline=''), delimiter=',', quotechar='|')
-        points = []
-        for row in reader:
-            points.append(row)
-        
-        # Set header
-        i = 0
-        while i < len(points[0]):
-            Point.header[i] = points[0][i]
-            i += 1
-            
-        # Initialize all other rows as objects
-        stops = {}
-        for data in points[1:]:
-            pt = Point(data)
-            if pt.stop_id not in stops:
-                stops[pt.stop_id] = {}
-            stops[pt.stop_id][pt] = True
-            
-        # Convert stop DS items to stop objects, will have a feature of data
-        # iff all points for the stop have the same value for that feature
-        for stop in stops:
-            obj = Stop(stop)
-            obj._points = stops[stop]
-            for feature in Point.header.values():
-                match = True
-                temp = 'none'
-                for pt in obj._points:
-                    if temp == 'none':
-                        temp = eval('pt.' + str(feature))
-                    elif eval('pt.' + str(feature)) != temp:
-                        match = False
-                if match == True:
-                    exec('obj.' + str(feature) + '= temp')
+    @classmethod
+    def load(cls):
+        load_json('{}/data/geography.json'.format(PATH), cls)
 
-        # Develop object map for stops
-        Stop.map_objects()
-        return True
+    @classmethod
+    def export(cls):
+        export_json('{}/data/geography.json'.format(PATH), cls)
 
 
 class Inventory(object):
@@ -112,12 +85,12 @@ class Inventory(object):
             for filename in [f for f in filenames if re.search('stop_inventory', f)]:
                 obj = Inventory((str(dirpath) + '/' + str(filename)))
                 obj.read_inventory()
-                obj.write_report()
+                # obj.write_report()
         return True
 
     @staticmethod
     def load_codes():
-        reader = open(PATH + '/data/stops/inventory/inventory_codes',
+        reader = open(PATH + '/data/inventory_codes.txt',
                       'r')
         for line in reader:
             line = line.rstrip()
@@ -161,28 +134,7 @@ class Inventory(object):
         writer.close()
 
 
-def parse_gps_dms(gps):
-    return [x for x in re.split('[\'’\"”°]', re.sub(' ', '', gps.replace('\\', ''))) if x]
-
-
-def remove_gps_direction(dd_gps):
-    if dd_gps[1] == 'N' or dd_gps[1] == 'E':
-        return dd_gps[0]
-    elif dd_gps[1] == 'S' or dd_gps[1] == 'W':
-        return 0 - dd_gps[0]
-    else:
-        raise ValueError('GPS Point ' + dd_gps + ' has an invalid direction')
-
-
-def convert_gps_dms_to_dd(gps):
-    try:
-        gps = parse_gps_dms(gps)
-        return remove_gps_direction([int(gps[0]) + (int(gps[1]) / 60) + (float(gps[2]) / 3600), gps[3]])
-    except:
-        return ''
-
-
-Point.process()
+Stop.load()
 
 if __name__ == '__main__':
-    Inventory.process()
+    Geography.load()

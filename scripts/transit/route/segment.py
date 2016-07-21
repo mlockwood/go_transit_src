@@ -101,11 +101,11 @@ class Segment(object):
     @classmethod
     def load(cls):
         Direction.load()
-        load_json('{}/data/routes/segment.json'.format(PATH), cls)
+        load_json('{}/data/segment.json'.format(PATH), cls)
 
     @classmethod
     def export(cls):
-        export_json('{}/data/routes/segment.json'.format(PATH), cls)
+        export_json('{}/data/segment.json'.format(PATH), cls)
 
     def get_json(self):
         return dict([(k, getattr(self, k)) for k in ['joint', 'schedule_id', 'dir_order', 'route', 'name',
@@ -158,15 +158,14 @@ class StopSeq(object):
     objects = {}
     segment_query = {}
 
-    def __init__(self, segment, stop, gps_ref, arrive, depart, timed, display, load_seq, destination):
+    def __init__(self, segment, stop, arrive, depart, timed, display, load_seq, destination):
         # Stop validation
-        if (stop, gps_ref) not in st.Point.objects:
-            raise UnknownStopPointError('Stop {}{} from {} is not recognized.'.format(stop, gps_ref, segment))
+        if stop not in st.Stop.objects:
+            raise UnknownStopPointError('Stop {} from {} is not recognized.'.format(stop, segment))
 
         # Assign attributes
         self.segment = segment
         self.stop = stop
-        self.gps_ref = gps_ref
         self.arrive = int(arrive)
         self.depart = int(depart)
         self.gtfs_depart = int(arrive) if destination else int(depart)
@@ -185,13 +184,13 @@ class StopSeq(object):
 
     @classmethod
     def load(cls):
-        load_json(PATH + '/data/routes/stop_seq.json', cls)
+        load_json(PATH + '/data/stop_seq.json', cls)
         Segment.set_segments()
 
     @classmethod
     def export(cls):
-        export_json(PATH + '/data/routes/stop_seq.json', cls)
+        export_json(PATH + '/data/stop_seq.json', cls)
 
     def get_json(self):
-        return dict([(k, getattr(self, k)) for k in ['segment', 'stop', 'gps_ref', 'arrive', 'depart', 'timed',
-                                                     'display', 'load_seq', 'destination']])
+        return dict([(k, getattr(self, k)) for k in ['segment', 'stop', 'arrive', 'depart', 'timed', 'display',
+                                                     'load_seq', 'destination']])

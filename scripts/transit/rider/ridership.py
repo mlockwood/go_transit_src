@@ -14,13 +14,13 @@ import xlsxwriter
 import multiprocessing as mp
 
 # Entire scripts from src
-import src.scripts.transit.stop.stop as st
-import src.scripts.transit.route.route as rt
-import src.scripts.transit.ridership.errors as RidershipErrors
+from src.scripts.transit.stop.stop import Stop
+from src.scripts.transit.route.route import Route
+from src.scripts.transit.rider.errors import *
 
 # Classes and variables from src
 from src.scripts.transit.constants import PATH, BEGIN, BASELINE, INCREMENT
-from src.scripts.transit.ridership.constants import CHARS, DATA_HEADER, META_HEADER, INJECT_HEADER
+from src.scripts.transit.rider.constants import CHARS, DATA_HEADER, META_HEADER, INJECT_HEADER
 from src.scripts.utils.IOutils import csv_writer
 
 
@@ -48,7 +48,7 @@ class Sheet(object):
         Sheet.load_data(directory=directory)
 
         for file in Sheet.meta_check:
-            Sheet.errors += [RidershipErrors.MissingDatasheetError.get(file)]
+            Sheet.errors += [MissingDatasheetError.get(file)]
 
         csv_writer('{}/reports/ridership/'.format(PATH), 'errors', Sheet.errors)
         csv_writer('{}/reports/ridership/'.format(PATH), 'warnings', Sheet.warnings)
@@ -94,7 +94,7 @@ class Sheet(object):
                     del Sheet.meta_check[filename]
                     files.append((dirpath, filename, meta, Sheet.injections))
                 else:
-                    Sheet.errors += [RidershipErrors.MissingMetadataError.get(filename)]
+                    Sheet.errors += [MissingMetadataError.get(filename)]
 
         p = mp.Pool()
         results = p.map(Sheet.load_file, files)
@@ -146,7 +146,7 @@ class Sheet(object):
 
         # If no data, alert user just in case of error
         if r < 2:
-            warnings += [RidershipErrors.EmptyDataWarning.get(file)]
+            warnings += [EmptyDataWarning.get(file)]
 
         return errors, warnings, records
 
@@ -165,7 +165,7 @@ class Sheet(object):
         i = 0
         while i < len(meta):
             if not re.sub(' ', '', meta[i]):
-                errors += [RidershipErrors.MissingMetaValueError.get(file, META_HEADER[i])]
+                errors += [MissingMetaValueError.get(file, META_HEADER[i])]
             i += 1
         return errors
 
@@ -184,7 +184,7 @@ class Sheet(object):
         i = 0
         while i < len(entry):
             if not re.sub(' ', '', entry[i]):
-                errors += [RidershipErrors.EntryError.get(file, r, DATA_HEADER[i])]
+                errors += [EntryError.get(file, r, DATA_HEADER[i])]
             i += 1
 
         # Stop validation and mapping
@@ -194,8 +194,8 @@ class Sheet(object):
         if on != entry[0]:
             overwrite = True
 
-        if on not in st.Stop.obj_map:
-            errors += [RidershipErrors.StopValidationError.get(file, 'Boarding', entry[0], r)]
+        if on not in Stop.locations:
+            errors += [StopValidationError.get(file, 'Boarding', entry[0], r)]
             on = None
 
         # Deboarding (off)
@@ -205,20 +205,20 @@ class Sheet(object):
         if off != entry[3]:
             overwrite = True
 
-        if off not in st.Stop.obj_map:
-            errors += [RidershipErrors.StopValidationError.get(file, 'Deboarding', entry[3], r)]
+        if off not in Stop.locations:
+            errors += [StopValidationError.get(file, 'Deboarding', entry[3], r)]
             off = None
 
         # Time validation
         time = re.sub(':', '', entry[1])
         if len(time) > 4:
-            errors += [RidershipErrors.TimeValidationError.get(file, time, r)]
+            errors += [TimeValidationError.get(file, time, r)]
             time = 'xxxx'
         else:
             try:
                 time = str(int(time[:-2])) + ':' + str(time[-2:])
             except TypeError:
-                errors += [RidershipErrors.TimeValidationError.get(file, time, r)]
+                errors += [TimeValidationError.get(file, time, r)]
                 time = 'xxxx'
             except ValueError:
                 if len(time) == 2:
@@ -226,14 +226,14 @@ class Sheet(object):
                 elif len(time) == 1:
                     time = '00:0{}'.format(time)
                 else:
-                    errors += [RidershipErrors.TimeValidationError.get(file, time, r)]
+                    errors += [TimeValidationError.get(file, time, r)]
                     time = 'xxxx'
 
         # Count validation
         try:
             count = int(entry[2])
         except TypeError:
-            errors += [RidershipErrors.CountValidationError.get(file, entry[2], r)]
+            errors += [CountValidationError.get(file, entry[2], r)]
             count = 0
 
         return on, off, time, count, errors, overwrite
@@ -312,11 +312,11 @@ class Record(object):
         else:
             routes = re.split('&', self.route)
             for route_id in routes:
-                if rt.Route.query_route(int(route_id), self.date, stop):
+                if Route.query_route(int(route_id), self.date, stop):
                     return route_id
 
             if stop != 'None' and stop:
-                Sheet.errors += [RidershipErrors.StopUnavailableForRouteError.get(self.file, stop, self.route)]
+                Sheet.errors += [StopUnavailableForRouteError.get(self.file, stop, self.route)]
         return 'Unmatched'
 
     def append_record(self):

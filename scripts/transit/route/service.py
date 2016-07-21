@@ -38,11 +38,11 @@ class Service(object):
 
     @classmethod
     def load(cls):
-        load_json('{}/data/routes/service.json'.format(PATH), cls)
+        load_json('{}/data/service.json'.format(PATH), cls)
 
     @classmethod
     def export(cls):
-        export_json('{}/data/routes/service.json'.format(PATH), cls)
+        export_json('{}/data/service.json'.format(PATH), cls)
 
     def get_json(self):
         attrs = dict([(k, getattr(self, k)) for k in ['id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday',

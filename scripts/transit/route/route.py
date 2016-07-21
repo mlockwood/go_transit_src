@@ -8,7 +8,7 @@ import math
 import re
 
 # Entire scripts from src
-from src.scripts.transit.stop.stop import Point
+from src.scripts.transit.stop.stop import Stop
 from src.scripts.transit.route.errors import *
 
 # Classes and variables from src
@@ -23,7 +23,7 @@ from src.scripts.transit.route.trip import Trip, StopTime
 from src.scripts.utils.functions import stitch_dicts
 
 # Load dependent data
-Point.process()
+Stop.load()
 Direction.load()
 Segment.load()
 StopSeq.load()
@@ -52,7 +52,8 @@ class Route:
                     Route.route_query[segment.route][(start, end)] = {}
 
                 for stop in segment.stops:
-                    Route.route_query[segment.route][(start, end)][stop] = True
+                    # It is important to remove the GPS_REF
+                    Route.route_query[segment.route][(start, end)][stop[:3]] = True
 
         return True
 
@@ -101,11 +102,11 @@ class Joint(object):
 
     @classmethod
     def load(cls):
-        load_json('{}/data/routes/joint.json'.format(PATH), cls)
+        load_json('{}/data/joint.json'.format(PATH), cls)
 
     @classmethod
     def export(cls):
-        export_json('{}/data/routes/joint.json'.format(PATH), cls)
+        export_json('{}/data/joint.json'.format(PATH), cls)
 
     def get_json(self):
         return dict([(k, getattr(self, k)) for k in ['id', 'desc', 'routes', 'service_id', 'headway']])
@@ -172,11 +173,11 @@ class Schedule(object):
 
     @classmethod
     def load(cls):
-        load_json(PATH + '/data/routes/schedule.json', cls)
+        load_json(PATH + '/data/schedule.json', cls)
 
     @classmethod
     def export(cls):
-        export_json(PATH + '/data/routes/schedule.json', cls)
+        export_json(PATH + '/data/schedule.json', cls)
 
     def get_json(self):
         return dict([(k, getattr(self, k)) for k in ['id', 'joint_id', 'start_str', 'end_str', 'offset']])
