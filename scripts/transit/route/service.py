@@ -6,43 +6,24 @@ import datetime
 
 # Import scripts from src
 from src.scripts.transit.route.errors import *
-from src.scripts.utils.IOutils import load_json, export_json
+from src.scripts.utils.classes import DataModelTemplate
 
 # Import variables from src
 from src.scripts.transit.constants import PATH
 
 
-class Service(object):
+class Service(DataModelTemplate):
 
+    json_path = '{}/data/service.json'.format(PATH)
     objects = {}
 
-    def __init__(self, id, monday, tuesday, wednesday, thursday, friday, saturday, sunday, start_date, end_date, text):
-        self.id = int(id)
-        self.monday = monday
-        self.tuesday = tuesday
-        self.wednesday = wednesday
-        self.thursday = thursday
-        self.friday = friday
-        self.saturday = saturday
-        self.sunday = sunday
-        self.start_date = datetime.datetime.strptime(start_date, '%Y%m%d')
-        self.end_date = datetime.datetime.strptime(end_date, '%Y%m%d')
-
-        self.text = text
+    def set_object_attrs(self):
+        self.start_date = datetime.datetime.strptime(self.start_date, '%Y%m%d')
+        self.end_date = datetime.datetime.strptime(self.end_date, '%Y%m%d')
         self.segments = {}
-
-        Service.objects[int(id)] = self
 
     def __repr__(self):
         return '<Direction {}>'.format(id)
-
-    @classmethod
-    def load(cls):
-        load_json('{}/data/service.json'.format(PATH), cls)
-
-    @classmethod
-    def export(cls):
-        export_json('{}/data/service.json'.format(PATH), cls)
 
     def get_json(self):
         attrs = dict([(k, getattr(self, k)) for k in ['id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday',

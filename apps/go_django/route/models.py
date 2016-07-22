@@ -52,8 +52,8 @@ class Direction(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=80)
     description = models.TextField()
-    origin = models.ForeignKey('stop.Stop')
-    destination = models.ForeignKey('stop.Stop')
+    origin = models.ForeignKey('stop.Stop', related_name='direction_origin')
+    destination = models.ForeignKey('stop.Stop', related_name='direction_destination')
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -82,8 +82,38 @@ class StopSeq(models.Model):
 
 
 class Trip(models.Model):
-    pass
+    id = models.CharField(max_length=255, primary_key=True)
+    joint = models.ForeignKey('Joint')
+    schedule = models.ForeignKey('Schedule')
+    segment = models.ForeignKey('Segment')
+    start_loc = models.IntegerField()
+    end_loc = models.IntegerField()
+    base_time = models.DateTimeField()
+    start_time = models.DateTimeField
+    end_time = models.DateTimeField
+    driver = models.IntegerField()
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            self.id = self.__class__.objects.all().order_by("-id")[0].id + 1
+        super(self.__class__, self).save(*args, **kwargs)
 
 
 class StopTime(models.Model):
-    pass
+    trip_id = models.ForeignKey('Trip')
+    stop = models.ForeignKey('stop.Stop')
+    driver = models.IntegerField()
+    arrive = models.DateTimeField()
+    depart = models.DateTimeField()
+    gtfs_depart = models.DateTimeField()
+    arrive_24p = models.DateTimeField()
+    depart_24p = models.DateTimeField()
+    gtfs_depart_24p = models.DateTimeField()
+    order = models.IntegerField()
+    timepoint = models.IntegerField()
+    pickup = models.IntegerField()
+    dropoff = models.IntegerField()
+    display = models.IntegerField()
+    joint = models.ForeignKey('Joint')
+    route = models.IntegerField()
+    direction = models.CharField(max_length=80)

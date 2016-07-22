@@ -40,7 +40,7 @@ class Trip(object):
         export_json('{}/data/trip.json'.format(PATH), cls)
 
     def get_json(self):
-        attrs = dict([(k, getattr(self, k)) for k in ['trip_seq', 'id', 'start_loc', 'end_loc', 'driver']])
+        attrs = dict([(k, getattr(self, k)) for k in ['id', 'start_loc', 'end_loc', 'driver']])
         attrs['joint'] = self.joint.id
         attrs['schedule'] = self.schedule.id
         attrs['segment'] = self.segment.name

@@ -5,7 +5,7 @@
 import datetime
 
 # Import scripts from src
-import src.scripts.transit.stop.stop as st
+from src.scripts.transit.stop.stop import Stop
 from src.scripts.transit.route.direction import Direction
 from src.scripts.transit.route.errors import *
 from src.scripts.utils.IOutils import load_json, export_json
@@ -160,7 +160,7 @@ class StopSeq(object):
 
     def __init__(self, segment, stop, arrive, depart, timed, display, load_seq, destination):
         # Stop validation
-        if stop not in st.Stop.objects:
+        if stop not in Stop.objects:
             raise UnknownStopPointError('Stop {} from {} is not recognized.'.format(stop, segment))
 
         # Assign attributes
