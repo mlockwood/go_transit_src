@@ -3,6 +3,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from simple_history.models import HistoricalRecords
 
+from bike.models import Bike, Fleet
 
 class Cyclist(models.Model):
     CURRENT = 'C'
@@ -31,8 +32,8 @@ class CheckInOut(models.Model):
         (MEDIUM, 'Medium term check-out up to 72 hours.'),
         (SHORT, 'Short term check-out up to 12 hours.')
     )
-    fleet = models.ForeignKey('Fleet')
-    bike = models.ForeignKey('Bike')
+    fleet = models.ForeignKey('bike.Fleet')
+    bike = models.ForeignKey('bike.Bike')
     duration = models.CharField(max_length=1, choices=CHECK_OUT_CHOICES)
     check_out = models.DateTimeField(auto_now_add=True)
     check_in = models.DateTimeField()
