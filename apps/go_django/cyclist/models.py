@@ -5,6 +5,7 @@ from simple_history.models import HistoricalRecords
 
 from bike.models import Bike, Fleet
 
+
 class Cyclist(models.Model):
     CURRENT = 'C'
     EXPIRED = 'E'

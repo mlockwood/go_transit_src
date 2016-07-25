@@ -28,7 +28,7 @@ class Trip(object):
         self.base_time = start_time - datetime.timedelta(seconds=start_loc)
         self.start_time = start_time  # This must have gone to the next date if it passed midnight
         self.end_time = self.base_time + datetime.timedelta(seconds=end_loc)
-        self.stop_times = dict((StopTime(self, stop_seq, self.base_time, driver), True) for stop_seq in stop_seqs)
+        self.stop_times = dict((StopTime(self, stop_seq, self.base_time), True) for stop_seq in stop_seqs)
         self.driver = driver
         Trip.objects[self.id] = self
 
@@ -54,12 +54,11 @@ class StopTime(object):
 
     objects = {}
 
-    def __init__(self, trip, stop_seq, base_time, driver):
+    def __init__(self, trip, stop_seq, base_time):
         # Attributes from __init__
         self.trip = trip
         self.trip_id = trip.id
         self.stop_seq = stop_seq
-        self.driver = driver
 
         # Attributes from stop_seq
         self.stop = stop_seq.stop
@@ -81,17 +80,12 @@ class StopTime(object):
         self.dropoff = 3 if not self.timepoint else 0
         self.display = stop_seq.display
 
-        # Attributes from trip
-        self.joint = trip.joint.id
-        self.route = trip.segment.route
-        self.direction = trip.segment.direction.name
-
         # Set records
         StopTime.objects[(trip.id, self.order)] = self
 
     def get_record(self):
-        return [self.trip.id, self.stop, self.direction, self.arrive, self.gtfs_depart, self.order, self.timepoint,
-                self.pickup, self.dropoff, self.display, self.driver]
+        return [self.trip.id, self.stop, self.trip.direction, self.arrive, self.gtfs_depart, self.order, self.timepoint,
+                self.pickup, self.dropoff, self.display, self.trip.driver]
 
     @staticmethod
     def publish_matrix():
@@ -109,8 +103,7 @@ class StopTime(object):
         export_json('{}/data/stop_time.json'.format(PATH), cls)
 
     def get_json(self):
-        return dict([(k, getattr(self, k)) for k in ['trip_id', 'stop', 'driver', 'arrive', 'depart', 'gtfs_depart',
-                                                     'arrive_24p', 'depart_24p', 'gtfs_depart_24p', 'order',
-                                                     'timepoint', 'pickup', 'dropoff', 'display', 'joint', 'route',
-                                                     'direction']])
+        return dict([(k, getattr(self, k)) for k in ['trip_id', 'stop', 'arrive', 'depart', 'gtfs_depart', 'arrive_24p',
+                                                     'depart_24p', 'gtfs_depart_24p', 'order', 'timepoint', 'pickup',
+                                                     'dropoff', 'display']])
 

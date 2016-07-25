@@ -134,7 +134,7 @@ class Schedule(object):
                                                                             minute=int(end_str[2:]))
 
         self.prev = None
-        self.drivers = []
+        self.drivers = {}
         self.trips = {}
         self.segments = self.get_segments()
         self.roundtrip = self.get_roundtrip()
@@ -279,12 +279,11 @@ class Schedule(object):
         :return: {start_loc: driver}
         """
         start_locs = {}
-        drivers = sorted([driver.id for driver in self.drivers]) # sort driver ids
         last = self.offset  # starting position is equal to the schedule's offset
         d = 0  # index of the current driver position
 
         while d < len(self.drivers):
-            start_locs[last] = drivers[d]
+            start_locs[last] = self.drivers[d]
             # Increment the last location distance by the headway % the roundtrip in case the origin is passed
             last = (last + self.joint.headway) % self.roundtrip
             d += 1
@@ -359,20 +358,33 @@ class Schedule(object):
         self.end_locs[min(self.end_locs) + self.roundtrip] = self.end_locs[min(self.end_locs)]
 
 
+class DateRange(object):
+
+    lookup = {}
+    objects = {}
+
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+        self.joints = {}
+        DateRange.objects[(start, end)] = self
+        while start <= end:
+            DateRange.lookup[start] = self
+            start = start + datetime.timedelta(days=1)
+
+
 class Driver:
 
     objects = {}
-    id_generator = 1
 
     def __init__(self):
-        self.id = Driver.id_generator
-        Driver.id_generator += 1
         self.start = None
-        Driver.objects[self.id] = self
+        self.positions = {}  # {joint_id: driver_position_number}
+        Driver.objects[self] = self
 
     @staticmethod
     def get_drivers(n):
-        return [Driver() for driver in range(n)]
+        return dict([(x, Driver()) for x in range(n)])
 
     @staticmethod
     def set_start(id, stop):
