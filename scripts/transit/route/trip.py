@@ -18,6 +18,7 @@ class Trip(object):
         self.joint = joint
         self.schedule = schedule
         self.segment = segment
+        self.direction = segment.direction.name
         self.trip_seq = segment.trip_generator
         self.id = '-'.join(str(s) for s in [joint.id, schedule.id, segment.name, self.trip_seq])
         segment.trip_generator += 1
@@ -30,17 +31,39 @@ class Trip(object):
         self.end_time = self.base_time + datetime.timedelta(seconds=end_loc)
         self.stop_times = dict((StopTime(self, stop_seq, self.base_time), True) for stop_seq in stop_seqs)
         self.driver = driver
+        self.driver_id = driver.id
         Trip.objects[self.id] = self
 
     def __repr__(self):
         return '<Trip {} with Segment {}>'.format(self.id, self.segment.name)
+
+    def __lt__(self, other):
+        return (self.id, self.segment.name) < (other.id, other.segment.name)
+
+    def __le__(self, other):
+        return (self.id, self.segment.name) <= (other.id, other.segment.name)
+
+    def __eq__(self, other):
+        return (self.id, self.segment.name) == (other.id, other.segment.name)
+
+    def __ne__(self, other):
+        return (self.id, self.segment.name) != (other.id, other.segment.name)
+
+    def __gt__(self, other):
+        return (self.id, self.segment.name) > (other.id, other.segment.name)
+
+    def __ge__(self, other):
+        return (self.id, self.segment.name) >= (other.id, other.segment.name)
+
+    def __hash__(self):
+        return hash((self.id, self.segment.name))
 
     @classmethod
     def export(cls):
         export_json('{}/data/trip.json'.format(PATH), cls)
 
     def get_json(self):
-        attrs = dict([(k, getattr(self, k)) for k in ['id', 'start_loc', 'end_loc', 'driver']])
+        attrs = dict([(k, getattr(self, k)) for k in ['id', 'start_loc', 'end_loc', 'driver_id']])
         attrs['joint'] = self.joint.id
         attrs['schedule'] = self.schedule.id
         attrs['segment'] = self.segment.name
@@ -85,7 +108,7 @@ class StopTime(object):
 
     def get_record(self):
         return [self.trip.id, self.stop, self.trip.direction, self.arrive, self.gtfs_depart, self.order, self.timepoint,
-                self.pickup, self.dropoff, self.display, self.trip.driver]
+                self.pickup, self.dropoff, self.display, self.trip.driver.position]
 
     @staticmethod
     def publish_matrix():

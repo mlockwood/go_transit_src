@@ -6,6 +6,7 @@ import copy
 import datetime
 import math
 import re
+import uuid
 
 # Entire scripts from src
 from src.scripts.transit.stop.stop import Stop
@@ -87,6 +88,7 @@ class Joint(object):
 
     @staticmethod
     def process():
+        ranges = {}
         for obj in Joint.objects:
             joint = Joint.objects[obj]
             # Create trips for each schedule in order
@@ -98,6 +100,12 @@ class Joint(object):
                 schedule.set_trips()
                 prev = schedule
 
+            date_key = (joint.service.start_date, joint.service.end_date + datetime.timedelta(days=1))
+            if date_key not in ranges:
+                ranges[date_key] = []
+            ranges[date_key] = ranges.get(date_key) + [joint]
+
+        DateRange.set_ranges(ranges)
         return True
 
     @classmethod
@@ -332,8 +340,8 @@ class Schedule(object):
                 end_loc = segment.trip_length
 
             # Set trip
-            Trip(self.joint, self, segment, segment.query_stop_seqs(start_loc, end_loc), start_loc, end_loc, start,
-                 driver)
+            self.trips[Trip(self.joint, self, segment, segment.query_stop_seqs(start_loc, end_loc), start_loc, end_loc,
+                            start, driver)] = True
 
             # Set driver start location
             Driver.set_start(driver, segment.query_min_stop_seq(start_loc, end_loc))
@@ -360,17 +368,74 @@ class Schedule(object):
 
 class DateRange(object):
 
-    lookup = {}
     objects = {}
 
     def __init__(self, start, end):
         self.start = start
         self.end = end
-        self.joints = {}
+        self.joints = []
         DateRange.objects[(start, end)] = self
-        while start <= end:
-            DateRange.lookup[start] = self
-            start = start + datetime.timedelta(days=1)
+
+    def __repr__(self):
+        return '<DateRange {}-{}>'.format(self.start, self.end)
+
+    @staticmethod
+    def set_ranges(ranges):
+        """
+        Build non-overlapping DateRange objects populated with all
+        joint routes within the DateRange object's start and end date.
+        :param ranges: {(start, end): [Joint, Joint, ... ]}
+        :return: True after setting up DateRange objects with joints
+        """
+        # Find all unique start and end dates
+        points = {}
+        for date_range in ranges:
+            for date in date_range:
+                points[date] = True
+        points = sorted(list(points.keys()))
+
+        # Order the dates and create ranges between each two ordered points
+        i = 0
+        while i < len(points) - 1:
+            DateRange(points[i], points[i+1])
+            i += 1
+
+        # Connect Joint objects to DateRange objects
+        for date_range in ranges:
+            for obj in DateRange.objects:
+                if date_range[0] <= DateRange.objects[obj].start and date_range[1] >= DateRange.objects[obj].end:
+                    DateRange.objects[obj].joints += ranges[date_range]
+
+    @staticmethod
+    def get_feed_by_date(date):
+        trips = None
+        for obj in DateRange.objects:
+            date_range = DateRange.objects[obj]
+            if date_range.start <= date < date_range.end:
+                trips = date_range.get_feed()
+        return trips
+
+    def get_feed(self):
+        trips = {}
+        stop_seqs = {}
+
+        self.joints = [Joint.objects[joint] for joint in sorted([joint.id for joint in self.joints])]
+
+        # Set driver positions and collect trips
+        position = 1
+        for joint in self.joints:
+            for schedule in joint.schedules:
+                for driver in sorted(schedule.drivers.keys()):
+                    # Set the driver's position
+                    schedule.drivers[driver].position = position
+                    position += 1
+
+                    # Select trips
+                    trips.update(schedule.trips)
+                    for trip in schedule.trips:
+                        stop_seqs.update(trip.stop_times)
+
+        return trips, stop_seqs
 
 
 class Driver:
@@ -378,8 +443,9 @@ class Driver:
     objects = {}
 
     def __init__(self):
+        self.id = str(uuid.uuid4())
         self.start = None
-        self.positions = {}  # {joint_id: driver_position_number}
+        self.position = None
         Driver.objects[self] = self
 
     @staticmethod
@@ -396,6 +462,10 @@ Joint.load()
 Schedule.load()
 Joint.process()
 Route.set_route_query()
+
+feed = DateRange.get_feed_by_date(datetime.datetime.today())
+
+print(len(feed[0]), len(feed[1]))
 
 if __name__ == "__main__":
     Trip.export()
