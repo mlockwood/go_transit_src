@@ -20,11 +20,13 @@ class Segment(object):
     schedule_query = {}
     id_generator = 1
 
-    def __init__(self, joint, schedule_id, dir_order, route, name, direction_id):
+    def __init__(self, joint, schedule_id, dir_order, dir_type, route, name, direction_id):
         # Initialized attributes
         self.joint = int(joint)
         self.schedule_id = int(schedule_id)
         self.dir_order = int(dir_order)
+        self.dir_type = dir_type
+        self.dir_type_num = 1 if dir_type == 'inbound' else 0
         self.route = int(route)
         self.name = name
         self.direction = Direction.objects[int(direction_id)]
@@ -108,7 +110,7 @@ class Segment(object):
         export_json('{}/data/segment.json'.format(PATH), cls)
 
     def get_json(self):
-        return dict([(k, getattr(self, k)) for k in ['joint', 'schedule_id', 'dir_order', 'route', 'name',
+        return dict([(k, getattr(self, k)) for k in ['joint', 'schedule_id', 'dir_order', 'dir_type', 'route', 'name',
                                                      'direction_id']])
 
     def set_order(self):

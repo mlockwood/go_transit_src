@@ -23,7 +23,28 @@ class Service(DataModelTemplate):
         self.segments = {}
 
     def __repr__(self):
-        return '<Direction {}>'.format(id)
+        return '<Service {}>'.format(self.id)
+
+    def __lt__(self, other):
+        return self.id < other.id
+
+    def __le__(self, other):
+        return self.id <= other.id
+
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return self.id != other.id
+
+    def __gt__(self, other):
+        return self.id > other.id
+
+    def __ge__(self, other):
+        return self.id >= other.id
+
+    def __hash__(self):
+        return hash(self.id)
 
     def get_json(self):
         attrs = dict([(k, getattr(self, k)) for k in ['id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
@@ -37,3 +58,23 @@ class Service(DataModelTemplate):
             self.segments[segment] = True
         else:
             raise DuplicateServiceSheetError('Duplicate segment {} found in service {}'.format(segment, self.id))
+
+
+class Holiday(DataModelTemplate):
+
+    json_path = '{}/data/holidays.json'.format(PATH)
+    objects = {}
+
+    @classmethod
+    def get_holidays(cls, past_filter=True):
+        holidays = []
+        for holiday in cls.objects:
+            holiday = cls.objects[holiday]
+            if past_filter and datetime.datetime.strptime(holiday.holiday, '%Y%m%d') < datetime.datetime.today():
+                continue
+            for obj in Service.objects:
+                service = Service.objects[obj]
+                # Check if the holiday applies to the given service dates
+                if service.start_date <= datetime.datetime.strptime(holiday.holiday, '%Y%m%d') <= service.end_date:
+                    holidays.append([service.id, holiday.holiday, 2])
+        return holidays

@@ -18,7 +18,7 @@ class Trip(object):
         self.joint = joint
         self.schedule = schedule
         self.segment = segment
-        self.direction = segment.direction.name
+        self.direction = segment.direction
         self.trip_seq = segment.trip_generator
         self.id = '-'.join(str(s) for s in [joint.id, schedule.id, segment.name, self.trip_seq])
         segment.trip_generator += 1
@@ -107,8 +107,8 @@ class StopTime(object):
         StopTime.objects[(trip.id, self.order)] = self
 
     def get_record(self):
-        return [self.trip.id, self.stop, self.trip.direction, self.arrive, self.gtfs_depart, self.order, self.timepoint,
-                self.pickup, self.dropoff, self.display, self.trip.driver.position]
+        return [self.trip.id, self.stop, self.trip.direction.name, self.arrive, self.gtfs_depart, self.order,
+                self.timepoint, self.pickup, self.dropoff, self.display, self.trip.driver.position]
 
     @staticmethod
     def publish_matrix():

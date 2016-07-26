@@ -22,7 +22,7 @@ class Direction(object):
         Direction.objects[int(id)] = self
 
     def __repr__(self):
-        return '<Direction {}>'.format(id)
+        return '<Direction {}>'.format(self.id)
 
     @classmethod
     def load(cls):
