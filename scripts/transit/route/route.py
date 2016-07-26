@@ -426,9 +426,10 @@ class DateRange(object):
         for joint in self.joints:
             for schedule in joint.schedules:
                 for driver in sorted(schedule.drivers.keys()):
-                    # Set the driver's position
-                    schedule.drivers[driver].position = position
-                    position += 1
+                    # Set the driver's position if schedule has not been seen
+                    if not schedule.prev:
+                        schedule.drivers[driver].position = position
+                        position += 1
 
                     # Select trips
                     trips.update(schedule.trips)
@@ -464,8 +465,6 @@ Joint.process()
 Route.set_route_query()
 
 feed = DateRange.get_feed_by_date(datetime.datetime.today())
-
-print(len(feed[0]), len(feed[1]))
 
 if __name__ == "__main__":
     Trip.export()
