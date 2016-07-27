@@ -22,6 +22,16 @@ class Service(models.Model):
         super(self.__class__, self).save(*args, **kwargs)
 
 
+class Holiday(models.Model):
+    id = models.IntegerField(primary_key=True)
+    holiday = models.DateField()
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            self.id = self.__class__.objects.all().order_by("-id")[0].id + 1
+        super(self.__class__, self).save(*args, **kwargs)
+
+
 class Joint(models.Model):
     id = models.IntegerField(primary_key=True)
     routes = models.CharField(max_length=12)

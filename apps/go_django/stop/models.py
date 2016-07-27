@@ -14,7 +14,7 @@ class Stop(models.Model):
     shelter = models.CharField(max_length=20, default='Undecided')
     operating = models.DateField()
     speed = models.IntegerField(default=25)
-    available = models.IntegerField()
+    available = models.IntegerField(default=2)
 
     def __str__(self):
         return '({}) {}'.format(self.stop_id, self.name)

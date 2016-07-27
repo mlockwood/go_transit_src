@@ -8,7 +8,6 @@ import shutil
 import sys
 
 # Entire scripts from src
-from src.scripts.transit.stop.stop import Stop
 from src.scripts.transit.route.route import DateRange
 from src.scripts.transit.route.service import Holiday
 from src.scripts.transit.constants import PATH
@@ -96,22 +95,17 @@ class BuildHolidays(ExportFeed):
 class BuildRoutes(ConvertFeed):
 
     file = 'routes'
+    json_file = '{}/{}.json'.format(DATA_PATH, 'route')
     header = ['route_id', 'route_short_name', 'route_long_name', 'route_desc', 'route_type', 'route_color',
               'route_text_color']
 
 
-class BuildStops(ExportFeed):
+class BuildStops(ConvertFeed):
 
     file = 'stops'
-
-    @classmethod
-    def get_matrix(cls):
-        stops = [['stop_id', 'stop_name', 'stop_desc', 'stop_lat', 'stop_lon']]
-        for obj in Stop.objects:
-            stop = Stop.objects[obj]
-            if stop.available == '1':
-                stops.append([stop.id, stop.name, stop.description, stop.lat, stop.lng])
-        return stops
+    json_file = '{}/{}.json'.format(DATA_PATH, 'stop')
+    header = ['stop_id', 'stop_name', 'stop_desc', 'stop_lat', 'stop_lon']
+    order = ['id', 'name', 'description', 'lat', 'lng']
 
 
 class BuildStopTimes(ExportFeed):
@@ -132,6 +126,7 @@ class BuildStopTimes(ExportFeed):
 class BuildTransfers(ConvertFeed):
 
     file = 'transfers'
+    json_file = '{}/{}.json'.format(DATA_PATH, 'transfer')
     header = ['from_stop_id', 'to_stop_id', 'transfer_type']
 
 

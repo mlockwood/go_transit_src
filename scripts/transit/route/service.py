@@ -62,7 +62,7 @@ class Service(DataModelTemplate):
 
 class Holiday(DataModelTemplate):
 
-    json_path = '{}/data/holidays.json'.format(PATH)
+    json_path = '{}/data/holiday.json'.format(PATH)
     objects = {}
 
     @classmethod

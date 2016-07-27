@@ -18,11 +18,17 @@ from django.contrib import admin
 
 from rest_framework import routers
 
-from rider import views
+from stop import views
 
+
+router = routers.SimpleRouter()
+router.register(r'stops', views.StopViewSet)
+router.register(r'geography', views.GeographyViewSet)
+router.register(r'inventory', views.InventoryViewSet)
 
 urlpatterns = [
-    url(r'^rider/', include('rider.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/v1/', include(router.urls, namespace='apiv1')),
 ]
 
