@@ -2,7 +2,7 @@ import csv
 import datetime
 import math
 import statistics
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 
 
 stops = {}

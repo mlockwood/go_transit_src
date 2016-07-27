@@ -7,7 +7,7 @@ from pykml import parser
 
 import src.scripts.transit.route.route as rt
 import src.scripts.transit.stop.stop as st
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 
 
 class Shape(object):

@@ -7,7 +7,7 @@ import src.scripts.transit.route.route as rt
 import src.scripts.transit.stop.stop as st
 
 # Classes and variables from src
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 
 
 def build_stop_table():

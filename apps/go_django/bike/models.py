@@ -42,7 +42,7 @@ class Bike(models.Model):
     id = models.CharField(max_length=12, primary_key=True)
     serial_number = models.CharField(max_length=40)
     low_step = models.BooleanField()
-    fleet = models.ForeignKey('Bike')
+    fleet = models.ForeignKey('Fleet')
     history = HistoricalRecords()
 
     def save(self, *args, **kwargs):
@@ -51,7 +51,7 @@ class Bike(models.Model):
         super(self.__class__, self).save(*args, **kwargs)
 
 
-class GPS(models.Model):
+class BikeGPS(models.Model):
     bike = models.OneToOneField('Bike')
     id = models.CharField(max_length=12, primary_key=True)
     serial_number = models.CharField(max_length=40)

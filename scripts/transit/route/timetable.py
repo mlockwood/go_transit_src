@@ -14,7 +14,7 @@ import src.scripts.transit.route.errors as RouteErrors
 from src.scripts.utils.functions import stack
 
 # Variables from src
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 from src.scripts.transit.route.constants import DISPLAY_ALL, TIMETABLE_HEADER, TIMETABLE_FOOTER, ORDER
 
 

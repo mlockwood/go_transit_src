@@ -15,14 +15,8 @@ import seaborn as sns
 import xlsxwriter
 import multiprocessing as mp
 
-# Entire scripts from src
-import src.scripts.transit.stop.stop as st
-import src.scripts.transit.ridership.errors as RidershipErrors
-
 # Classes and variables from src
-from src.scripts.transit.constants import PATH, BEGIN, BASELINE, INCREMENT
-from src.scripts.transit.ridership.constants import CHARS, HEADER, STANDARD, ORDER, META_MAP
-from src.scripts.utils.functions import csv_writer
+from src.scripts.constants import PATH
 
 
 __author__ = 'Michael Lockwood'

@@ -27,7 +27,7 @@ class GeographySerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'geography',
+            'name',
             'minimum',
             'maximum'
         )

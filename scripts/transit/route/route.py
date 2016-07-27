@@ -13,7 +13,7 @@ from src.scripts.transit.stop.stop import Stop
 from src.scripts.transit.route.errors import *
 
 # Classes and variables from src
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 from src.scripts.utils.IOutils import load_json, export_json
 
 from src.scripts.transit.route.segment import Segment, StopSeq, Direction

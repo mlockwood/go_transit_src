@@ -5,7 +5,7 @@ from pykml.factory import KML_ElementMaker as KML
 from lxml import etree
 from xml.sax.saxutils import unescape
 
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 
 
 table = {}

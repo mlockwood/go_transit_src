@@ -11,7 +11,7 @@ from src.scripts.transit.stop.stop import Stop
 from src.scripts.transit.route.constants import *
 
 # Classes and variables from src
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 
 
 def build_master_table(date):

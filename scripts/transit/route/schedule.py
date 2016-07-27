@@ -12,7 +12,7 @@ import src.scripts.transit.stop.stop as st
 import src.scripts.transit.route.errors as RouteErrors
 
 # Classes and variables from src
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 from src.scripts.transit.route.constants import DISPLAY_ALL, SCHEDULE_HEADER
 
 

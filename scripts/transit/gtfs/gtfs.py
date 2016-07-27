@@ -10,7 +10,7 @@ import sys
 # Entire scripts from src
 from src.scripts.transit.route.route import DateRange
 from src.scripts.transit.route.service import Holiday
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 from src.scripts.utils.IOutils import *
 
 

@@ -15,7 +15,7 @@ Explanation here.
 """
 
 from src.scripts.utils.classes import DataModelTemplate
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 
 
 class Asset(DataModelTemplate):
@@ -36,7 +36,7 @@ class Fleet(DataModelTemplate):
     objects = {}
 
 
-class GPS(DataModelTemplate):
+class BikeGPS(DataModelTemplate):
 
     json_path = '{}/data/bike_gps.json'.format(PATH)
     objects = {}
@@ -54,7 +54,7 @@ Bike.load()
 Bike.print_stats()
 Fleet.load()
 Fleet.print_stats()
-GPS.load()
-GPS.print_stats()
+BikeGPS.load()
+BikeGPS.print_stats()
 Lock.load()
 Lock.print_stats()

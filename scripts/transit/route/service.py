@@ -9,7 +9,7 @@ from src.scripts.transit.route.errors import *
 from src.scripts.utils.classes import DataModelTemplate
 
 # Import variables from src
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 
 
 class Service(DataModelTemplate):

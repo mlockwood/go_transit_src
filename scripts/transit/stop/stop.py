@@ -1,5 +1,5 @@
 from src.scripts.utils.classes import DataModelTemplate
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 
 
 class Stop(DataModelTemplate):

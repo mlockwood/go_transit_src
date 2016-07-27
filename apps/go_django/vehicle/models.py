@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Vehicle(models.Model):
-    license = models.CharField(max_length=12)
+    license = models.CharField(max_length=12, primary_key=True)
     make = models.CharField(max_length=20)
     model = models.CharField(max_length=20)
 

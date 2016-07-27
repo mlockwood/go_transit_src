@@ -8,7 +8,7 @@ from xml.sax.saxutils import unescape
 
 import src.scripts.transit.stop.stop as st
 import src.scripts.transit.route.schedule as sch
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 
 
 # Function to add style maps for changing the color of the buttons

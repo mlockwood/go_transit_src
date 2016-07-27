@@ -1,8 +1,6 @@
 #!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 
-
-
 # Python libraries and packages
 import copy
 import csv
@@ -19,9 +17,9 @@ from src.scripts.transit.route.route import Route
 from src.scripts.transit.rider.errors import *
 
 # Classes and variables from src
-from src.scripts.transit.constants import PATH, BEGIN, BASELINE, INCREMENT
-from src.scripts.transit.rider.constants import CHARS, DATA_HEADER, META_HEADER, INJECT_HEADER
-from src.scripts.utils.IOutils import csv_writer
+from src.scripts.constants import PATH
+from src.scripts.transit.rider.constants import BEGIN, BASELINE, DATA_HEADER, INCREMENT, META_HEADER, INJECT_HEADER
+from src.scripts.utils.IOutils import set_directory, txt_writer
 
 
 __author__ = 'Michael Lockwood'
@@ -50,8 +48,8 @@ class Sheet(object):
         for file in Sheet.meta_check:
             Sheet.errors += [MissingDatasheetError.get(file)]
 
-        csv_writer('{}/reports/ridership/'.format(PATH), 'errors', Sheet.errors)
-        csv_writer('{}/reports/ridership/'.format(PATH), 'warnings', Sheet.warnings)
+        txt_writer(Sheet.errors, '{}/reports/ridership/errors.csv'.format(PATH))
+        txt_writer(Sheet.warnings, '{}/reports/ridership/warnings.csv'.format(PATH))
         return True
 
     @staticmethod
@@ -327,12 +325,7 @@ class Record(object):
 
     @staticmethod
     def publish_matrix():
-        if not os.path.exists(PATH + '/reports/ridership'):
-            os.makedirs(PATH + '/reports/ridership')
-        writer = csv.writer(open(PATH + '/reports/ridership/records.csv', 'w', newline=''),
-                            delimiter=',', quotechar='|')
-        for row in Record.matrix:
-            writer.writerow(row)
+        txt_writer(Record.matrix, '{}/reports/ridership/records.csv'.format(PATH))
         return True
     
 
@@ -476,6 +469,7 @@ class Period(object):
 
 
 if __name__ == "__main__":
+    set_directory('{}/reports/ridership'.format(PATH))
     start = time.clock()
     Sheet.process()
     print('Sheet processing complete', time.clock() - start)

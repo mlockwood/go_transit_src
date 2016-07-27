@@ -3,31 +3,29 @@ from rest_framework import serializers
 from . import models
 
 
-class DriverSerializer(serializers.ModelSerializer):
+class MetadataSerializer(serializers.ModelSerializer):
     class Meta:
-        extra_kwargs = {
-            'first': {'write_only': True},
-            'last': {'write_only': True}
-        }
         fields = (
-            'id'
-            'first',
-            'last',
-            'hired'
+            'sheet',
+            'date',
+            'route',
+            'driver',
+            'vehicle',
+            'login',
+            'start_mileage',
+            'end_mileage',
+            'logout'
         )
-        model = models.Driver
+        model = models.Metadata
 
 
-class StopSerializer(serializers.ModelSerializer):
-    class Meta:
-        extra_kwargs = {
-            'first': {'write_only': True},
-            'last': {'write_only': True}
-        }
+class EntrySerializer(serializers.ModelSerializer):
+    class Entry:
         fields = (
-            'id'
-            'first',
-            'last',
-            'hired'
+            'metadata',
+            'on',
+            'time',
+            'count',
+            'off'
         )
-        model = models.Driver
+        model = models.Entry

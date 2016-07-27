@@ -27,7 +27,7 @@ class Stop(models.Model):
 
 class Geography(models.Model):
     id = models.IntegerField(primary_key=True)
-    geography = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
     minimum = models.CharField(max_length=3)
     maximum = models.CharField(max_length=3)
 

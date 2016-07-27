@@ -2,7 +2,7 @@ import csv
 import re
 import os
 import src.scripts.transit.stop.stop as st
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 from src.scripts.transit.stop.constants import LANDMARK_HEADER
 
 

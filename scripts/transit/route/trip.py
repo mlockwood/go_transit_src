@@ -2,7 +2,7 @@ import csv
 import datetime
 import os
 
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 from src.scripts.utils.time import convert_to_24_plus_time
 from src.scripts.transit.route.constants import STOP_TIME_HEADER
 from src.scripts.utils.IOutils import load_json, export_json

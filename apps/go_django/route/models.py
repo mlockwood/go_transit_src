@@ -96,6 +96,7 @@ class Trip(models.Model):
     joint = models.ForeignKey('Joint')
     schedule = models.ForeignKey('Schedule')
     segment = models.ForeignKey('Segment')
+    direction = models.ForeignKey('Direction')
     start_loc = models.IntegerField()
     end_loc = models.IntegerField()
     base_time = models.DateTimeField()
@@ -110,9 +111,8 @@ class Trip(models.Model):
 
 
 class StopTime(models.Model):
-    trip_id = models.ForeignKey('Trip')
+    trip = models.ForeignKey('Trip')
     stop = models.ForeignKey('stop.Stop')
-    driver = models.IntegerField()
     arrive = models.DateTimeField()
     depart = models.DateTimeField()
     gtfs_depart = models.DateTimeField()
@@ -124,6 +124,3 @@ class StopTime(models.Model):
     pickup = models.IntegerField()
     dropoff = models.IntegerField()
     display = models.IntegerField()
-    joint = models.ForeignKey('Joint')
-    route = models.IntegerField()
-    direction = models.CharField(max_length=80)

@@ -2,10 +2,9 @@ from django.db import models
 
 
 class Driver(models.Model):
-    # NEED A PASSWORD FIELD??? CONNECT TO AUTH?
     first = models.CharField(max_length=64)
     last = models.CharField(max_length=64)
-    hired = models.DateField()
+    rank = models.CharField(max_length=4, blank=True)
 
     def __str__(self):
         return '{}, {}'.format(self.first, self.last)

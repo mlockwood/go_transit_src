@@ -11,7 +11,7 @@ from src.scripts.transit.route.errors import *
 from src.scripts.utils.IOutils import load_json, export_json
 
 # Import variables from src
-from src.scripts.transit.constants import PATH
+from src.scripts.constants import PATH
 
 
 class Segment(object):
