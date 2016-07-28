@@ -9,8 +9,10 @@ class DataModelTemplate(object):
     def __init__(self, **kwargs):
         [setattr(self, k, v) for k, v in kwargs.items() if k != 'self']
         self.set_objects()
-        if 'set_object_attrs' in dir(self):
-            self.set_object_attrs()
+        self.set_object_attrs()
+
+    def set_object_attrs(self):
+        pass
 
     def set_objects(self):
         try:
@@ -20,10 +22,13 @@ class DataModelTemplate(object):
                                       'object\'s primary key is not `id`.')
 
     @classmethod
+    def set_class_vars(cls):
+        pass
+
+    @classmethod
     def load(cls):
         load_json(cls.json_path, cls)
-        if 'set_class_vars' in dir(cls):
-            cls.set_class_vars()
+        cls.set_class_vars()
 
     @classmethod
     def export(cls):

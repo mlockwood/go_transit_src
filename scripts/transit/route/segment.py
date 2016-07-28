@@ -6,10 +6,8 @@ import datetime
 
 # Import scripts from src
 from src.scripts.utils.classes import DataModelTemplate
-from src.scripts.transit.stop.stop import Stop
 from src.scripts.transit.route.direction import Direction
 from src.scripts.transit.route.errors import *
-from src.scripts.utils.IOutils import load_json, export_json
 
 # Import variables from src
 from src.scripts.constants import PATH
@@ -20,9 +18,10 @@ Direction.load()
 
 class Segment(DataModelTemplate):
 
+    id_generator = 1
+    json_path = '{}/data/segment.json'.format(PATH)
     objects = {}
     schedule_query = {}
-    id_generator = 1
 
     def set_object_attrs(self):
         self.dir_type_num = 1 if self.dir_type == 'inbound' else 0
@@ -32,12 +31,12 @@ class Segment(DataModelTemplate):
         self.seq_order = {}  # {StopSeq.order: StopSeq}
         self.stops = {}  # {StopSeq.stop: True}
 
-        if self.schedule.id not in Segment.schedule_query:
-            Segment.schedule_query[self.schedule.id] = {}
-        Segment.schedule_query[self.schedule.id][self] = True
+        if self.schedule not in Segment.schedule_query:
+            Segment.schedule_query[self.schedule] = {}
+        Segment.schedule_query[self.schedule][self] = True
 
     def set_objects(self):
-        Segment.objects[(self.joint, self.schedule.id, self.name)] = self
+        Segment.objects[(self.joint, self.schedule, self.name)] = self
 
     def __repr__(self):
         return '<Segment {}>'.format(self.name)
@@ -46,25 +45,25 @@ class Segment(DataModelTemplate):
         return 'Segment {} for joint {}'.format(self.name, self.joint)
 
     def __lt__(self, other):
-        return (self.joint, self.schedule.id, self.name) < (other.joint, other.schedule.id, other.name)
+        return (self.joint, self.schedule, self.name) < (other.joint, other.schedule, other.name)
 
     def __le__(self, other):
-        return (self.joint, self.schedule.id, self.name) <= (other.joint, other.schedule.id, other.name)
+        return (self.joint, self.schedule, self.name) <= (other.joint, other.schedule, other.name)
 
     def __eq__(self, other):
-        return (self.joint, self.schedule.id, self.name) == (other.joint, other.schedule.id, other.name)
+        return (self.joint, self.schedule, self.name) == (other.joint, other.schedule, other.name)
 
     def __ne__(self, other):
-        return (self.joint, self.schedule.id, self.name) != (other.joint, other.schedule.id, other.name)
+        return (self.joint, self.schedule, self.name) != (other.joint, other.schedule, other.name)
 
     def __gt__(self, other):
-        return (self.joint, self.schedule.id, self.name) > (other.joint, other.schedule.id, other.name)
+        return (self.joint, self.schedule, self.name) > (other.joint, other.schedule, other.name)
 
     def __ge__(self, other):
-        return (self.joint, self.schedule.id, self.name) >= (other.joint, other.schedule.id, other.name)
+        return (self.joint, self.schedule, self.name) >= (other.joint, other.schedule, other.name)
 
     def __hash__(self):
-        return hash((self.joint, self.schedule.id, self.name))
+        return hash((self.joint, self.schedule, self.name))
 
     @staticmethod
     def set_segments():
@@ -96,9 +95,8 @@ class Segment(DataModelTemplate):
             segment.set_order()
 
     def get_json(self):
-        attrs = dict([(k, getattr(self, k)) for k in ['joint', 'dir_order', 'dir_type', 'route', 'name']])
+        attrs = dict([(k, getattr(self, k)) for k in ['joint', 'schedule', 'dir_order', 'dir_type', 'route', 'name']])
         attrs['direction'] = self.direction.id
-        attrs['schedule'] = self.schedule.id
         return attrs
 
     def set_order(self):
@@ -143,44 +141,26 @@ class Segment(DataModelTemplate):
         return None
 
 
-class StopSeq(object):
+class StopSeq(DataModelTemplate):
 
+    json_path = '{}/data/stop_seq.json'.format(PATH)
     objects = {}
     segment_query = {}
 
-    def __init__(self, segment, stop, arrive, depart, timed, display, load_seq, destination):
-        # Stop validation
-        if stop not in Stop.objects:
-            raise UnknownStopPointError('Stop {} from {} is not recognized.'.format(stop, segment))
-
-        # Assign attributes
-        self.segment = segment
-        self.stop = stop
-        self.arrive = int(arrive)
-        self.depart = int(depart)
-        self.gtfs_depart = int(arrive) if destination else int(depart)
+    def set_object_attrs(self):
+        self.gtfs_depart = self.arrive if self.destination else self.depart
         self.timedelta = datetime.timedelta(seconds=(self.depart - self.arrive))
         self.gtfs_timedelta = datetime.timedelta(seconds=(self.gtfs_depart - self.arrive))
-        self.timed = int(timed)
-        self.display = int(display)
-        self.load_seq = int(load_seq)
-        self.destination = destination
         self.order = None
 
-        StopSeq.objects[(segment, load_seq)] = self
-        if segment not in StopSeq.segment_query:
-            StopSeq.segment_query[segment] = {}
-        StopSeq.segment_query[segment][self] = True
+        if self.segment not in StopSeq.segment_query:
+            StopSeq.segment_query[self.segment] = {}
+        StopSeq.segment_query[self.segment][self] = True
 
-    @classmethod
-    def load(cls):
-        load_json(PATH + '/data/stop_seq.json', cls)
-        Segment.set_segments()
-
-    @classmethod
-    def export(cls):
-        export_json(PATH + '/data/stop_seq.json', cls)
+    def set_objects(self):
+        StopSeq.objects[(self.segment, self.load_seq)] = self
 
     def get_json(self):
         return dict([(k, getattr(self, k)) for k in ['segment', 'stop', 'arrive', 'depart', 'timed', 'display',
                                                      'load_seq', 'destination']])
+

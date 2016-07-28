@@ -13,8 +13,8 @@ from src.scripts.transit.stop.stop import Stop
 from src.scripts.transit.route.errors import *
 
 # Classes and variables from src
-from src.scripts.constants import PATH
-from src.scripts.utils.IOutils import load_json, export_json
+from src.scripts.constants import *
+from src.scripts.utils.classes import DataModelTemplate
 
 from src.scripts.transit.route.segment import Segment, StopSeq, Direction
 from src.scripts.transit.route.service import Service
@@ -28,6 +28,7 @@ Stop.load()
 Direction.load()
 Segment.load()
 StopSeq.load()
+Segment.set_segments()
 Service.load()
 
 
@@ -68,20 +69,15 @@ class Route:
         return False
 
 
-class Joint(object):
+class Joint(DataModelTemplate):
 
     objects = {}
+    json_path = '{}/joint.json'.format(DATA_PATH)
     locations = {}
 
-    def __init__(self, id, routes, description, service_id, headway):
-        self.id = int(id)
-        self.routes = routes
-        self.description = description
-        self.service = Service.objects[int(service_id)]
-        self.service_id = int(service_id)
-        self.headway = int(headway)
+    def set_object_attrs(self):
+        self.service = Service.objects[self.service]
         self.schedules = {}
-        Joint.objects[int(id)] = self
 
     def __repr__(self):
         return '<Joint {}>'.format(self.id)
@@ -108,49 +104,40 @@ class Joint(object):
         DateRange.set_ranges(ranges)
         return True
 
-    @classmethod
-    def load(cls):
-        load_json('{}/data/joint.json'.format(PATH), cls)
-
-    @classmethod
-    def export(cls):
-        export_json('{}/data/joint.json'.format(PATH), cls)
-
     def get_json(self):
-        return dict([(k, getattr(self, k)) for k in ['id', 'desc', 'routes', 'service_id', 'headway']])
+        attrs = dict([(k, getattr(self, k)) for k in ['id', 'desc', 'routes', 'headway']])
+        attrs['service'] = self.service.id
+        return attrs
 
 
-class Schedule(object):
+class Schedule(DataModelTemplate):
 
     objects = {}
+    json_path = '{}/schedule.json'.format(DATA_PATH)
 
-    def __init__(self, id, joint_id, start_str, end_str, offset):
-        self.id = int(id)
-        self.joint_id = int(joint_id)
-        self.joint = Joint.objects[joint_id]
-        self.start_str = start_str
-        self.end_str = end_str
-        self.offset = int(offset)
+    def set_object_attrs(self):
+        self.joint = Joint.objects[self.joint]
+        self.start_str = self.start
+        self.end_str = self.end
 
-        self.start = self.joint.service.start_date.replace(hour=int(start_str[:2]), minute=int(start_str[2:]))
-        # Handle times that are at or after midnight (24+ hour scale for GTFS) remember to use start_date for end
-        if int(end_str[:2]) >= 24:
-            self.end = copy.deepcopy(self.joint.service.start_date
-                ).replace(hour=int(end_str[:2]) - 24, minute=int(end_str[2:])) + datetime.timedelta(days=1)
-        else:
-            self.end = copy.deepcopy(self.joint.service.start_date).replace(hour=int(end_str[:2]),
-                                                                            minute=int(end_str[2:]))
+        # Set times
+        self.start = copy.deepcopy(self.joint.service.start_date).replace(hour=int(self.start[:2]),
+                                                                          minute=int(self.start[-2:]))
+        self.end = copy.deepcopy(self.joint.service.start_date).replace(hour=int(self.end[:2]),
+                                                                        minute=int(self.end[-2:]))
+        # Handle end times that are at or after midnight (24+ hour scale for GTFS) by incrementing the day
+        if self.end < self.start:
+            self.end = self.end + datetime.timedelta(days=1)
+
+        if 'drivers' not in self.__dict__:
+            self.drivers = {}
 
         self.prev = None
-        self.drivers = {}
-        self.trips = {}
         self.segments = self.get_segments()
         self.roundtrip = self.get_roundtrip()
         self.order = self.get_order()
         self.joint.schedules[self] = True
         self.end_locs = {}
-
-        Schedule.objects[int(id)] = self
 
     def __repr__(self):
         return '<Schedule {}>'.format(self.id)
@@ -179,16 +166,15 @@ class Schedule(object):
     def __hash__(self):
         return hash((self.start, self.end))
 
-    @classmethod
-    def load(cls):
-        load_json(PATH + '/data/schedule.json', cls)
-
-    @classmethod
-    def export(cls):
-        export_json(PATH + '/data/schedule.json', cls)
-
     def get_json(self):
-        return dict([(k, getattr(self, k)) for k in ['id', 'joint_id', 'start_str', 'end_str', 'offset']])
+        return {
+            'id': self.id,
+            'offset': self.offset,
+            'joint': self.joint.id,
+            'start': self.start_str,
+            'end': self.end_str,
+            'drivers': dict((driver, self.drivers[driver].id) for driver in self.drivers)
+        }
 
     def get_segments(self):
         return dict((segment.dir_order, segment) for segment in Segment.schedule_query[self.id])
@@ -340,11 +326,20 @@ class Schedule(object):
                 end_loc = segment.trip_length
 
             # Set trip
-            self.trips[Trip(self.joint, self, segment, segment.query_stop_seqs(start_loc, end_loc), start_loc, end_loc,
-                            start, driver)] = True
+            trip = Trip(**{
+                'id': '-'.join(str(s) for s in [self.joint.id, self.id, segment.name, segment.trip_generator]),
+                'schedule': self.id,
+                'direction': segment.direction.id,
+                'start_loc': start_loc,
+                'end_loc': end_loc,
+                'start_time': start.strftime('%Y%m%d-%H%M%S'),
+                'driver': driver
+            })
+            segment.trip_generator += 1
+            trip.create_stop_times(segment.query_stop_seqs(start_loc, end_loc), self.joint.service)
 
             # Set driver start location
-            Driver.set_start(driver, segment.query_min_stop_seq(start_loc, end_loc))
+            driver.start = segment.query_min_stop_seq(start_loc, end_loc)
 
             # Calculate next start
             start_loc = 0
@@ -366,15 +361,18 @@ class Schedule(object):
         self.end_locs[min(self.end_locs) + self.roundtrip] = self.end_locs[min(self.end_locs)]
 
 
-class DateRange(object):
+class DateRange(DataModelTemplate):
 
+    json_path = '{}/date_range.json'.format(DATA_PATH)
     objects = {}
 
-    def __init__(self, start, end):
-        self.start = start
-        self.end = end
-        self.joints = []
-        DateRange.objects[(start, end)] = self
+    def set_object_attrs(self):
+        self.start = datetime.datetime.strptime(self.start, '%Y-%m-%d')
+        self.end = datetime.datetime.strptime(self.end, '%Y-%m-%d')
+        self.joints = [Joint.objects[joint] for joint in self.joints]
+
+    def set_objects(self):
+        DateRange.objects[(self.start, self.end)] = self
 
     def __repr__(self):
         return '<DateRange {}-{}>'.format(self.start, self.end)
@@ -397,7 +395,11 @@ class DateRange(object):
         # Order the dates and create ranges between each two ordered points
         i = 0
         while i < len(points) - 1:
-            DateRange(points[i], points[i+1])
+            DateRange(**{
+                'start': points[i].strftime('%Y-%m-%d'),
+                'end': points[i+1].strftime('%Y-%m-%d'),
+                'joints': []
+            })
             i += 1
 
         # Connect Joint objects to DateRange objects
@@ -417,7 +419,7 @@ class DateRange(object):
 
     def get_feed(self):
         trips = {}
-        stop_seqs = {}
+        stop_times = {}
 
         self.joints = [Joint.objects[joint] for joint in sorted([joint.id for joint in self.joints])]
 
@@ -431,42 +433,73 @@ class DateRange(object):
                         schedule.drivers[driver].position = position
                         position += 1
 
-                    # Select trips
-                    trips.update(schedule.trips)
-                    for trip in schedule.trips:
-                        stop_seqs.update(trip.stop_times)
+                # Select trips
+                trips.update(Trip.feed[schedule.id])
 
-        return trips, stop_seqs
+                # Select stop_times
+                stop_times.update(StopTime.feed[schedule.id])
+
+        return trips, stop_times
+
+    def get_json(self):
+        return {
+            'joints': [joint.id for joint in self.joints],
+            'start': self.start.strftime('%Y-%m-%d'),
+            'end': self.end.strftime('%Y-%m-%d')
+        }
 
 
-class Driver:
+class Driver(DataModelTemplate):
 
+    json_path = '{}/route_driver.json'.format(DATA_PATH)
     objects = {}
 
-    def __init__(self):
-        self.id = str(uuid.uuid4())
-        self.start = None
-        self.position = None
-        Driver.objects[self] = self
+    @classmethod
+    def get_drivers(cls, n):
+        return dict([(x, cls(**{
+            'id': str(uuid.uuid4()),
+            'start': None,
+            'position': None
+        })) for x in range(n)])
 
-    @staticmethod
-    def get_drivers(n):
-        return dict([(x, Driver()) for x in range(n)])
+    @classmethod
+    def reconstruct_object_links(cls):
+        for obj in Schedule.objects:
+            sch = Schedule.objects[obj]
+            sch.drivers = dict((driver, Driver.objects[sch.drivers[driver]]) for driver in sch.drivers)
+        for obj in Trip.objects:
+            Trip.objects[obj].driver = Driver.objects[Trip.objects[obj].driver]
+        return True
 
-    @staticmethod
-    def set_start(id, stop):
-        if not Driver.objects[id].start:
-            Driver.objects[id].start = stop
 
-
-Joint.load()
-Schedule.load()
-Joint.process()
-Route.set_route_query()
-
-feed = DateRange.get_feed_by_date(datetime.datetime.today())
-
-if __name__ == "__main__":
+def process():
+    Joint.load()
+    Schedule.load()
+    Joint.process()
+    Route.set_route_query()
+    feed = DateRange.get_feed_by_date(datetime.datetime.today())
+    StopTime.publish_matrix()
+    Schedule.export()
+    DateRange.export()
+    Driver.export()
     Trip.export()
     StopTime.export()
+    return feed
+
+
+def load():
+    Joint.load()
+    Schedule.load()
+    DateRange.load()
+    Driver.load()
+    Trip.load()
+    StopTime.load()
+    Driver.reconstruct_object_links()
+    feed = DateRange.get_feed_by_date(datetime.datetime.today())
     StopTime.publish_matrix()
+    return feed
+
+if __name__ == "__main__":
+    # feed = process()
+    feed = load()
+    print(len(feed[0]), len(feed[1]))
