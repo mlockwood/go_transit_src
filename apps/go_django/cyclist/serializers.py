@@ -12,7 +12,6 @@ class CyclistSerializer(serializers.ModelSerializer):
             'email',
             'waiver',
             'waiver_time',
-            'history'
         )
         model = models.Cyclist
 

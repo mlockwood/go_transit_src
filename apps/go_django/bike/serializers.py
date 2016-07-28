@@ -11,8 +11,8 @@ class FleetSerializer(serializers.ModelSerializer):
             'description',
             'lat',
             'lng',
-            'operation',
-            'phone_number',
+            'operating',
+            'phone',
             'schedule'
         )
         model = models.Fleet
@@ -27,7 +27,6 @@ class StewardSerializer(serializers.ModelSerializer):
             'email',
             'fleet',
             'status',
-            'history'
         )
         model = models.Steward
 
@@ -39,7 +38,6 @@ class BikeSerializer(serializers.ModelSerializer):
             'serial_number',
             'low_step',
             'fleet',
-            'history'
         )
         model = models.Bike
 
@@ -51,7 +49,6 @@ class BikeGPSSerializer(serializers.ModelSerializer):
             'id',
             'serial_number',
             'wi_mm',
-            'history'
         )
         model = models.BikeGPS
 
@@ -62,7 +59,6 @@ class LockSerializer(serializers.ModelSerializer):
             'bike',
             'id',
             'serial_number',
-            'history'
         )
         model = models.Lock
 
@@ -73,6 +69,5 @@ class AssetSerializer(serializers.ModelSerializer):
             'fleet',
             'id',
             'asset_type',
-            'history'
         )
         model = models.Asset

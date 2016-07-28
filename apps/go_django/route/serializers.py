@@ -69,6 +69,7 @@ class DirectionSerializer(serializers.ModelSerializer):
 class SegmentSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
+            'id',
             'joint',
             'schedule',
             'dir_order',
@@ -82,6 +83,7 @@ class SegmentSerializer(serializers.ModelSerializer):
 class StopSeqSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
+            'id',
             'segment',
             'stop',
             'arrive',
@@ -115,6 +117,7 @@ class TripSerializer(serializers.ModelSerializer):
 class StopTimeSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
+            'id',
             'trip',
             'stop',
             'arrive',

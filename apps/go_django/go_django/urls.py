@@ -34,7 +34,7 @@ router = routers.SimpleRouter()
 router.register(r'fleet', FleetViewSet)
 router.register(r'steward', StewardViewSet)
 router.register(r'bike', BikeViewSet)
-router.register(r'bike_gps', BikeGPSViewSet)
+router.register(r'bikegps', BikeGPSViewSet)
 router.register(r'lock', LockViewSet)
 router.register(r'asset', AssetViewSet)
 

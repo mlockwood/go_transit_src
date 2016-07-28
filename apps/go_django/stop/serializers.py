@@ -10,7 +10,6 @@ class StopSerializer(serializers.ModelSerializer):
             'name',
             'location',
             'description',
-            'gps_ref',
             'geography',
             'lat',
             'lng',

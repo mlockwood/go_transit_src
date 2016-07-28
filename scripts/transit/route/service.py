@@ -18,8 +18,8 @@ class Service(DataModelTemplate):
     objects = {}
 
     def set_object_attrs(self):
-        self.start_date = datetime.datetime.strptime(self.start_date, '%Y%m%d')
-        self.end_date = datetime.datetime.strptime(self.end_date, '%Y%m%d')
+        self.start_date = datetime.datetime.strptime(self.start_date, '%Y-%m-%d')
+        self.end_date = datetime.datetime.strptime(self.end_date, '%Y-%m-%d')
         self.segments = {}
 
     def __repr__(self):
@@ -49,8 +49,8 @@ class Service(DataModelTemplate):
     def get_json(self):
         attrs = dict([(k, getattr(self, k)) for k in ['id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
                                                       'saturday', 'sunday', 'text']])
-        attrs['start_date'] = self.start_date.strftime('%Y%m%d')
-        attrs['end_date'] = self.end_date.strftime('%Y%m%d')
+        attrs['start_date'] = self.start_date.strftime('%Y-%m-%d')
+        attrs['end_date'] = self.end_date.strftime('%Y-%m-%d')
         return attrs
 
     def add_segment(self, segment):
@@ -70,11 +70,11 @@ class Holiday(DataModelTemplate):
         holidays = []
         for holiday in cls.objects:
             holiday = cls.objects[holiday]
-            if past_filter and datetime.datetime.strptime(holiday.holiday, '%Y%m%d') < datetime.datetime.today():
+            if past_filter and datetime.datetime.strptime(holiday.holiday, '%Y-%m-%d') < datetime.datetime.today():
                 continue
             for obj in Service.objects:
                 service = Service.objects[obj]
                 # Check if the holiday applies to the given service dates
-                if service.start_date <= datetime.datetime.strptime(holiday.holiday, '%Y%m%d') <= service.end_date:
+                if service.start_date <= datetime.datetime.strptime(holiday.holiday, '%Y-%m-%d') <= service.end_date:
                     holidays.append([service.id, holiday.holiday, 2])
         return holidays

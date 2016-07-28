@@ -25,10 +25,8 @@ class Inventory(DataModelTemplate):
     objects = {}
 
     def set_objects(self):
-        Inventory.objects[self.timestamp, self.stop] = self
+        Inventory.objects[(self.timestamp, self.stop)] = self
 
-
-Stop.load()
 
 if __name__ == '__main__':
     Geography.load()

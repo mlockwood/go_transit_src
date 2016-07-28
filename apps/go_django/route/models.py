@@ -83,8 +83,8 @@ class Segment(models.Model):
 class StopSeq(models.Model):
     segment = models.CharField(max_length=12)
     stop = models.ForeignKey('stop.Stop')
-    arrive = models.IntegerField()
-    depart = models.IntegerField
+    arrive = models.IntegerField(default=0)
+    depart = models.IntegerField(default=0)
     timed = models.IntegerField()
     display = models.IntegerField()
     load_seq = models.IntegerField()

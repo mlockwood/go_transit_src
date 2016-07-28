@@ -1,7 +1,10 @@
+import inspect
 import json
+import re
 import requests
+import sys
 
-from src.scripts.constants import PATH
+from src.scripts.constants import *
 
 
 class DatabaseLoader(object):
@@ -25,23 +28,28 @@ class DatabaseLoader(object):
     def process(cls):
         for obj in cls.models:
             cls(obj, cls.models[obj])
-        cls.delete()
+        # cls.delete()
         cls.post()
+        cls.objects = {}
         return True
 
     @classmethod
     def delete(cls):
         for name in cls.objects:
             res = requests.get('{}/{}/'.format(cls.root, name), headers=cls.header)
-            for item in res.json()['results']:
-                requests.delete('{}/{}/{}/'.format(cls.root, name, item['id']), headers=cls.header)
+            while res.json()['results']:
+                for item in res.json()['results']:
+                    requests.delete('{}/{}/{}/'.format(cls.root, name, item['id']), headers=cls.header)
+                res = requests.get('{}/{}/'.format(cls.root, name), headers=cls.header)
         return True
 
     @classmethod
     def post(cls):
         for name in cls.objects:
             for item in cls.objects[name].data:
-                requests.post('{}/{}/'.format(cls.root, name), data=item, headers=cls.header)
+                res = requests.post('{}/{}/'.format(cls.root, name), data=item, headers=cls.header)
+                if res.status_code == 400 and not re.search('already exists', str(res.json())):
+                    print(name, res.json())
         return True
 
 
@@ -73,6 +81,71 @@ data = [
 ]
 
 
-class FirstLoad(DatabaseLoader):
+class FirstLoader(DatabaseLoader):
 
-    models = {}
+    models = {
+        'fleet': '{}/fleet.json'.format(DATA_PATH),
+        # 'cyclist': '{}/cyclist.json'.format(DATA_PATH),
+        # 'driver': '{}/driver.json'.format(DATA_PATH),
+        'service': '{}/service.json'.format(DATA_PATH),
+        'holiday': '{}/holiday.json'.format(DATA_PATH),
+        'geography': '{}/geography.json'.format(DATA_PATH),
+        # 'vehicle': '{}/vehicle.json'.format(DATA_PATH),
+    }
+
+
+class SecondLoader(DatabaseLoader):
+
+    models = {
+        # 'steward': '{}/steward.json'.format(DATA_PATH),
+        'bike': '{}/bike.json'.format(DATA_PATH),
+        'asset': '{}/asset.json'.format(DATA_PATH),
+        # 'metadata': '{}/metadata.json'.format(DATA_PATH),
+        'joint': '{}/joint.json'.format(DATA_PATH),
+        'stop': '{}/stop.json'.format(DATA_PATH),
+        # 'maintenance': '{}/maintenance.json'.format(DATA_PATH),
+    }
+
+
+class ThirdLoader(DatabaseLoader):
+
+    models = {
+        'bikegps': '{}/bike_gps.json'.format(DATA_PATH),
+        'lock': '{}/lock.json'.format(DATA_PATH),
+        # 'checkinout': '{}/checkinout.json'.format(DATA_PATH),
+        # 'entry': '{}/entry.json'.format(DATA_PATH),
+        'schedule': '{}/schedule.json'.format(DATA_PATH),
+        'direction': '{}/direction.json'.format(DATA_PATH),
+        'stopseq': '{}/stop_seq.json'.format(DATA_PATH),
+        'inventory': '{}/inventory.json'.format(DATA_PATH),
+    }
+
+
+class FourthLoader(DatabaseLoader):
+
+    models = {
+        'segment': '{}/segment.json'.format(DATA_PATH),
+    }
+
+
+class FifthLoader(DatabaseLoader):
+
+    models = {
+        'trip': '{}/trip.json'.format(DATA_PATH),
+    }
+
+
+class SixthLoader(DatabaseLoader):
+
+    models = {
+        'stoptime': '{}/stop_time.json'.format(DATA_PATH),
+    }
+
+
+if __name__ == "__main__":
+    FirstLoader.process()
+    SecondLoader.process()
+    ThirdLoader.process()
+    FourthLoader.process()
+    # FifthLoader.process()
+    # SixthLoader.process()

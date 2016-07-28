@@ -8,6 +8,6 @@ class DriverSerializer(serializers.ModelSerializer):
         fields = (
             'first',
             'last',
-            'hired'
+            'rank'
         )
         model = models.Driver

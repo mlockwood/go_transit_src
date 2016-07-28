@@ -10,8 +10,8 @@ class Fleet(models.Model):
     description = models.TextField()
     lat = models.DecimalField(max_digits=9, decimal_places=6)
     lng = models.DecimalField(max_digits=9, decimal_places=6)
-    operation = models.DateField()
-    phone_number = models.CharField(max_length=20)
+    operating = models.DateField()
+    phone = PhoneNumberField()
     schedule = models.TextField(default='24 hours every day except holidays')
 
     def save(self, *args, **kwargs):

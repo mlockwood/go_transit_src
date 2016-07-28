@@ -5,6 +5,7 @@
 import datetime
 
 # Import scripts from src
+from src.scripts.utils.classes import DataModelTemplate
 from src.scripts.transit.stop.stop import Stop
 from src.scripts.transit.route.direction import Direction
 from src.scripts.transit.route.errors import *
@@ -14,35 +15,29 @@ from src.scripts.utils.IOutils import load_json, export_json
 from src.scripts.constants import PATH
 
 
-class Segment(object):
+Direction.load()
+
+
+class Segment(DataModelTemplate):
 
     objects = {}
     schedule_query = {}
     id_generator = 1
 
-    def __init__(self, joint, schedule_id, dir_order, dir_type, route, name, direction_id):
-        # Initialized attributes
-        self.joint = int(joint)
-        self.schedule_id = int(schedule_id)
-        self.dir_order = int(dir_order)
-        self.dir_type = dir_type
-        self.dir_type_num = 1 if dir_type == 'inbound' else 0
-        self.route = int(route)
-        self.name = name
-        self.direction = Direction.objects[int(direction_id)]
-        self.direction_id = int(direction_id)
-
-        # Attributes set after initialization
+    def set_object_attrs(self):
+        self.dir_type_num = 1 if self.dir_type == 'inbound' else 0
+        self.direction = Direction.objects[self.direction]
         self.trip_generator = 1
         self.trip_length = 0
         self.seq_order = {}  # {StopSeq.order: StopSeq}
         self.stops = {}  # {StopSeq.stop: True}
 
-        # Add to objects
-        Segment.objects[(joint, schedule_id, name)] = self
-        if schedule_id not in Segment.schedule_query:
-            Segment.schedule_query[schedule_id] = {}
-        Segment.schedule_query[schedule_id][self] = True
+        if self.schedule.id not in Segment.schedule_query:
+            Segment.schedule_query[self.schedule.id] = {}
+        Segment.schedule_query[self.schedule.id][self] = True
+
+    def set_objects(self):
+        Segment.objects[(self.joint, self.schedule.id, self.name)] = self
 
     def __repr__(self):
         return '<Segment {}>'.format(self.name)
@@ -51,25 +46,25 @@ class Segment(object):
         return 'Segment {} for joint {}'.format(self.name, self.joint)
 
     def __lt__(self, other):
-        return (self.joint, self.schedule_id, self.name) < (other.joint, other.schedule_id, other.name)
+        return (self.joint, self.schedule.id, self.name) < (other.joint, other.schedule.id, other.name)
 
     def __le__(self, other):
-        return (self.joint, self.schedule_id, self.name) <= (other.joint, other.schedule_id, other.name)
+        return (self.joint, self.schedule.id, self.name) <= (other.joint, other.schedule.id, other.name)
 
     def __eq__(self, other):
-        return (self.joint, self.schedule_id, self.name) == (other.joint, other.schedule_id, other.name)
+        return (self.joint, self.schedule.id, self.name) == (other.joint, other.schedule.id, other.name)
 
     def __ne__(self, other):
-        return (self.joint, self.schedule_id, self.name) != (other.joint, other.schedule_id, other.name)
+        return (self.joint, self.schedule.id, self.name) != (other.joint, other.schedule.id, other.name)
 
     def __gt__(self, other):
-        return (self.joint, self.schedule_id, self.name) > (other.joint, other.schedule_id, other.name)
+        return (self.joint, self.schedule.id, self.name) > (other.joint, other.schedule.id, other.name)
 
     def __ge__(self, other):
-        return (self.joint, self.schedule_id, self.name) >= (other.joint, other.schedule_id, other.name)
+        return (self.joint, self.schedule.id, self.name) >= (other.joint, other.schedule.id, other.name)
 
     def __hash__(self):
-        return hash((self.joint, self.schedule_id, self.name))
+        return hash((self.joint, self.schedule.id, self.name))
 
     @staticmethod
     def set_segments():
@@ -100,18 +95,11 @@ class Segment(object):
 
             segment.set_order()
 
-    @classmethod
-    def load(cls):
-        Direction.load()
-        load_json('{}/data/segment.json'.format(PATH), cls)
-
-    @classmethod
-    def export(cls):
-        export_json('{}/data/segment.json'.format(PATH), cls)
-
     def get_json(self):
-        return dict([(k, getattr(self, k)) for k in ['joint', 'schedule_id', 'dir_order', 'dir_type', 'route', 'name',
-                                                     'direction_id']])
+        attrs = dict([(k, getattr(self, k)) for k in ['joint', 'dir_order', 'dir_type', 'route', 'name']])
+        attrs['direction'] = self.direction.id
+        attrs['schedule'] = self.schedule.id
+        return attrs
 
     def set_order(self):
         # List of stop_ids in order of travel_time
