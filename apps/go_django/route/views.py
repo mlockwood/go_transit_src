@@ -50,15 +50,11 @@ class StopSeqViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.StopSeqSerializer
 
 
-class TripViewSet(mixins.ListModelMixin,
-                  mixins.RetrieveModelMixin,
-                  viewsets.GenericViewSet):
+class TripViewSet(viewsets.ModelViewSet):
     queryset = models.Trip.objects.all()
     serializer_class = serializers.TripSerializer
 
 
-class StopTimeViewSet(mixins.ListModelMixin,
-                      mixins.RetrieveModelMixin,
-                      viewsets.GenericViewSet):
+class StopTimeViewSet(viewsets.ModelViewSet):
     queryset = models.StopTime.objects.all()
     serializer_class = serializers.StopTimeSerializer

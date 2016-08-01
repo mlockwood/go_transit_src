@@ -100,15 +100,11 @@ class TripSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'joint',
             'schedule',
-            'segment',
             'direction',
             'start_loc',
             'end_loc',
-            'base_time',
             'start_time',
-            'end_time',
             'driver'
         )
         model = models.Trip

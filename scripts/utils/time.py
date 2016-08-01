@@ -26,3 +26,10 @@ def convert_to_24_time(time, seconds=True):
 
 def pad_time(time_unit):
     return '0' + str(time_unit) if len(str(time_unit)) == 1 else str(time_unit)
+
+
+def to_list(time):
+    if isinstance(time, str):
+        time = re.sub(':', '', time)
+    time = '{0:04d}'.format(int(time))
+    return [time[:2], time[2:]]

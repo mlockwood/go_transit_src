@@ -16,12 +16,7 @@ class Stop(models.Model):
     available = models.IntegerField(default=2)
 
     def __str__(self):
-        return '({}) {}'.format(self.stop_id, self.name)
-
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            self.id = self.__class__.objects.all().order_by("-id")[0].id + 1
-        super(self.__class__, self).save(*args, **kwargs)
+        return '({}) {}'.format(self.id, self.name)
 
 
 class Geography(models.Model):
@@ -29,6 +24,9 @@ class Geography(models.Model):
     name = models.CharField(max_length=255)
     minimum = models.CharField(max_length=3)
     maximum = models.CharField(max_length=3)
+
+    def __str__(self):
+        return '({}) {}'.format(self.id, self.name)
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -63,4 +61,10 @@ class Inventory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     code = models.CharField(max_length=1, choices=CODE_CHOICES)
     notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return '({}) {}'.format(self.stop, self.timestamp)
+
+    class Meta:
+        unique_together = ('timestamp', 'stop')
 

@@ -5,6 +5,7 @@
 import copy
 import csv
 import datetime
+import json
 import os
 import re
 import time
@@ -13,28 +14,34 @@ import multiprocessing as mp
 
 # Entire scripts from src
 from src.scripts.transit.stop.stop import Stop
-from src.scripts.transit.route.route import Route
+from src.scripts.transit.route.route import Route, load
 from src.scripts.transit.rider.errors import *
 
 # Classes and variables from src
-from src.scripts.constants import PATH
+from src.scripts.constants import *
 from src.scripts.transit.rider.constants import BEGIN, BASELINE, DATA_HEADER, INCREMENT, META_HEADER, INJECT_HEADER
-from src.scripts.utils.IOutils import set_directory, txt_writer
+from src.scripts.utils.IOutils import *
+from src.scripts.utils.time import to_list
 
 
 __author__ = 'Michael Lockwood'
 __github__ = 'mlockwood'
 __projectclass__ = 'go'
-__projectsubclass__ = 'transit'
-__projectname__ = 'ridership.py'
+__projectsubclass__ = 'src/scripts/transit'
+__project__ = 'rider'
+__script__ = 'ridership.py'
 __date__ = 'February2015'
 __credits__ = None
 __collaborators__ = None
 
 
+load()
+
+
 class Sheet(object):
 
     metadata = {}
+    export = []
     meta_check = {}
     errors = []
     warnings = []
@@ -56,10 +63,46 @@ class Sheet(object):
     def load_metadata(directory='{}/data/ridership'.format(PATH)):
         reader = csv.reader(open('{}/metadata.csv'.format(directory), 'r', newline='', encoding="utf8"), delimiter=',',
                             quotechar='|')
+
+        driver = {}
+        vehicle = {}
+
+        d_key = open('{}/ridership/driver_key.txt'.format(DATA_PATH), 'r')
+        v_key = open('{}/ridership/vehicle_key.txt'.format(DATA_PATH), 'r')
+
+        for row in d_key:
+            row = re.split(',', row.rstrip())
+            driver[row[0].lower()] = row[1]
+
+        for row in v_key:
+            row = re.split(',', row.rstrip())
+            vehicle[row[0].lower()] = row[1]
+
         for row in reader:
             if row != META_HEADER:
+                date = '{0}-{1:02d}-{2:02d}'.format(row[0], int(row[1]), int(row[2]))
                 file = '{0}{1:02d}{2:02d}_{3}.csv'.format(row[0], int(row[1]), int(row[2]), row[3])
+                start = to_list(row[7])
+                end = to_list(row[11])
                 Sheet.metadata[file] = row
+                new_obj = {
+                    'sheet': re.sub('.csv$', '', file),
+                    'date': date,
+                    'route': row[4],
+                    'login': '{} {}:{}'.format(date, start[0], start[1]),
+                    'logout': '{} {}:{}'.format(date, end[0], end[1]),
+                    'start_mileage': int(row[9]),
+                    'end_mileage': int(row[12])
+                }
+                try:
+                    new_obj['driver'] = driver[row[5].lower()]
+                except KeyError:
+                    print(row[5])
+                try:
+                    new_obj['vehicle'] = vehicle[row[6].lower()]
+                except KeyError:
+                    print(row[6])
+                Sheet.export.append(new_obj)
 
         Sheet.meta_check = copy.deepcopy(Sheet.metadata)
         return True
@@ -327,6 +370,19 @@ class Record(object):
     def publish_matrix():
         txt_writer(Record.matrix, '{}/reports/ridership/records.csv'.format(PATH))
         return True
+
+    def get_json(self):
+        return {
+            'metadata': '{0}{1:02d}{2:02d}_{3}'.format(self.year, self.month, self.day, self.sheet),
+            'on': self.on_stop,
+            'time': self.time,
+            'count': self.count,
+            'off': self.off_stop
+        }
+
+    @classmethod
+    def export(cls):
+        export_json('{}/entry.json'.format(DATA_PATH), cls)
     
 
 class Period(object):
@@ -479,4 +535,6 @@ if __name__ == "__main__":
     print('Averages set', time.clock() - start)
     Period.publish()
     print('Publishing complete', time.clock() - start)
+    json.dump(Sheet.export, open('{}/metadata.json'.format(DATA_PATH), 'w'), indent=4, sort_keys=True)
+    Record.export()
 

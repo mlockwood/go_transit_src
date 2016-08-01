@@ -14,6 +14,9 @@ class Fleet(models.Model):
     phone = PhoneNumberField()
     schedule = models.TextField(default='24 hours every day except holidays')
 
+    def __str__(self):
+        return '({}) {}'.format(self.id, self.name)
+
     def save(self, *args, **kwargs):
         if self.id is None:
             self.id = self.__class__.objects.all().order_by("-id")[0].id + 1
@@ -31,11 +34,15 @@ class Steward(models.Model):
     )
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80)
+    rank = models.CharField(max_length=8, null=True, blank=True)
     phone = PhoneNumberField()
     email = models.EmailField()
     fleet = models.ForeignKey('Fleet')
     status = models.CharField(max_length=1, choices=STATUS_CHOICES)
     history = HistoricalRecords()
+
+    def __str__(self):
+        return '({}): {}, {}'.format(self.fleet, self.last_name, self.first_name)
 
 
 class Bike(models.Model):
@@ -44,6 +51,9 @@ class Bike(models.Model):
     low_step = models.BooleanField()
     fleet = models.ForeignKey('Fleet')
     history = HistoricalRecords()
+
+    def __str__(self):
+        return '({}) {} - {}'.format(self.fleet.id, self.fleet.name, self.id)
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -58,12 +68,18 @@ class BikeGPS(models.Model):
     wi_mm = models.CharField(max_length=40)
     history = HistoricalRecords()
 
+    def __str__(self):
+        return '({}) {}'.format(self.bike.id, self.id)
+
 
 class Lock(models.Model):
     bike = models.OneToOneField('Bike')
     id = models.CharField(max_length=12, primary_key=True)
     serial_number = models.CharField(max_length=40)
     history = HistoricalRecords()
+
+    def __str__(self):
+        return '({}) {}'.format(self.bike.id, self.id)
 
 
 class Asset(models.Model):
@@ -79,6 +95,9 @@ class Asset(models.Model):
     id = models.CharField(max_length=12, primary_key=True)
     asset_type = models.CharField(max_length=1, choices=ASSET_CHOICES)
     history = HistoricalRecords()
+
+    def __str__(self):
+        return '({}) {} - {}: {}'.format(self.fleet.id, self.fleet.name, self.id, self.asset_type)
 
 
 

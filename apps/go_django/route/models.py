@@ -79,6 +79,9 @@ class Segment(models.Model):
     name = models.CharField(max_length=12)
     direction = models.ForeignKey('Direction')
 
+    class Meta:
+        unique_together = ('joint', 'schedule', 'name')
+
 
 class StopSeq(models.Model):
     segment = models.CharField(max_length=12)
@@ -90,19 +93,18 @@ class StopSeq(models.Model):
     load_seq = models.IntegerField()
     destination = models.BooleanField()
 
+    class Meta:
+        unique_together = ('segment', 'load_seq')
+
 
 class Trip(models.Model):
     id = models.CharField(max_length=255, primary_key=True)
-    joint = models.ForeignKey('Joint')
     schedule = models.ForeignKey('Schedule')
-    segment = models.ForeignKey('Segment')
     direction = models.ForeignKey('Direction')
     start_loc = models.IntegerField()
     end_loc = models.IntegerField()
-    base_time = models.DateTimeField()
-    start_time = models.DateTimeField
-    end_time = models.DateTimeField
-    driver = models.IntegerField()
+    start_time = models.DateTimeField()
+    driver = models.CharField(max_length=255)
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -111,14 +113,15 @@ class Trip(models.Model):
 
 
 class StopTime(models.Model):
+    id = models.CharField(max_length=255, primary_key=True)
     trip = models.ForeignKey('Trip')
     stop = models.ForeignKey('stop.Stop')
-    arrive = models.DateTimeField()
-    depart = models.DateTimeField()
-    gtfs_depart = models.DateTimeField()
-    arrive_24p = models.DateTimeField()
-    depart_24p = models.DateTimeField()
-    gtfs_depart_24p = models.DateTimeField()
+    arrive = models.CharField(max_length=8)
+    depart = models.CharField(max_length=8)
+    gtfs_depart = models.CharField(max_length=8)
+    arrive_24p = models.CharField(max_length=8)
+    depart_24p = models.CharField(max_length=8)
+    gtfs_depart_24p = models.CharField(max_length=8)
     order = models.IntegerField()
     timepoint = models.IntegerField()
     pickup = models.IntegerField()

@@ -332,7 +332,7 @@ class Schedule(DataModelTemplate):
                 'direction': segment.direction.id,
                 'start_loc': start_loc,
                 'end_loc': end_loc,
-                'start_time': start.strftime('%Y%m%d-%H%M%S'),
+                'start_time': start.strftime('%Y-%m-%d %H:%M:%S'),
                 'driver': driver
             })
             segment.trip_generator += 1
@@ -495,11 +495,12 @@ def load():
     Trip.load()
     StopTime.load()
     Driver.reconstruct_object_links()
+    Route.set_route_query()
     feed = DateRange.get_feed_by_date(datetime.datetime.today())
     StopTime.publish_matrix()
     return feed
 
 if __name__ == "__main__":
-    # feed = process()
-    feed = load()
+    feed = process()
+    # feed = load()
     print(len(feed[0]), len(feed[1]))

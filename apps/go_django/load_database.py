@@ -48,7 +48,8 @@ class DatabaseLoader(object):
         for name in cls.objects:
             for item in cls.objects[name].data:
                 res = requests.post('{}/{}/'.format(cls.root, name), data=item, headers=cls.header)
-                if res.status_code == 400 and not re.search('already exists', str(res.json())):
+                if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
+                        not re.search('unique set', str(res.json()))):
                     print(name, res.json())
         return True
 
@@ -92,6 +93,7 @@ class FirstLoader(DatabaseLoader):
         'geography': '{}/geography.json'.format(DATA_PATH),
         # 'vehicle': '{}/vehicle.json'.format(DATA_PATH),
     }
+    objects = {}
 
 
 class SecondLoader(DatabaseLoader):
@@ -105,6 +107,7 @@ class SecondLoader(DatabaseLoader):
         'stop': '{}/stop.json'.format(DATA_PATH),
         # 'maintenance': '{}/maintenance.json'.format(DATA_PATH),
     }
+    objects = {}
 
 
 class ThirdLoader(DatabaseLoader):
@@ -119,6 +122,7 @@ class ThirdLoader(DatabaseLoader):
         'stopseq': '{}/stop_seq.json'.format(DATA_PATH),
         'inventory': '{}/inventory.json'.format(DATA_PATH),
     }
+    objects = {}
 
 
 class FourthLoader(DatabaseLoader):
@@ -126,6 +130,7 @@ class FourthLoader(DatabaseLoader):
     models = {
         'segment': '{}/segment.json'.format(DATA_PATH),
     }
+    objects = {}
 
 
 class FifthLoader(DatabaseLoader):
@@ -133,6 +138,7 @@ class FifthLoader(DatabaseLoader):
     models = {
         'trip': '{}/trip.json'.format(DATA_PATH),
     }
+    objects = {}
 
 
 class SixthLoader(DatabaseLoader):
@@ -140,6 +146,7 @@ class SixthLoader(DatabaseLoader):
     models = {
         'stoptime': '{}/stop_time.json'.format(DATA_PATH),
     }
+    objects = {}
 
 
 if __name__ == "__main__":
@@ -147,5 +154,5 @@ if __name__ == "__main__":
     SecondLoader.process()
     ThirdLoader.process()
     FourthLoader.process()
-    # FifthLoader.process()
-    # SixthLoader.process()
+    FifthLoader.process()
+    SixthLoader.process()

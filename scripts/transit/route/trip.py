@@ -46,7 +46,7 @@ class Trip(DataModelTemplate):
     # Expect these __init__ args => id, direction.id, start_loc, end_loc, start_time, driver.id
     def set_object_attrs(self):
         self.direction = Direction.objects[self.direction]
-        self.start_time = datetime.datetime.strptime(self.start_time, '%Y%m%d-%H%M%S')  # Added +1 day if > 12:00
+        self.start_time = datetime.datetime.strptime(self.start_time, '%Y-%m-%d %H:%M:%S')  # Added +1 day if > 12:00
         self.base_time = self.start_time - datetime.timedelta(seconds=self.start_loc)
         self.end_time = self.base_time + datetime.timedelta(seconds=self.end_loc)
 
@@ -67,7 +67,7 @@ class Trip(DataModelTemplate):
     def get_json(self):
         attrs = dict([(k, getattr(self, k)) for k in ['id', 'schedule', 'start_loc', 'end_loc']])
         attrs['direction'] = self.direction.id
-        attrs['start_time'] = self.start_time.strftime('%Y%m%d-%H%M%S')
+        attrs['start_time'] = self.start_time.strftime('%Y-%m-%d %H:%M:%S')
         attrs['driver'] = self.driver.id
         return attrs
 

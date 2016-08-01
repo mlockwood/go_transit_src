@@ -36,6 +36,7 @@ class GeographySerializer(serializers.ModelSerializer):
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
+            'id',
             'stop',
             'timestamp',
             'code',

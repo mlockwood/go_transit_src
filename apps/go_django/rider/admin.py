@@ -20,6 +20,9 @@ class MetadataAdmin(admin.ModelAdmin):
     list_filter = ['date']
     search_fields = ['date', 'sheet', 'route', 'driver', 'vehicle']
 
+
+admin.site.register(Metadata, MetadataAdmin)
+
 """
 class DriverAdmin(admin.ModelAdmin):
     fieldsets = [

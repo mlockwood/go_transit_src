@@ -5,7 +5,7 @@ PATH = find_path('go')
 
 DATA_PATH = '{}/data'. format(PATH)
 
-REPORT_PATH = '{}/report'. format(PATH)
+REPORT_PATH = '{}/reports'. format(PATH)
 
 SRC_PATH = '{}/src'. format(PATH)
 APP_PATH = '{}/src/apps'.format(PATH)
