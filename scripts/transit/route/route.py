@@ -501,6 +501,5 @@ def load():
     return feed
 
 if __name__ == "__main__":
-    feed = process()
-    # feed = load()
+    feed = load()
     print(len(feed[0]), len(feed[1]))

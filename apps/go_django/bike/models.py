@@ -17,11 +17,6 @@ class Fleet(models.Model):
     def __str__(self):
         return '({}) {}'.format(self.id, self.name)
 
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            self.id = self.__class__.objects.all().order_by("-id")[0].id + 1
-        super(self.__class__, self).save(*args, **kwargs)
-
 
 class Steward(models.Model):
     ACTIVE = 'A'
@@ -54,11 +49,6 @@ class Bike(models.Model):
 
     def __str__(self):
         return '({}) {} - {}'.format(self.fleet.id, self.fleet.name, self.id)
-
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            self.id = self.__class__.objects.all().order_by("-id")[0].id + 1
-        super(self.__class__, self).save(*args, **kwargs)
 
 
 class BikeGPS(models.Model):

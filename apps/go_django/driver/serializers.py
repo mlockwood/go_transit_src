@@ -6,6 +6,7 @@ from . import models
 class DriverSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
+            'id',
             'first',
             'last',
             'rank'

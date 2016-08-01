@@ -20,7 +20,7 @@ class MetadataSerializer(serializers.ModelSerializer):
 
 
 class EntrySerializer(serializers.ModelSerializer):
-    class Entry:
+    class Meta:
         fields = (
             'metadata',
             'on',

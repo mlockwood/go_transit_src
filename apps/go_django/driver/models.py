@@ -2,7 +2,8 @@ from django.db import models
 
 
 class Driver(models.Model):
-    first = models.CharField(max_length=64)
+    id = models.CharField(max_length=64, primary_key=True)
+    first = models.CharField(max_length=64, blank=True)
     last = models.CharField(max_length=64)
     rank = models.CharField(max_length=4, blank=True)
 

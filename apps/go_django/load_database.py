@@ -87,11 +87,11 @@ class FirstLoader(DatabaseLoader):
     models = {
         'fleet': '{}/fleet.json'.format(DATA_PATH),
         # 'cyclist': '{}/cyclist.json'.format(DATA_PATH),
-        # 'driver': '{}/driver.json'.format(DATA_PATH),
+        'driver': '{}/driver.json'.format(DATA_PATH),
         'service': '{}/service.json'.format(DATA_PATH),
         'holiday': '{}/holiday.json'.format(DATA_PATH),
         'geography': '{}/geography.json'.format(DATA_PATH),
-        # 'vehicle': '{}/vehicle.json'.format(DATA_PATH),
+        'vehicle': '{}/vehicle.json'.format(DATA_PATH),
     }
     objects = {}
 
@@ -102,7 +102,7 @@ class SecondLoader(DatabaseLoader):
         # 'steward': '{}/steward.json'.format(DATA_PATH),
         'bike': '{}/bike.json'.format(DATA_PATH),
         'asset': '{}/asset.json'.format(DATA_PATH),
-        # 'metadata': '{}/metadata.json'.format(DATA_PATH),
+        'metadata': '{}/metadata.json'.format(DATA_PATH),
         'joint': '{}/joint.json'.format(DATA_PATH),
         'stop': '{}/stop.json'.format(DATA_PATH),
         # 'maintenance': '{}/maintenance.json'.format(DATA_PATH),
@@ -116,7 +116,7 @@ class ThirdLoader(DatabaseLoader):
         'bikegps': '{}/bike_gps.json'.format(DATA_PATH),
         'lock': '{}/lock.json'.format(DATA_PATH),
         # 'checkinout': '{}/checkinout.json'.format(DATA_PATH),
-        # 'entry': '{}/entry.json'.format(DATA_PATH),
+        'entry': '{}/entry.json'.format(DATA_PATH),
         'schedule': '{}/schedule.json'.format(DATA_PATH),
         'direction': '{}/direction.json'.format(DATA_PATH),
         'stopseq': '{}/stop_seq.json'.format(DATA_PATH),
