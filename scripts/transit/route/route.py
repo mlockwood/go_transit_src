@@ -6,6 +6,7 @@ import copy
 import datetime
 import math
 import re
+import sys
 import uuid
 
 # Entire scripts from src
@@ -35,9 +36,11 @@ Service.load()
 class Route:
 
     route_query = {}
+    loc_to_stop = {}
 
     @staticmethod
     def set_route_query():
+
         for obj in Schedule.objects:
             schedule = Schedule.objects[obj]
 
@@ -67,6 +70,31 @@ class Route:
                     if stop in Route.route_query[route][key]:
                         return True
         return False
+
+    @staticmethod
+    def convert_locs_to_stops(joint, on, off):
+
+        # Find all potential on and off stops by shared location value
+        min_length = (sys.maxsize, 0, 0)
+        for schedule in joint.schedules:
+            on_map = []
+            off_map = []
+
+            for dir_order in schedule.segments:
+                segment = schedule.segments[dir_order]
+                if on in segment.locs:
+                    on_map += segment.locs[on]
+                if off in segment.locs:
+                    off_map += segment.locs[off]
+
+            # Find the minimum trip distance between on and off stop_seqs
+            for on_stop in on_map:
+                for off_stop in off_map:
+                    trip_length = schedule.get_trip_length(on_stop, off_stop)
+                    if trip_length < min_length[0]:
+                        min_length = (trip_length, on_stop.stop, off_stop.stop)
+
+        return min_length[1:]
 
 
 class Joint(DataModelTemplate):
@@ -197,7 +225,7 @@ class Schedule(DataModelTemplate):
         return roundtrip
 
     def get_order(self):
-        order = {}
+        order = {}  # {<Segment>: next_<Segment>}
         for segment in self.segments:
             # Segment_key represents the next segment, which is dir_order + 1 or if the final dir_order the next is 0
             segment_key = segment + 1 if segment + 1 in self.segments else 0
@@ -209,10 +237,9 @@ class Schedule(DataModelTemplate):
 
     def get_trip_length(self, a, b):
         """
-        DEPRECATED but still a potentially useful function
-        :param a: The origin of the trip; MUST be a Segment id OR a
+        :param a: The origin of the trip; MUST be a Segment OR a
             StopSeq object
-        :param b: The destination of the trip; MUST be a Segment id OR a
+        :param b: The destination of the trip; MUST be a Segment OR a
             StopSeq object
         :return: The trip length
         """
@@ -221,17 +248,17 @@ class Schedule(DataModelTemplate):
         # If the origin is a StopSeq subtract the departure time from the trip_length
         if re.search('stopseq', str(a.__class__).lower()):
             trip_length -= a.depart
-            a = Segment.objects[a.segment]
+            a = Segment.objects[(self.joint.id, self.id, a.segment)]
 
         # If the destination is a StopSeq add the departure time to the trip_length
         if re.search('stopseq', str(b.__class__).lower()):
             trip_length += b.depart
-            b = Segment.objects[b.segment]
+            b = Segment.objects[(self.joint.id, self.id, b.segment)]
 
         # Continue traveling the order until the cur_segment and final_segment are the same
         while a != b:
-            # Add current segment's trip length to the prev_trip_length
-            trip_length += self.order[a].trip_length
+            # Add current segment's trip_length to the total trip_length
+            trip_length += a.trip_length
             # Shift the cur_segment forward
             a = self.order[a]
 
@@ -370,6 +397,7 @@ class DateRange(DataModelTemplate):
         self.start = datetime.datetime.strptime(self.start, '%Y-%m-%d')
         self.end = datetime.datetime.strptime(self.end, '%Y-%m-%d')
         self.joints = [Joint.objects[joint] for joint in self.joints]
+        self.lookup = dict((sheet, Joint.objects[joint]) for sheet, joint in self.lookup)
 
     def set_objects(self):
         DateRange.objects[(self.start, self.end)] = self
@@ -398,7 +426,8 @@ class DateRange(DataModelTemplate):
             DateRange(**{
                 'start': points[i].strftime('%Y-%m-%d'),
                 'end': points[i+1].strftime('%Y-%m-%d'),
-                'joints': []
+                'joints': [],
+                'lookup': []
             })
             i += 1
 
@@ -413,6 +442,7 @@ class DateRange(DataModelTemplate):
         trips = None
         for obj in DateRange.objects:
             date_range = DateRange.objects[obj]
+            date_range.set_positions()
             if date_range.start <= date < date_range.end:
                 trips = date_range.get_feed()
         return trips
@@ -421,6 +451,20 @@ class DateRange(DataModelTemplate):
         trips = {}
         stop_times = {}
 
+        self.set_positions()
+
+        for joint in self.joints:
+            for schedule in joint.schedules:
+
+                # Select trips
+                trips.update(Trip.feed[schedule.id])
+
+                # Select stop_times
+                stop_times.update(StopTime.feed[schedule.id])
+
+        return trips, stop_times
+
+    def set_positions(self):
         self.joints = [Joint.objects[joint] for joint in sorted([joint.id for joint in self.joints])]
 
         # Set driver positions and collect trips
@@ -431,21 +475,16 @@ class DateRange(DataModelTemplate):
                     # Set the driver's position if schedule has not been seen
                     if not schedule.prev:
                         schedule.drivers[driver].position = position
+                        self.lookup[position] = joint
                         position += 1
-
-                # Select trips
-                trips.update(Trip.feed[schedule.id])
-
-                # Select stop_times
-                stop_times.update(StopTime.feed[schedule.id])
-
-        return trips, stop_times
+        return True
 
     def get_json(self):
         return {
-            'joints': [joint.id for joint in self.joints],
             'start': self.start.strftime('%Y-%m-%d'),
-            'end': self.end.strftime('%Y-%m-%d')
+            'end': self.end.strftime('%Y-%m-%d'),
+            'joints': [joint.id for joint in self.joints],
+            'lookup': [(sheet, joint.id) for sheet, joint in self.lookup.items()]
         }
 
 
@@ -501,5 +540,6 @@ def load():
     return feed
 
 if __name__ == "__main__":
+    # feed = process()
     feed = load()
     print(len(feed[0]), len(feed[1]))

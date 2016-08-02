@@ -14,7 +14,7 @@ import multiprocessing as mp
 
 # Entire scripts from src
 from src.scripts.transit.stop.stop import Stop
-from src.scripts.transit.route.route import Route, load
+from src.scripts.transit.route.route import DateRange, Route, load
 from src.scripts.transit.rider.errors import *
 
 # Classes and variables from src
@@ -46,6 +46,29 @@ class Sheet(object):
     errors = []
     warnings = []
     injections = {}  # {stop: {joint_route: {(from, to): convert_stop}}}
+
+    @staticmethod
+    def convert_sheet(sheet, date):
+        sheet = sheet.upper()
+        number = int(re.sub('\D', '', sheet))
+
+        if datetime.datetime(2016, 3, 28) <= date < datetime.datetime(2016, 4, 25):
+            if sheet == 'S5Z':
+                return 'S1A'
+            elif date.isoweekday() <= 5:
+                return 'S{}{}'.format(number + 1, sheet[-1])
+            else:
+                return 'S{}{}'.format(number + 6, sheet[-1])
+
+        elif datetime.datetime(2016, 4, 25) <= date < datetime.datetime(2016, 11, 1):
+            if sheet == 'S5A':
+                return 'S1A'
+            elif number < 5:
+                return 'S{}{}'.format(number + 1, sheet[-1])
+            else:
+                return sheet
+
+        return sheet
 
     @staticmethod
     def process(directory='{}/data/ridership'.format(PATH)):
@@ -82,11 +105,13 @@ class Sheet(object):
             if row != META_HEADER:
                 date = '{0}-{1:02d}-{2:02d}'.format(row[0], int(row[1]), int(row[2]))
                 file = '{0}{1:02d}{2:02d}_{3}.csv'.format(row[0], int(row[1]), int(row[2]), row[3])
+                row[3] = Sheet.convert_sheet(row[3], datetime.datetime.strptime(date, '%Y-%m-%d'))
+                new_file = '{0}{1:02d}{2:02d}_{3}.csv'.format(row[0], int(row[1]), int(row[2]), row[3])
                 start = to_list(row[7])
                 end = to_list(row[11])
                 Sheet.metadata[file] = row
                 new_obj = {
-                    'sheet': re.sub('.csv$', '', file),
+                    'sheet': re.sub('.csv$', '', new_file),
                     'date': date,
                     'route': row[4],
                     'login': '{} {}:{}'.format(date, start[0], start[1]),
@@ -172,18 +197,16 @@ class Sheet(object):
             r += 1
             if row != DATA_HEADER:
                 # Validate entry
-                on, off, time, count, errs, ow = Sheet.validate_entry(r, row, meta, injections, file)
+                on, off, time, count, errs, overwrite = Sheet.validate_entry(r, row, meta, injections, file)
                 errors += errs
-                if ow:
-                    overwrite = True
 
                 # Set record
                 records.append([file] + meta[0:7] + [on, off, time, count])
                 entries.append([on, time, count, off])
 
         # Overwrite file if necessary
-        if overwrite:
-            Sheet.overwrite(file, entries)
+        # if overwrite:
+        #     Sheet.overwrite(file, entries)
 
         # If no data, alert user just in case of error
         if r < 2:
@@ -315,6 +338,8 @@ class Record(object):
         self.time = time
         self.count = count
 
+        self.set_stops()
+
         # Set pseudo route values
         self.on_pseudo = self.get_pseudo(on_stop)
         self.off_pseudo = self.get_pseudo(off_stop)
@@ -336,6 +361,24 @@ class Record(object):
         self.append_record()
         # Add record to the date it pertains
         Period.add_count(self.date, self.count)
+
+    def set_stops(self):
+        joint = None
+        for obj in DateRange.objects:
+            date_range = DateRange.objects[obj]
+            if date_range.start <= self.date < date_range.end:
+                try:
+                    joint = date_range.lookup[int(re.sub('\D', '', self.sheet))]
+                except KeyError:
+                    print(int(re.sub('\D', '', self.sheet)))
+                    print('Key error for {}'.format(self.file))
+                    return None
+        if joint:
+            self.on_stop, self.off_stop = Route.convert_locs_to_stops(joint, self.on_stop, self.off_stop)
+            return True
+
+        print('Stops failed for {}; {} {}'.format(self.file, self.on_stop, self.off_stop))
+
 
     def get_pseudo(self, stop):
         if str(stop) in ['100', '300']:

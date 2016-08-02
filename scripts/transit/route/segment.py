@@ -30,6 +30,7 @@ class Segment(DataModelTemplate):
         self.trip_length = 0
         self.seq_order = {}  # {StopSeq.order: StopSeq}
         self.stops = {}  # {StopSeq.stop: True}
+        self.locs = {}  # {StopSeq.stop[:3]: [<StopSeq>, <StopSeq>, ...]}
 
         if self.schedule not in Segment.schedule_query:
             Segment.schedule_query[self.schedule] = {}
@@ -89,8 +90,11 @@ class Segment(DataModelTemplate):
                 if stop_seq.destination:
                     segment.trip_length = stop_seq.depart
 
-                # Add the StopSeq stop to segment.stops
+                # Add the StopSeq stop to segment.stops and StopSeq loc to segment.locs
                 segment.stops[stop_seq.stop] = True
+                if stop_seq.stop[:3] not in segment.locs:
+                    segment.locs[stop_seq.stop[:3]] = []
+                segment.locs[stop_seq.stop[:3]] = segment.locs.get(stop_seq.stop[:3]) + [stop_seq]
 
             segment.set_order()
 
