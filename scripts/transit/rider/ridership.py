@@ -2,26 +2,19 @@
 # -*- coding: utf-8 -*-
 
 # Python libraries and packages
-import copy
-import csv
 import datetime
-import json
-import os
-import re
 import time
 import xlsxwriter
 import multiprocessing as mp
 
 # Entire scripts from src
-from src.scripts.transit.stop.stop import Stop
-from src.scripts.transit.route.route import DateRange, Route, load
-from src.scripts.transit.rider.errors import *
+from src.scripts.transit.route.route import load
 
 # Classes and variables from src
 from src.scripts.constants import *
-from src.scripts.transit.rider.constants import BEGIN, BASELINE, DATA_HEADER, INCREMENT, META_HEADER, INJECT_HEADER
+from src.scripts.transit.rider.constants import BEGIN, BASELINE, INCREMENT
+from src.scripts.utils.classes import DataModelTemplate
 from src.scripts.utils.IOutils import *
-from src.scripts.utils.time import to_list
 
 
 __author__ = 'Michael Lockwood'
@@ -38,394 +31,27 @@ __collaborators__ = None
 load()
 
 
-class Sheet(object):
+class Metadata(DataModelTemplate):
 
-    metadata = {}
-    export = []
-    meta_check = {}
-    errors = []
-    warnings = []
-    injections = {}  # {stop: {joint_route: {(from, to): convert_stop}}}
-
-    @staticmethod
-    def convert_sheet(sheet, date):
-        sheet = sheet.upper()
-        number = int(re.sub('\D', '', sheet))
-
-        if datetime.datetime(2016, 3, 28) <= date < datetime.datetime(2016, 4, 25):
-            if sheet == 'S5Z':
-                return 'S1A'
-            elif date.isoweekday() <= 5:
-                return 'S{}{}'.format(number + 1, sheet[-1])
-            else:
-                return 'S{}{}'.format(number + 6, sheet[-1])
-
-        elif datetime.datetime(2016, 4, 25) <= date < datetime.datetime(2016, 11, 1):
-            if sheet == 'S5A':
-                return 'S1A'
-            elif number < 5:
-                return 'S{}{}'.format(number + 1, sheet[-1])
-            else:
-                return sheet
-
-        return sheet
-
-    @staticmethod
-    def process(directory='{}/data/ridership'.format(PATH)):
-        Sheet.load_metadata(directory=directory)
-        Sheet.load_data(directory=directory)
-
-        for file in Sheet.meta_check:
-            Sheet.errors += [MissingDatasheetError.get(file)]
-
-        txt_writer(Sheet.errors, '{}/reports/ridership/errors.csv'.format(PATH))
-        txt_writer(Sheet.warnings, '{}/reports/ridership/warnings.csv'.format(PATH))
-        return True
-
-    @staticmethod
-    def load_metadata(directory='{}/data/ridership'.format(PATH)):
-        reader = csv.reader(open('{}/metadata.csv'.format(directory), 'r', newline='', encoding="utf8"), delimiter=',',
-                            quotechar='|')
-
-        driver = {}
-        vehicle = {}
-
-        d_key = open('{}/ridership/driver_key.txt'.format(DATA_PATH), 'r')
-        v_key = open('{}/ridership/vehicle_key.txt'.format(DATA_PATH), 'r')
-
-        for row in d_key:
-            row = re.split(',', row.rstrip())
-            driver[row[0].lower()] = row[1]
-
-        for row in v_key:
-            row = re.split(',', row.rstrip())
-            vehicle[row[0].lower()] = row[1]
-
-        for row in reader:
-            if row != META_HEADER:
-                date = '{0}-{1:02d}-{2:02d}'.format(row[0], int(row[1]), int(row[2]))
-                file = '{0}{1:02d}{2:02d}_{3}.csv'.format(row[0], int(row[1]), int(row[2]), row[3])
-                row[3] = Sheet.convert_sheet(row[3], datetime.datetime.strptime(date, '%Y-%m-%d'))
-                new_file = '{0}{1:02d}{2:02d}_{3}.csv'.format(row[0], int(row[1]), int(row[2]), row[3])
-                start = to_list(row[7])
-                end = to_list(row[11])
-                Sheet.metadata[file] = row
-                new_obj = {
-                    'sheet': re.sub('.csv$', '', new_file),
-                    'date': date,
-                    'route': row[4],
-                    'login': '{} {}:{}'.format(date, start[0], start[1]),
-                    'logout': '{} {}:{}'.format(date, end[0], end[1]),
-                    'start_mileage': int(row[9]),
-                    'end_mileage': int(row[12])
-                }
-                try:
-                    new_obj['driver'] = driver[row[5].lower()]
-                except KeyError:
-                    print(row[5])
-                try:
-                    new_obj['vehicle'] = vehicle[row[6].lower()]
-                except KeyError:
-                    print(row[6])
-                Sheet.export.append(new_obj)
-
-        Sheet.meta_check = copy.deepcopy(Sheet.metadata)
-        return True
-
-    @staticmethod
-    def load_injections(directory='{}/data/ridership'.format(PATH)):
-        reader = csv.reader(open('{}/injections.csv'.format(directory), 'r', newline='', encoding="utf8"), delimiter=',',
-                            quotechar='|')
-        for row in reader:
-            if row != INJECT_HEADER:
-                date0 = datetime.datetime.strptime(row[2], '%Y%m%d') if row[2] else datetime.datetime.min
-                date1 = datetime.datetime.strptime(row[3], '%Y%m%d') if row[3] else datetime.datetime.max
-                if row[0] not in Sheet.injections:
-                    Sheet.injections[row[0]] = {}
-                if row[1] not in Sheet.injections[row[0]]:
-                    Sheet.injections[row[0]][row[1]] = {}
-                Sheet.injections[row[0]][row[1]][(date0, date1)] = row[4]
-        return True
-
-    @staticmethod
-    def load_data(directory='{}/data/ridership'.format(PATH)):
-        Sheet.load_injections(directory)
-
-        files = []
-        for dirpath, dirnames, filenames in os.walk(directory):
-            for filename in [f for f in filenames if re.search('^\d{8}[_|\-]S\d+[A-Z]?\.csv$', f)]:
-                # Check if metadata exists for the datasheet
-                if filename in Sheet.metadata:
-                    meta = Sheet.metadata[filename]
-                    del Sheet.meta_check[filename]
-                    files.append((dirpath, filename, meta, Sheet.injections))
-                else:
-                    Sheet.errors += [MissingMetadataError.get(filename)]
-
-        p = mp.Pool()
-        results = p.map(Sheet.load_file, files)
-
-        for errors, warnings, records in results:
-            # Add errors and warnings to Sheet
-            Sheet.errors += errors
-            Sheet.warnings += warnings
-
-            # Add a Record object for each record
-            for record in records:
-                Record(*record)
-        return True
-
-    @staticmethod
-    def load_file(args):
-        records = []
-        errors = []
-        warnings = []
-
-        file = '{}/{}'.format(args[0], args[1])
-        meta = args[2]
-        injections = args[3]
-        reader = csv.reader(open(file, 'r', newline='', encoding="utf8"), delimiter=',', quotechar='|')
-
-        # Validate metadata
-        errors += Sheet.validate_meta(meta, file)
-
-        # Handle each entry in the data
-        r = 0
-        entries = []
-        overwrite = False
-        for row in reader:
-            r += 1
-            if row != DATA_HEADER:
-                # Validate entry
-                on, off, time, count, errs, overwrite = Sheet.validate_entry(r, row, meta, injections, file)
-                errors += errs
-
-                # Set record
-                records.append([file] + meta[0:7] + [on, off, time, count])
-                entries.append([on, time, count, off])
-
-        # Overwrite file if necessary
-        # if overwrite:
-        #     Sheet.overwrite(file, entries)
-
-        # If no data, alert user just in case of error
-        if r < 2:
-            warnings += [EmptyDataWarning.get(file)]
-
-        return errors, warnings, records
-
-    @staticmethod
-    def overwrite(file, entries):
-        print('{} has been overwritten'.format(file))
-        entries = [DATA_HEADER] + entries
-        writer = open(file, 'w')
-        for entry in entries:
-            writer.write('{}\n'.format(','.join([str(s) for s in entry])))
-        writer.close()
-
-    @staticmethod
-    def validate_meta(meta, file):
-        errors = []
-        i = 0
-        while i < len(meta):
-            if not re.sub(' ', '', meta[i]):
-                errors += [MissingMetaValueError.get(file, META_HEADER[i])]
-            i += 1
-        return errors
-
-    @staticmethod
-    def validate_entry(r, entry, meta, injections, file):
-        errors = []
-        overwrite = False
-
-        # Ignore blank rows and counts of 0
-        if not re.sub(' ', '', ''.join(str(x) for x in entry)):
-            return False
-        elif entry[2] == '0':
-            return False
-
-        # Validate that every column has been completed for the record
-        i = 0
-        while i < len(entry):
-            if not re.sub(' ', '', entry[i]):
-                errors += [EntryError.get(file, r, DATA_HEADER[i])]
-            i += 1
-
-        # Stop validation and mapping
-        # Boarding (on)
-        on = Sheet.test_injection(entry[0], meta[4], datetime.datetime(int(meta[0]), int(meta[1]), int(meta[2])),
-                                  injections)
-        if on != entry[0]:
-            overwrite = True
-
-        if on not in Stop.locations:
-            errors += [StopValidationError.get(file, 'Boarding', entry[0], r)]
-            on = None
-
-        # Deboarding (off)
-        off = Sheet.test_injection(entry[3], meta[4], datetime.datetime(int(meta[0]), int(meta[1]), int(meta[2])),
-                                   injections)
-
-        if off != entry[3]:
-            overwrite = True
-
-        if off not in Stop.locations:
-            errors += [StopValidationError.get(file, 'Deboarding', entry[3], r)]
-            off = None
-
-        # Time validation
-        time = re.sub(':', '', entry[1])
-        if len(time) > 4:
-            errors += [TimeValidationError.get(file, time, r)]
-            time = 'xxxx'
-        else:
-            try:
-                time = str(int(time[:-2])) + ':' + str(time[-2:])
-            except TypeError:
-                errors += [TimeValidationError.get(file, time, r)]
-                time = 'xxxx'
-            except ValueError:
-                if len(time) == 2:
-                    time = '00:{}'.format(time)
-                elif len(time) == 1:
-                    time = '00:0{}'.format(time)
-                else:
-                    errors += [TimeValidationError.get(file, time, r)]
-                    time = 'xxxx'
-
-        # Count validation
-        try:
-            count = int(entry[2])
-        except TypeError:
-            errors += [CountValidationError.get(file, entry[2], r)]
-            count = 0
-
-        return on, off, time, count, errors, overwrite
-
-    @staticmethod
-    def test_injection(stop, route, date, injections):
-        if stop in injections:
-            if route in injections[stop]:
-                for date_range in injections[stop][route]:
-                    if date_range[0] < date < date_range[1]:
-                        return injections[stop][route][date_range]
-        return stop
-
-
-class Record(object):
-
+    json_path = '{}/metadata.json'.format(DATA_PATH)
     objects = {}
-    ID_generator = 1
-    matrix_header = ['ID', 'Year', 'Month', 'Day', 'Weekday', 'Sheet', 'Route', 'On_Route', 'Off_Route', 'Driver',
-                     'License', 'Time', 'On_Stop', 'Off_Stop', 'Count']
-    matrix = [matrix_header]
 
-    def __init__(self, file, year, month, day, sheet, route, driver, veh_license, on_stop, off_stop, time,
-                 count):
-        # Default values
-        self.file = file
-        self.year = int(year)
-        self.month = int(month)
-        self.day = int(day)
-        self.date = datetime.datetime(self.year, self.month, self.day)
-        self.dow = str(self.date.isocalendar()[2])
-        self.sheet = sheet
-        self.route = route
-        self.driver = driver
-        self.license = veh_license
-        self.on_stop = on_stop
-        self.off_stop = off_stop
-        self.time = time
-        self.count = count
-
-        self.set_stops()
-
-        # Set pseudo route values
-        self.on_pseudo = self.get_pseudo(on_stop)
-        self.off_pseudo = self.get_pseudo(off_stop)
-
-        if not self.on_pseudo and self.off_pseudo:
-            self.on_pseudo = self.off_pseudo
-
-        elif self.on_pseudo and not self.off_pseudo:
-            self.off_pseudo = self.on_pseudo
-
-        if not self.on_pseudo and not self.off_pseudo:
-            self.on_pseudo = re.split('&', self.route)[0]
-            self.off_pseudo = re.split('&', self.route)[-1]
-
-        # Final attributions
-        self.ID = hex(Record.ID_generator)
-        Record.ID_generator += 1
-        Record.objects[self.ID] = self
-        self.append_record()
-        # Add record to the date it pertains
-        Period.add_count(self.date, self.count)
-
-    def set_stops(self):
-        joint = None
-        for obj in DateRange.objects:
-            date_range = DateRange.objects[obj]
-            if date_range.start <= self.date < date_range.end:
-                try:
-                    joint = date_range.lookup[int(re.sub('\D', '', self.sheet))]
-                except KeyError:
-                    print(int(re.sub('\D', '', self.sheet)))
-                    print('Key error for {}'.format(self.file))
-                    return None
-        if joint:
-            self.on_stop, self.off_stop = Route.convert_locs_to_stops(joint, self.on_stop, self.off_stop)
-            return True
-
-        print('Stops failed for {}; {} {}'.format(self.file, self.on_stop, self.off_stop))
+    def set_objects(self):
+        Metadata.objects[self.sheet] = self
 
 
-    def get_pseudo(self, stop):
-        if str(stop) in ['100', '300']:
-            return None
+class Entry(DataModelTemplate):
 
-        elif re.sub('[A-Za-z]', '', self.sheet) in ['8', '9']:
-            return 'Evening'
+    json_path = '{}/entry.json'.format(DATA_PATH)
+    objects = {}
 
-        elif self.sheet.lower() == 's5z':
-            return 'Morning'
+    def set_object_attrs(self):
+        Period.add_count(datetime.datetime(*[int(i) for i in [self.metadata[:4], self.metadata[4:6],
+                                                              self.metadata[6:8]]]),
+                         self.count)
 
-        elif self.date >= datetime.datetime(2016, 4, 25) and self.sheet.lower() == 's5a':
-            return 'Morning'
-
-        else:
-            routes = re.split('&', self.route)
-            for route_id in routes:
-                if Route.query_route(int(route_id), self.date, stop):
-                    return route_id
-
-            if stop != 'None' and stop:
-                Sheet.errors += [StopUnavailableForRouteError.get(self.file, stop, self.route)]
-        return 'Unmatched'
-
-    def append_record(self):
-        Record.matrix.append([self.ID, self.year, self.month, self.day, self.dow, self.sheet, self.route,
-                              self.on_pseudo, self.off_pseudo, self.driver, self.license, self.time, self.on_stop,
-                              self.off_stop, self.count])
-        return True
-
-    @staticmethod
-    def publish_matrix():
-        txt_writer(Record.matrix, '{}/reports/ridership/records.csv'.format(PATH))
-        return True
-
-    def get_json(self):
-        return {
-            'metadata': '{0}{1:02d}{2:02d}_{3}'.format(self.year, self.month, self.day, self.sheet),
-            'on': self.on_stop,
-            'time': self.time,
-            'count': self.count,
-            'off': self.off_stop
-        }
-
-    @classmethod
-    def export(cls):
-        export_json('{}/entry.json'.format(DATA_PATH), cls)
+    def set_objects(self):
+        Entry.objects[(self.metadata, self.time, self.on, self.off)] = self
     
 
 class Period(object):
@@ -570,14 +196,10 @@ class Period(object):
 if __name__ == "__main__":
     set_directory('{}/reports/ridership'.format(PATH))
     start = time.clock()
-    Sheet.process()
-    print('Sheet processing complete', time.clock() - start)
-    Record.publish_matrix()
-    print('Matrix published', time.clock() - start)
+    Metadata.load()
+    Entry.load()
+    print('Loading complete', time.clock() - start)
     Period.set_averages()
     print('Averages set', time.clock() - start)
     Period.publish()
     print('Publishing complete', time.clock() - start)
-    json.dump(Sheet.export, open('{}/metadata.json'.format(DATA_PATH), 'w'), indent=4, sort_keys=True)
-    Record.export()
-
