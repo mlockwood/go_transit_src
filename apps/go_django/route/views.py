@@ -15,14 +15,9 @@ class IsSuperUser(permissions.BasePermission):
         return True
 
 
-class ServiceViewSet(viewsets.ModelViewSet):
-    queryset = models.Service.objects.all()
-    serializer_class = serializers.ServiceSerializer
-
-
-class HolidayViewSet(viewsets.ModelViewSet):
-    queryset = models.Holiday.objects.all()
-    serializer_class = serializers.HolidaySerializer
+class DirectionViewSet(viewsets.ModelViewSet):
+    queryset = models.Direction.objects.all()
+    serializer_class = serializers.DirectionSerializer
 
 
 class JointViewSet(viewsets.ModelViewSet):
@@ -30,14 +25,14 @@ class JointViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.JointSerializer
 
 
+class HolidayViewSet(viewsets.ModelViewSet):
+    queryset = models.Holiday.objects.all()
+    serializer_class = serializers.HolidaySerializer
+
+
 class ScheduleViewSet(viewsets.ModelViewSet):
     queryset = models.Schedule.objects.all()
     serializer_class = serializers.ScheduleSerializer
-
-
-class DirectionViewSet(viewsets.ModelViewSet):
-    queryset = models.Direction.objects.all()
-    serializer_class = serializers.DirectionSerializer
 
 
 class SegmentViewSet(viewsets.ModelViewSet):
@@ -45,16 +40,26 @@ class SegmentViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SegmentSerializer
 
 
+class ServiceViewSet(viewsets.ModelViewSet):
+    queryset = models.Service.objects.all()
+    serializer_class = serializers.ServiceSerializer
+
+
 class StopSeqViewSet(viewsets.ModelViewSet):
     queryset = models.StopSeq.objects.all()
     serializer_class = serializers.StopSeqSerializer
 
 
-class TripViewSet(viewsets.ModelViewSet):
-    queryset = models.Trip.objects.all()
-    serializer_class = serializers.TripSerializer
-
-
 class StopTimeViewSet(viewsets.ModelViewSet):
     queryset = models.StopTime.objects.all()
     serializer_class = serializers.StopTimeSerializer
+
+
+class TransferViewSet(viewsets.ModelViewSet):
+    queryset = models.Transfer.objects.all()
+    serializer_class = serializers.TransferSerializer
+
+
+class TripViewSet(viewsets.ModelViewSet):
+    queryset = models.Trip.objects.all()
+    serializer_class = serializers.TripSerializer

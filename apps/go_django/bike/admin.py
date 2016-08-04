@@ -11,15 +11,6 @@ class LockInline(admin.StackedInline):
     model = models.Lock
 
 
-class AssetInline(admin.StackedInline):
-    model = models.Asset
-
-
-class FleetAdmin(admin.ModelAdmin):
-    inlines = [AssetInline]
-    search_fields = ['id', 'name', 'description', 'schedule']
-
-
 class BikeAdmin(admin.ModelAdmin):
     inlines = [BikeGPSInline, LockInline]
     list_filter = ['fleet', 'low_step']
@@ -27,6 +18,5 @@ class BikeAdmin(admin.ModelAdmin):
     # list_editable = ['low_step', 'serial_number']
 
 
-admin.site.register(models.Fleet, FleetAdmin)
-admin.site.register(models.Steward)
 admin.site.register(models.Bike, BikeAdmin)
+admin.site.register(models.CheckInOut)

@@ -13,16 +13,6 @@ class IsSuperUser(permissions.BasePermission):
         return True
 
 
-class FleetViewSet(viewsets.ModelViewSet):
-    queryset = models.Fleet.objects.all()
-    serializer_class = serializers.FleetSerializer
-
-
-class StewardViewSet(viewsets.ModelViewSet):
-    queryset = models.Steward.objects.all()
-    serializer_class = serializers.StewardSerializer
-
-
 class BikeViewSet(viewsets.ModelViewSet):
     queryset = models.Bike.objects.all()
     serializer_class = serializers.BikeSerializer
@@ -33,11 +23,12 @@ class BikeGPSViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BikeGPSSerializer
 
 
+class CheckInOutViewSet(viewsets.ModelViewSet):
+    queryset = models.CheckInOut.objects.all()
+    serializer_class = serializers.CheckInOutSerializer
+
+
 class LockViewSet(viewsets.ModelViewSet):
     queryset = models.Lock.objects.all()
     serializer_class = serializers.LockSerializer
 
-
-class AssetViewSet(viewsets.ModelViewSet):
-    queryset = models.Asset.objects.all()
-    serializer_class = serializers.AssetSerializer

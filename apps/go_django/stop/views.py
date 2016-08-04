@@ -21,8 +21,3 @@ class StopViewSet(viewsets.ModelViewSet):
 class GeographyViewSet(viewsets.ModelViewSet):
     queryset = models.Geography.objects.all()
     serializer_class = serializers.GeographySerializer
-
-
-class InventoryViewSet(viewsets.ModelViewSet):
-    queryset = models.Inventory.objects.all()
-    serializer_class = serializers.InventorySerializer

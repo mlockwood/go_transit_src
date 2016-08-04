@@ -40,12 +40,15 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'simple_history',
     # 'debug_toolbar',
+    'agency',
     'bike',
-    'cyclist',
-    'driver',
+    'fleet',
+    'maintenance',
     'rider',
+    'rideshare',
     'route',
     'stop',
+    'user',
     'vehicle',
 ]
 

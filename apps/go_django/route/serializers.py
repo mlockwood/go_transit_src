@@ -3,6 +3,65 @@ from rest_framework import serializers
 from . import models
 
 
+class DirectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'name',
+            'description',
+            'origin',
+            'destination'
+        )
+        model = models.Direction
+
+
+class JointSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'routes',
+            'description',
+            'service',
+            'headway'
+        )
+        model = models.Joint
+
+
+class HolidaySerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'holiday'
+        )
+        model = models.Holiday
+
+
+class ScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'joint',
+            'start',
+            'end',
+            'offset'
+        )
+        model = models.Schedule
+
+
+class SegmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'joint',
+            'schedule',
+            'dir_order',
+            'route',
+            'name',
+            'direction'
+        )
+        model = models.Segment
+
+
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
@@ -21,65 +80,6 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = models.Service
 
 
-class HolidaySerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'id',
-            'holiday'
-        )
-        model = models.Holiday
-
-
-class JointSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'id',
-            'routes',
-            'description',
-            'service',
-            'headway'
-        )
-        model = models.Joint
-
-
-class ScheduleSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'id',
-            'joint',
-            'start',
-            'end',
-            'offset'
-        )
-        model = models.Schedule
-
-
-class DirectionSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'id',
-            'name',
-            'description',
-            'origin',
-            'destination'
-        )
-        model = models.Direction
-
-
-class SegmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'id',
-            'joint',
-            'schedule',
-            'dir_order',
-            'route',
-            'name',
-            'direction'
-        )
-        model = models.Segment
-
-
 class StopSeqSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
@@ -94,20 +94,6 @@ class StopSeqSerializer(serializers.ModelSerializer):
             'destination'
         )
         model = models.StopSeq
-
-
-class TripSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'id',
-            'schedule',
-            'direction',
-            'start_loc',
-            'end_loc',
-            'start_time',
-            'driver'
-        )
-        model = models.Trip
 
 
 class StopTimeSerializer(serializers.ModelSerializer):
@@ -129,3 +115,29 @@ class StopTimeSerializer(serializers.ModelSerializer):
             'display'
         )
         model = models.StopTime
+
+
+class TransferSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'joint',
+            'from_stop',
+            'to_stop',
+            'transfer_type'
+        )
+        model = models.Transfer
+
+
+class TripSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'schedule',
+            'direction',
+            'start_loc',
+            'end_loc',
+            'start_time',
+            'driver'
+        )
+        model = models.Trip

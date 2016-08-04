@@ -3,34 +3,6 @@ from rest_framework import serializers
 from . import models
 
 
-class FleetSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'id',
-            'name',
-            'description',
-            'lat',
-            'lng',
-            'operating',
-            'phone',
-            'schedule'
-        )
-        model = models.Fleet
-
-
-class StewardSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'first_name',
-            'last_name',
-            'phone',
-            'email',
-            'fleet',
-            'status',
-        )
-        model = models.Steward
-
-
 class BikeSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
@@ -53,6 +25,19 @@ class BikeGPSSerializer(serializers.ModelSerializer):
         model = models.BikeGPS
 
 
+class CheckInOutSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id'
+            'fleet',
+            'bike',
+            'duration',
+            'check_out',
+            'check_in'
+        )
+        model = models.CheckInOut
+
+
 class LockSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
@@ -62,12 +47,3 @@ class LockSerializer(serializers.ModelSerializer):
         )
         model = models.Lock
 
-
-class AssetSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'fleet',
-            'id',
-            'asset_type',
-        )
-        model = models.Asset

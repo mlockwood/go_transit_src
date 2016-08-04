@@ -1,6 +1,6 @@
 from django.db import models
 
-from driver.models import Driver
+from user.models import EndUser
 from stop.models import Stop
 from vehicle.models import Vehicle
 
@@ -11,7 +11,7 @@ class Metadata(models.Model):
     sheet = models.CharField(max_length=20, primary_key=True)
     date = models.DateField()
     route = models.CharField(max_length=20)
-    driver = models.ForeignKey('driver.Driver')
+    driver = models.ForeignKey('user.EndUser')
     vehicle = models.ForeignKey('vehicle.Vehicle')
     login = models.DateTimeField(editable=True)
     start_mileage = models.IntegerField()

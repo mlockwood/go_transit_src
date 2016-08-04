@@ -32,14 +32,3 @@ class GeographySerializer(serializers.ModelSerializer):
         )
         model = models.Geography
 
-
-class InventorySerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'id',
-            'stop',
-            'timestamp',
-            'code',
-            'notes'
-        )
-        model = models.Inventory

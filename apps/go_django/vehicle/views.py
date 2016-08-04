@@ -16,9 +16,3 @@ class IsSuperUser(permissions.BasePermission):
 class VehicleViewSet(viewsets.ModelViewSet):
     queryset = models.Vehicle.objects.all()
     serializer_class = serializers.VehicleSerializer
-
-
-class MaintenanceViewSet(viewsets.ModelViewSet):
-    queryset = models.Maintenance.objects.all()
-    serializer_class = serializers.MaintenanceSerializer
-

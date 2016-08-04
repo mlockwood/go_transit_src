@@ -11,15 +11,3 @@ class VehicleSerializer(serializers.ModelSerializer):
             'model'
         )
         model = models.Vehicle
-
-
-class MaintenanceSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'vehicle',
-            'repair',
-            'description',
-            'cost',
-            'repair_date'
-        )
-        model = models.Maintenance

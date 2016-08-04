@@ -4,47 +4,14 @@ from phonenumber_field.modelfields import PhoneNumberField
 from simple_history.models import HistoricalRecords
 
 
-class Fleet(models.Model):
-    id = models.CharField(max_length=12, primary_key=True)
-    name = models.CharField(max_length=80)
-    description = models.TextField()
-    lat = models.DecimalField(max_digits=9, decimal_places=6)
-    lng = models.DecimalField(max_digits=9, decimal_places=6)
-    operating = models.DateField()
-    phone = PhoneNumberField()
-    schedule = models.TextField(default='24 hours every day except holidays')
-
-    def __str__(self):
-        return '({}) {}'.format(self.id, self.name)
-
-
-class Steward(models.Model):
-    ACTIVE = 'A'
-    BACKUP = 'B'
-    INACTIVE = 'I'
-    STATUS_CHOICES = (
-        (ACTIVE, 'The main active bike steward'),
-        (BACKUP, 'A designated back-up steward'),
-        (INACTIVE, 'The steward is no longer active')
-    )
-    first_name = models.CharField(max_length=80)
-    last_name = models.CharField(max_length=80)
-    rank = models.CharField(max_length=8, null=True, blank=True)
-    phone = PhoneNumberField()
-    email = models.EmailField()
-    fleet = models.ForeignKey('Fleet')
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
-    history = HistoricalRecords()
-
-    def __str__(self):
-        return '({}): {}, {}'.format(self.fleet, self.last_name, self.first_name)
+from fleet.models import Fleet
 
 
 class Bike(models.Model):
     id = models.CharField(max_length=12, primary_key=True)
     serial_number = models.CharField(max_length=40)
     low_step = models.BooleanField()
-    fleet = models.ForeignKey('Fleet')
+    fleet = models.ForeignKey('fleet.Fleet')
     history = HistoricalRecords()
 
     def __str__(self):
@@ -62,6 +29,22 @@ class BikeGPS(models.Model):
         return '({}) {}'.format(self.bike.id, self.id)
 
 
+class CheckInOut(models.Model):
+    LONG = 'L'
+    MEDIUM = 'M'
+    SHORT = 'S'
+    CHECK_OUT_CHOICES = (
+        (LONG, 'Long term check-out up to 30 days.'),
+        (MEDIUM, 'Medium term check-out up to 72 hours.'),
+        (SHORT, 'Short term check-out up to 12 hours.')
+    )
+    fleet = models.ForeignKey('fleet.Fleet')
+    bike = models.ForeignKey('Bike')
+    duration = models.CharField(max_length=1, choices=CHECK_OUT_CHOICES)
+    check_out = models.DateTimeField(auto_now_add=True)
+    check_in = models.DateTimeField()
+
+
 class Lock(models.Model):
     bike = models.OneToOneField('Bike')
     id = models.CharField(max_length=12, primary_key=True)
@@ -70,24 +53,6 @@ class Lock(models.Model):
 
     def __str__(self):
         return '({}) {}'.format(self.bike.id, self.id)
-
-
-class Asset(models.Model):
-    PUMP = 'P'
-    TOOLKIT = 'T'
-    VEST = 'V'
-    ASSET_CHOICES = (
-        (PUMP, 'Pump'),
-        (TOOLKIT, 'Toolkit'),
-        (VEST, 'Vest')
-    )
-    fleet = models.ForeignKey('Fleet')
-    id = models.CharField(max_length=12, primary_key=True)
-    asset_type = models.CharField(max_length=1, choices=ASSET_CHOICES)
-    history = HistoricalRecords()
-
-    def __str__(self):
-        return '({}) {} - {}: {}'.format(self.fleet.id, self.fleet.name, self.id, self.asset_type)
 
 
 

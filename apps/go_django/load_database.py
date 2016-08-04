@@ -9,7 +9,7 @@ from src.scripts.constants import *
 
 class DatabaseLoader(object):
 
-    header = {'Authorization': 'token 9036073dba260f556352e828b71ff7dde44ebe44'}
+    header = {'Authorization': 'token 09b0e8d78dc3d8ffd64bb2a792e4c7bf9f84fea8'}
     models = {}  # {name: json_file}
     objects = {}
     root = 'http://127.0.0.1:8000/api/v1'
@@ -52,34 +52,6 @@ class DatabaseLoader(object):
                         not re.search('unique set', str(res.json()))):
                     print(name, res.json())
         return True
-
-
-data = [
-    {
-        "id": 1,
-        "name": "Madigan",
-        "minimum": 100,
-        "maximum": 139
-    },
-    {
-        "id": 2,
-        "name": "Hillside",
-        "minimum": 140,
-        "maximum": 159
-    },
-    {
-        "id": 3,
-        "name": "Jackson A",
-        "minimum": 160,
-        "maximum": 169
-    },
-    {
-        "id": 4,
-        "name": "Jackson B",
-        "minimum": 170,
-        "maximum": 179
-    }
-]
 
 
 class FirstLoader(DatabaseLoader):
