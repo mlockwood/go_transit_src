@@ -1,9 +1,9 @@
 import csv
 import re
 import os
-import src.scripts.transit.stop.stop as st
+import src.scripts.stop.stop as st
 from src.scripts.constants import PATH
-from src.scripts.transit.stop.constants import LANDMARK_HEADER
+from src.scripts.stop.constants import LANDMARK_HEADER
 
 
 def process():

@@ -6,8 +6,8 @@ from pykml.factory import KML_ElementMaker as KML
 from lxml import etree
 from xml.sax.saxutils import unescape
 
-import src.scripts.transit.stop.stop as st
-import src.scripts.transit.route.schedule as sch
+import src.scripts.stop.stop as st
+import src.scripts.route.schedule as sch
 from src.scripts.constants import PATH
 
 

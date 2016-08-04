@@ -6,8 +6,8 @@ from src.scripts.constants import *
 from src.scripts.utils.classes import DataModelTemplate
 from src.scripts.utils.IOutils import set_directory
 from src.scripts.utils.time import convert_to_24_plus_time
-from src.scripts.transit.route.constants import STOP_TIME_HEADER
-from src.scripts.transit.route.direction import Direction
+from src.scripts.route.constants import STOP_TIME_HEADER
+from src.scripts.route.direction import Direction
 
 
 Direction.load()

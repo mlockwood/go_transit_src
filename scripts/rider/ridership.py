@@ -8,11 +8,11 @@ import xlsxwriter
 import multiprocessing as mp
 
 # Entire scripts from src
-from src.scripts.transit.route.route import load
+from src.scripts.route.route import load
 
 # Classes and variables from src
 from src.scripts.constants import *
-from src.scripts.transit.rider.constants import BEGIN, BASELINE, INCREMENT
+from src.scripts.rider.constants import BEGIN, BASELINE, INCREMENT
 from src.scripts.utils.classes import DataModelTemplate
 from src.scripts.utils.IOutils import *
 

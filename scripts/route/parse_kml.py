@@ -5,8 +5,8 @@ import sys
 
 from pykml import parser
 
-import src.scripts.transit.route.route as rt
-import src.scripts.transit.stop.stop as st
+import src.scripts.route.route as rt
+import src.scripts.stop.stop as st
 from src.scripts.constants import PATH
 
 

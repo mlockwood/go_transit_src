@@ -5,7 +5,7 @@
 import datetime
 
 # Import scripts from src
-from src.scripts.transit.route.errors import *
+from src.scripts.route.errors import *
 from src.scripts.utils.classes import DataModelTemplate
 
 # Import variables from src

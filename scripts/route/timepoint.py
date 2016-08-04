@@ -6,9 +6,9 @@ import os
 import xlsxwriter
 
 # Entire scripts from src
-from src.scripts.transit.route.route import DateRange
-from src.scripts.transit.stop.stop import Stop
-from src.scripts.transit.route.constants import *
+from src.scripts.route.route import DateRange
+from src.scripts.stop.stop import Stop
+from src.scripts.route.constants import *
 
 # Classes and variables from src
 from src.scripts.constants import PATH

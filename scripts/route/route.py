@@ -10,16 +10,16 @@ import sys
 import uuid
 
 # Entire scripts from src
-from src.scripts.transit.stop.stop import Stop
-from src.scripts.transit.route.errors import *
+from src.scripts.stop.stop import Stop
+from src.scripts.route.errors import *
 
 # Classes and variables from src
 from src.scripts.constants import *
 from src.scripts.utils.classes import DataModelTemplate
 
-from src.scripts.transit.route.segment import Segment, StopSeq, Direction
-from src.scripts.transit.route.service import Service
-from src.scripts.transit.route.trip import Trip, StopTime
+from src.scripts.route.segment import Segment, StopSeq, Direction
+from src.scripts.route.service import Service
+from src.scripts.route.trip import Trip, StopTime
 
 # Import classes and functions from src
 from src.scripts.utils.functions import stitch_dicts

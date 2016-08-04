@@ -6,16 +6,16 @@ import shutil
 import sys
 
 # Entire scripts from src
-import src.scripts.transit.route.route as rt
-import src.scripts.transit.stop.stop as st
-import src.scripts.transit.route.errors as RouteErrors
+import src.scripts.route.route as rt
+import src.scripts.stop.stop as st
+import src.scripts.route.errors as RouteErrors
 
 # Functions from src
 from src.scripts.utils.functions import stack
 
 # Variables from src
 from src.scripts.constants import PATH
-from src.scripts.transit.route.constants import DISPLAY_ALL, TIMETABLE_HEADER, TIMETABLE_FOOTER, ORDER
+from src.scripts.route.constants import DISPLAY_ALL, TIMETABLE_HEADER, TIMETABLE_FOOTER, ORDER
 
 
 class Stop(object):

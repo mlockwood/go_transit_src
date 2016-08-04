@@ -13,7 +13,7 @@ class Rider:
         vars(self).update((k,v) for k,v in vars().items() if k != 'self')
 
         self.id = hashlib.sha512('{}_{}_{}'.format(first, last, ''.join(home_gps)))
-        self.start =
+        self.start = False # ?????
         Rider.objects[self.id] = self
 
     def match(self):
@@ -21,7 +21,7 @@ class Rider:
             # If the rider is eligible for the vanpool by home or work county and the van is not full
             if (self.home_county == van.agency or self.work_county == van.agency) and len(van.riders) < van.occupancy:
                 # Check times
-                if
+                pass
 
 
 class Van:
