@@ -1,15 +1,15 @@
-import inspect
 import json
 import re
 import requests
-import sys
+
+from django.contrib.auth.models import User
 
 from src.scripts.constants import *
 
 
 class DatabaseLoader(object):
 
-    header = {'Authorization': 'token 09b0e8d78dc3d8ffd64bb2a792e4c7bf9f84fea8'}
+    header = {'Authorization': 'token fc30ff32d078e97190558b7fdaf68fb392cec32d'}
     models = {}  # {name: json_file}
     objects = {}
     root = 'http://127.0.0.1:8000/api/v1'
@@ -58,7 +58,6 @@ class FirstLoader(DatabaseLoader):
 
     models = {
         'fleet': '{}/fleet.json'.format(DATA_PATH),
-        # 'cyclist': '{}/cyclist.json'.format(DATA_PATH),
         'driver': '{}/driver.json'.format(DATA_PATH),
         'service': '{}/service.json'.format(DATA_PATH),
         'holiday': '{}/holiday.json'.format(DATA_PATH),
@@ -71,7 +70,6 @@ class FirstLoader(DatabaseLoader):
 class SecondLoader(DatabaseLoader):
 
     models = {
-        # 'steward': '{}/steward.json'.format(DATA_PATH),
         'bike': '{}/bike.json'.format(DATA_PATH),
         'asset': '{}/asset.json'.format(DATA_PATH),
         'metadata': '{}/metadata.json'.format(DATA_PATH),
@@ -85,13 +83,13 @@ class SecondLoader(DatabaseLoader):
 class ThirdLoader(DatabaseLoader):
 
     models = {
-        'bikegps': '{}/bike_gps.json'.format(DATA_PATH),
+        'bike_gps': '{}/bike_gps.json'.format(DATA_PATH),
         'lock': '{}/lock.json'.format(DATA_PATH),
         # 'checkinout': '{}/checkinout.json'.format(DATA_PATH),
         'entry': '{}/entry.json'.format(DATA_PATH),
         'schedule': '{}/schedule.json'.format(DATA_PATH),
         'direction': '{}/direction.json'.format(DATA_PATH),
-        'stopseq': '{}/stop_seq.json'.format(DATA_PATH),
+        'stop_seq': '{}/stop_seq.json'.format(DATA_PATH),
         'inventory': '{}/inventory.json'.format(DATA_PATH),
     }
     objects = {}
@@ -116,7 +114,7 @@ class FifthLoader(DatabaseLoader):
 class SixthLoader(DatabaseLoader):
 
     models = {
-        'stoptime': '{}/stop_time.json'.format(DATA_PATH),
+        'stop_time': '{}/stop_time.json'.format(DATA_PATH),
     }
     objects = {}
 
