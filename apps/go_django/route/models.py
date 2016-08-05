@@ -10,6 +10,9 @@ class Direction(models.Model):
     origin = models.ForeignKey('stop.Stop', related_name='direction_origin')
     destination = models.ForeignKey('stop.Stop', related_name='direction_destination')
 
+    def __str__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         if self.id is None:
             self.id = self.__class__.objects.all().order_by("-id")[0].id + 1
@@ -23,6 +26,9 @@ class Joint(models.Model):
     service = models.ForeignKey('Service')
     headway = models.IntegerField()
 
+    def __str__(self):
+        return self.id
+
     def save(self, *args, **kwargs):
         if self.id is None:
             self.id = self.__class__.objects.all().order_by("-id")[0].id + 1
@@ -32,6 +38,9 @@ class Joint(models.Model):
 class Holiday(models.Model):
     id = models.IntegerField(primary_key=True)
     holiday = models.DateField()
+
+    def __str__(self):
+        return self.holiday
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -45,6 +54,9 @@ class Schedule(models.Model):
     start = models.TimeField()
     end = models.TimeField()
     offset = models.IntegerField()
+
+    def __str__(self):
+        return 'Schedule {} for Joint {}'.format(self.id, self.joint)
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -63,6 +75,9 @@ class Segment(models.Model):
     class Meta:
         unique_together = ('joint', 'schedule', 'name')
 
+    def __str__(self):
+        return 'Segment {} for Schedule {} and Joint {}'.format(self.name, self.id, self.joint)
+
 
 class Service(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -76,6 +91,9 @@ class Service(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     text = models.TextField()
+
+    def __str__(self):
+        return '{} from {} to {} for {}'.format(self.id, self.start_date, self.end_date, self.text)
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -95,6 +113,9 @@ class StopSeq(models.Model):
 
     class Meta:
         unique_together = ('segment', 'load_seq')
+
+    def __str__(self):
+        return '{} -- {}'.format(self.segment, self.load_seq)
 
 
 class StopTime(models.Model):
@@ -119,6 +140,9 @@ class Transfer(models.Model):
     from_stop = models.ForeignKey('stop.Stop', related_name='from_stop')
     to_stop = models.ForeignKey('stop.Stop', related_name='to_stop')
     transfer_type = models.IntegerField()
+
+    def __str__(self):
+        return 'Joint {} from {} to {}'.format(self.joint, self.from_stop, self.to_stop)
 
 
 class Trip(models.Model):

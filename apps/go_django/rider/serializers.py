@@ -22,6 +22,7 @@ class MetadataSerializer(serializers.ModelSerializer):
 class EntrySerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
+            'id',
             'metadata',
             'on',
             'time',

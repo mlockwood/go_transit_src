@@ -26,16 +26,18 @@ class EndUser(models.Model):
         (INACTIVE, 'User is no longer an active steward.'),
         (NONACTIVE, 'User has never been a steward.')
     )
+    id = models.CharField(max_length=80, primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # first_name = models.CharField(max_length=80)
     # last_name = models.CharField(max_length=80)
     # rank = models.CharField(max_length=4, blank=True)
     # phone = PhoneNumberField()
     # email = models.EmailField()
-    go_permission = models.IntegerField(default=0)
-    transit_staff = models.IntegerField(default=0)
-    fleet = models.ForeignKey('fleet.Fleet', null=True, blank=True)
     waiver = models.CharField(max_length=1, choices=WAIVER_CHOICES, default='N')
     waiver_time = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='N')
+    fleet = models.ForeignKey('fleet.Fleet', null=True, blank=True)
     history = HistoricalRecords()
+
+    def __str__(self):
+        return self.id

@@ -31,3 +31,6 @@ class Entry(models.Model):
 
     def __str__(self):
         return '{} riders | On: {} Off: {} @ {}'.format(self.count, self.on, self.off, self.time)
+
+    class Meta:
+        unique_together = ('metadata', 'time', 'on', 'off')
