@@ -33,4 +33,4 @@ class FleetAsset(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return '({}) {} - {}: {}'.format(self.fleet.id, self.fleet.name, self.id, self.asset_type)
+        return '{} {} @ ({}) {}'.format(self.asset_type, self.id, self.fleet.id, self.fleet.name)

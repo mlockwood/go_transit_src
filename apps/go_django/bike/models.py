@@ -15,7 +15,7 @@ class Bike(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return '({}) {} - {}'.format(self.fleet.id, self.fleet.name, self.id)
+        return '{} @ ({}) {}'.format(self.id, self.fleet.id, self.fleet.name)
 
 
 class BikeGPS(models.Model):
@@ -26,7 +26,7 @@ class BikeGPS(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return '({}) {}'.format(self.bike.id, self.id)
+        return '{} @ {}'.format(self.id, self.bike.id)
 
 
 class CheckInOut(models.Model):
@@ -44,6 +44,9 @@ class CheckInOut(models.Model):
     check_out = models.DateTimeField(auto_now_add=True)
     check_in = models.DateTimeField()
 
+    def __str__(self):
+        return '{} from {} @ {}({})'.format(self.bike, self.fleet, self.check_out, self.duration)
+
 
 class Lock(models.Model):
     bike = models.OneToOneField('Bike')
@@ -52,7 +55,7 @@ class Lock(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return '({}) {}'.format(self.bike.id, self.id)
+        return '{} @ {}'.format(self.id, self.bike.id)
 
 
 

@@ -26,7 +26,7 @@ class Damage(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return '{} for asset {} on {}'.format(self.damage, self.asset, self.date)
+        return '{} for {} on {}'.format(self.damage, self.asset, self.date)
 
 
 class Inventory(models.Model):
@@ -49,6 +49,9 @@ class Inventory(models.Model):
     code = models.CharField(max_length=1, choices=CODE_CHOICES)
     notes = models.TextField(blank=True)
 
+    def __str__(self):
+        return 'Inventory of {} @ {}'.format(self.asset, self.timestamp)
+
 
 class Maintenance(models.Model):
     asset = None  # use models.ForeignKey('class')
@@ -59,7 +62,7 @@ class Maintenance(models.Model):
     repair_date = models.DateField()
 
     def __str__(self):
-        return '{} for asset {} on {}'.format(self.repair, self.asset, self.repair_date)
+        return '{} for {} on {}'.format(self.repair, self.asset, self.repair_date)
 
 
 class BikeDamage(Damage):

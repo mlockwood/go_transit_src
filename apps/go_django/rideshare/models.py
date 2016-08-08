@@ -19,11 +19,17 @@ class Carpool(models.Model):
     occupancy = models.IntegerField()
     hov_parking = models.BooleanField()
 
+    def __str__(self):
+        return self.license
+
 
 class DaySchedule(models.Model):
     operating = models.BooleanField()
     start = models.TimeField(null=True, blank=True)
     end = models.TimeField(null=True, blank=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.start, self.end)
 
 
 class Vanpool(models.Model):
@@ -40,3 +46,6 @@ class Vanpool(models.Model):
     license = models.CharField(max_length=12, null=True, blank=True)
     occupancy = models.IntegerField()
     hov_parking = models.BooleanField()
+
+    def __str__(self):
+        return '{} from {}'.format(self.license, self.agency.name)

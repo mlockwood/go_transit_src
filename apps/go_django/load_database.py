@@ -37,7 +37,7 @@ class DatabaseLoader(object):
     def process(cls):
         for obj in cls.models:
             cls(obj, cls.models[obj])
-        cls.delete()
+        # cls.delete()
         cls.post()
         cls.objects = {}
         return True
@@ -59,7 +59,7 @@ class DatabaseLoader(object):
                 res = requests.post('{}/{}/'.format(ROOT, name), data=item, headers=HEADER)
                 if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
                         not re.search('unique set', str(res.json()))):
-                    print(name, res.json())
+                    print(name, res.json(), item)
         return True
 
 
@@ -123,7 +123,7 @@ class SecondLoader(DatabaseLoader):
         'metadata': '{}/rider/metadata.json'.format(DATA_PATH),
         'joint': '{}/route/joint.json'.format(DATA_PATH),
         'stop': '{}/stop/stop.json'.format(DATA_PATH),
-        # 'maintenance': '{}/maintenance.json'.format(DATA_PATH),
+        'maintenance': '{}/maintenance.json'.format(DATA_PATH),
     }
     objects = {}
 
