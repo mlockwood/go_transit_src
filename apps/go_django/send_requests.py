@@ -1,21 +1,15 @@
 import json
-import os
 import re
 import requests
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "go_django.settings")
-
-from django import setup
-setup()
-from django.contrib.auth.models import Group, User
-from django.db.utils import IntegrityError
-
 from src.scripts.constants import *
-from src.scripts.utils.IOutils import load_json
 
 
-ROOT = 'http://127.0.0.1:8000/api/v1'
-HEADER = {'Authorization': 'token fc30ff32d078e97190558b7fdaf68fb392cec32d'}
+LOCAL_ROOT = 'http://127.0.0.1:8000/api/v1'
+LOCAL_HEADER = {'Authorization': 'token fc30ff32d078e97190558b7fdaf68fb392cec32d'}
+
+ROOT = 'https://golewismcchord.herokuapp.com/api/v1'
+HEADER = {'Authorization': 'token 073a1a8db17a0b6241d95bc457f62989d71c7f88'}
 
 
 class DatabaseLoader(object):
@@ -66,39 +60,48 @@ class DatabaseLoader(object):
 class UserLoader(object):
 
     groups = {}
-    json_file = '{}/user/user.json'.format(DATA_PATH)
+    group_file = '{}/user/group.json'.format(DATA_PATH)
+    user_file = '{}/user/user.json'.format(DATA_PATH)
 
     @classmethod
     def process(cls):
+        # Load group.json
+        with open(cls.group_file, 'r') as infile:
+            data = json.load(infile)
+
+            # For each group
+            for group in data:
+                requests.post('{}/group/'.format(ROOT), data=group, headers=HEADER)
+
         # Load user.json
-        with open(cls.json_file, 'r') as infile:
+        with open(cls.user_file, 'r') as infile:
             data = json.load(infile)
 
             # For each user
             for end_user in data:
 
-                # Set a user in the model
-                try:
-                    user = User.objects.create_user(**{
-                        'username': end_user['username'],
-                        'email': end_user['email'],
-                        'password': end_user['password'],
-                        'first_name': end_user['first_name'],
-                        'last_name': end_user['last_name'],
-                        'is_active': end_user['is_active'],
-                        'is_staff': end_user['is_staff']
-                    })
-                except IntegrityError:
-                    user = User.objects.get(username=end_user['username'])
-
-                # Add groups to user
-                for group in end_user['groups']:
-                    if group not in cls.groups:
-                        cls.groups[group] = Group.objects.get(name=group)
-                    cls.groups[group].user_set.add(user)
+                # Set the user
+                user = {
+                    'username': end_user['username'],
+                    'email': end_user['email'],
+                    'password': end_user['password'],
+                    'groups': [int(i) + 6 for i in end_user['groups']],
+                    'first_name': end_user['first_name'],
+                    'last_name': end_user['last_name'],
+                    'is_active': end_user['is_active'],
+                    'is_staff': end_user['is_staff']
+                }
+                res = requests.post('{}/user/'.format(ROOT), data=user, headers=HEADER)
+                if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
+                        not re.search('unique set', str(res.json()))):
+                    print('user', res.json(), user)
 
                 # Set end_user portion of the attributes
-                requests.post('{}/end_user/'.format(ROOT), data={'id': end_user['id'], 'user': user.pk}, headers=HEADER)
+                res = requests.post('{}/end_user/'.format(ROOT), data={'id': end_user['id'],
+                                    'user': end_user['username']}, headers=HEADER)
+                if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
+                        not re.search('unique set', str(res.json()))):
+                    print('end_user', res.json(), user)
 
         return True
 
@@ -131,13 +134,13 @@ class SecondLoader(DatabaseLoader):
 class ThirdLoader(DatabaseLoader):
 
     models = {
-        # 'bike_gps': '{}/bike/bike_gps.json'.format(DATA_PATH),
-        # 'lock': '{}/bike/lock.json'.format(DATA_PATH),
-        # 'checkinout': '{}/checkinout.json'.format(DATA_PATH),
+        'bike_gps': '{}/bike/bike_gps.json'.format(DATA_PATH),
+        'lock': '{}/bike/lock.json'.format(DATA_PATH),
+        'checkinout': '{}/checkinout.json'.format(DATA_PATH),
         'entry': '{}/rider/entry.json'.format(DATA_PATH),
-        # 'schedule': '{}/route/schedule.json'.format(DATA_PATH),
-        # 'direction': '{}/route/direction.json'.format(DATA_PATH),
-        # 'stop_seq': '{}/route/stop_seq.json'.format(DATA_PATH),
+        'schedule': '{}/route/schedule.json'.format(DATA_PATH),
+        'direction': '{}/route/direction.json'.format(DATA_PATH),
+        'stop_seq': '{}/route/stop_seq.json'.format(DATA_PATH),
     }
     objects = {}
 
@@ -167,10 +170,10 @@ class SixthLoader(DatabaseLoader):
 
 
 if __name__ == "__main__":
-    # UserLoader.process()
-    # FirstLoader.process()
+    UserLoader.process()
+    FirstLoader.process()
     # SecondLoader.process()
-    ThirdLoader.process()
+    # ThirdLoader.process()
     # FourthLoader.process()
     # FifthLoader.process()
     # SixthLoader.process()

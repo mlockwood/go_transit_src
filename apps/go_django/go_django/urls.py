@@ -87,6 +87,8 @@ router.register(r'stop', StopViewSet)
 router.register(r'geography', GeographyViewSet)
 
 # User
+router.register(r'user', UserViewSet)
+router.register(r'group', GroupViewSet)
 router.register(r'end_user', EndUserViewSet)
 
 # Vehicle

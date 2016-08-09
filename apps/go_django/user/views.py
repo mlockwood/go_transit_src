@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group, User
 from rest_framework import generics, mixins, permissions, viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
@@ -11,6 +12,17 @@ class IsSuperUser(permissions.BasePermission):
         if not request.user.is_superuser and request.method == 'DELETE':
             return False
         return True
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+    lookup_field = 'username'
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = serializers.GroupSerializer
 
 
 class EndUserViewSet(viewsets.ModelViewSet):
