@@ -8,9 +8,7 @@ DATE_INPUT_FORMATS = ('%d%m%Y',)
 
 
 class Metadata(models.Model):
-    sheet = models.CharField(max_length=20, primary_key=True)
-    date = models.DateField()
-    route = models.CharField(max_length=20)
+    schedule = models.IntegerField()
     driver = models.ForeignKey('user.EndUser')
     vehicle = models.ForeignKey('vehicle.Vehicle')
     login = models.DateTimeField(editable=True)

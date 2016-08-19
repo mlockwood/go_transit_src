@@ -12,4 +12,5 @@ class FleetAdmin(admin.ModelAdmin):
     search_fields = ['id', 'name', 'description', 'schedule']
 
 
+
 admin.site.register(models.Fleet, FleetAdmin)

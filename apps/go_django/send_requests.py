@@ -31,8 +31,8 @@ class DatabaseLoader(object):
     def process(cls):
         for obj in cls.models:
             cls(obj, cls.models[obj])
-        # cls.delete()
-        cls.post()
+        cls.delete()
+        # cls.post()
         cls.objects = {}
         return True
 
@@ -50,7 +50,13 @@ class DatabaseLoader(object):
     def post(cls):
         for name in cls.objects:
             for item in cls.objects[name].data:
-                res = requests.post('{}/{}/'.format(ROOT, name), data=item, headers=HEADER)
+                try:
+                    res = requests.post('{}/{}/'.format(ROOT, name), data=item, headers=HEADER)
+                except:
+                    answer = None
+                    while not answer:
+                        answer = input('Server connection has been interrupted. Reset dynos. (Press anything)')
+                    res = requests.post('{}/{}/'.format(ROOT, name), data=item, headers=HEADER)
                 if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
                         not re.search('unique set', str(res.json()))):
                     print(name, res.json(), item)
@@ -92,16 +98,17 @@ class UserLoader(object):
                     'is_staff': end_user['is_staff']
                 }
                 res = requests.post('{}/user/'.format(ROOT), data=user, headers=HEADER)
+
                 if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
                         not re.search('unique set', str(res.json()))):
                     print('user', res.json(), user)
 
                 # Set end_user portion of the attributes
-                res = requests.post('{}/end_user/'.format(ROOT), data={'id': end_user['id'],
-                                    'user': end_user['username']}, headers=HEADER)
-                if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
-                        not re.search('unique set', str(res.json()))):
-                    print('end_user', res.json(), user)
+                # res = requests.post('{}/end_user/'.format(ROOT), data={'id': end_user['id'],
+                #                     'user': end_user['username']}, headers=HEADER)
+                # if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
+                #         not re.search('unique set', str(res.json()))):
+                #     print('end_user', res.json(), user)
 
         return True
 
@@ -121,12 +128,11 @@ class FirstLoader(DatabaseLoader):
 class SecondLoader(DatabaseLoader):
 
     models = {
-        'bike': '{}/bike/bike.json'.format(DATA_PATH),
-        'asset': '{}/fleet/asset.json'.format(DATA_PATH),
+        # 'bike': '{}/bike/bike.json'.format(DATA_PATH),
+        # 'asset': '{}/fleet/asset.json'.format(DATA_PATH),
         'metadata': '{}/rider/metadata.json'.format(DATA_PATH),
-        'joint': '{}/route/joint.json'.format(DATA_PATH),
-        'stop': '{}/stop/stop.json'.format(DATA_PATH),
-        'maintenance': '{}/maintenance.json'.format(DATA_PATH),
+        # 'joint': '{}/route/joint.json'.format(DATA_PATH),
+        # 'stop': '{}/stop/stop.json'.format(DATA_PATH),
     }
     objects = {}
 
@@ -134,13 +140,13 @@ class SecondLoader(DatabaseLoader):
 class ThirdLoader(DatabaseLoader):
 
     models = {
-        'bike_gps': '{}/bike/bike_gps.json'.format(DATA_PATH),
-        'lock': '{}/bike/lock.json'.format(DATA_PATH),
-        'checkinout': '{}/checkinout.json'.format(DATA_PATH),
+        # 'bike_gps': '{}/bike/bike_gps.json'.format(DATA_PATH),
+        # 'lock': '{}/bike/lock.json'.format(DATA_PATH),
+        # 'checkinout': '{}/checkinout.json'.format(DATA_PATH),
         'entry': '{}/rider/entry.json'.format(DATA_PATH),
-        'schedule': '{}/route/schedule.json'.format(DATA_PATH),
-        'direction': '{}/route/direction.json'.format(DATA_PATH),
-        'stop_seq': '{}/route/stop_seq.json'.format(DATA_PATH),
+        # 'schedule': '{}/route/schedule.json'.format(DATA_PATH),
+        # 'direction': '{}/route/direction.json'.format(DATA_PATH),
+        # 'stop_seq': '{}/route/stop_seq.json'.format(DATA_PATH),
     }
     objects = {}
 
@@ -170,10 +176,10 @@ class SixthLoader(DatabaseLoader):
 
 
 if __name__ == "__main__":
-    UserLoader.process()
-    FirstLoader.process()
+    # UserLoader.process()
+    # FirstLoader.process()
     # SecondLoader.process()
-    # ThirdLoader.process()
+    ThirdLoader.process()
     # FourthLoader.process()
     # FifthLoader.process()
     # SixthLoader.process()

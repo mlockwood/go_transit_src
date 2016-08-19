@@ -6,9 +6,8 @@ from . import models
 class MetadataSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
-            'sheet',
-            'date',
-            'route',
+            'id',
+            'schedule',
             'driver',
             'vehicle',
             'login',

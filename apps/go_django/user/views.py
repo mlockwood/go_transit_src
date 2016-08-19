@@ -17,7 +17,6 @@ class IsSuperUser(permissions.BasePermission):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
-    lookup_field = 'username'
 
 
 class GroupViewSet(viewsets.ModelViewSet):

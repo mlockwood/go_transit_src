@@ -31,7 +31,6 @@ class BikeMaintenanceSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'asset',
             'damage_report',
             'repair',
             'description',
@@ -69,7 +68,6 @@ class BikeGPSMaintenanceSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'asset',
             'damage_report',
             'repair',
             'description',
@@ -107,7 +105,6 @@ class FleetAssetMaintenanceSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'asset',
             'damage_report',
             'repair',
             'description',
@@ -145,7 +142,6 @@ class LockMaintenanceSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'asset',
             'damage_report',
             'repair',
             'description',
@@ -183,7 +179,6 @@ class StopMaintenanceSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'asset',
             'damage_report',
             'repair',
             'description',

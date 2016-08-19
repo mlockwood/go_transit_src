@@ -12,11 +12,13 @@ from vehicle.models import Vehicle
 class Damage(models.Model):
     MINOR = 'M'
     REPAIRABLE = 'R'
+    SCHEDULED = 'S'
     TOTALED = 'T'
     LOSS = 'L'
     DAMAGE_CHOICES = (
-        (MINOR, '(Minor) damage which requires attention but does not impact the operation of the asset.'),
-        (REPAIRABLE, '(Repairable) damage which impacts the operation of the asset but can be repaired.'),
+        (MINOR, '(Minor) damage requires attention but does not impact the operation of the asset.'),
+        (REPAIRABLE, '(Repairable) damage impacts the operation of the asset but can be repaired.'),
+        (SCHEDULED, '(Scheduled) damage caused by normal operation that needs routine maintenance.'),
         (TOTALED, '(Totaled) damage which cannot or should not be repaired and renders the asset unusable.'),
         (LOSS, '(Loss) loss or theft of asset.')
     )
@@ -37,12 +39,12 @@ class Inventory(models.Model):
     SWAP = 'S'
     UNAVAILABLE = 'U'
     CODE_CHOICES = (
-        (AVAILABLE, 'Asset is in inventory but not deployed/distributed.'),
-        (DAMAGED, 'Asset shows damage. Follow-up with appropriate damage form.'),
-        (INSPECT, 'Asset should be inspected by someone trained to assess the asset.'),
-        (PASS, 'Asset passed inventory level-of-service standards.'),
-        (SWAP, 'Asset should be swapped out with another asset.'),
-        (UNAVAILABLE, 'Asset is neither in inventory nor deployed/distributed.'),
+        (AVAILABLE, '(A) Asset is in inventory but not deployed/distributed.'),
+        (DAMAGED, '(D) Asset shows damage. Follow-up with appropriate damage form.'),
+        (INSPECT, '(I) Asset should be inspected by someone trained to assess the asset.'),
+        (PASS, '(P) Asset passed inventory level-of-service standards.'),
+        (SWAP, '(S) Asset should be swapped out with another asset.'),
+        (UNAVAILABLE, '(U) Asset is neither in inventory nor deployed/distributed.'),
     )
     asset = None  # use models.ForeignKey('class')
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -54,8 +56,7 @@ class Inventory(models.Model):
 
 
 class Maintenance(models.Model):
-    asset = None  # use models.ForeignKey('class')
-    damage_report = None  # use models.ForeignKey('class' # null=True, blank=True)
+    damage_report = None  # use models.ForeignKey('class')
     repair = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     cost = models.DecimalField(max_digits=8, decimal_places=2)
@@ -75,7 +76,7 @@ class BikeInventory(Inventory):
 
 class BikeMaintenance(Maintenance):
     asset = models.ForeignKey('bike.Bike')
-    damage_report = models.ForeignKey('BikeDamage', null=True, blank=True)
+    damage_report = models.ForeignKey('BikeDamage')
 
 
 class BikeGPSDamage(Damage):
@@ -88,7 +89,7 @@ class BikeGPSInventory(Inventory):
 
 class BikeGPSMaintenance(Maintenance):
     asset = models.ForeignKey('bike.BikeGPS')
-    damage_report = models.ForeignKey('BikeGPSDamage', null=True, blank=True)
+    damage_report = models.ForeignKey('BikeGPSDamage')
 
 
 class FleetAssetDamage(Damage):
@@ -101,7 +102,7 @@ class FleetAssetInventory(Inventory):
 
 class FleetAssetMaintenance(Maintenance):
     asset = models.ForeignKey('fleet.FleetAsset')
-    damage_report = models.ForeignKey('FleetAssetDamage', null=True, blank=True)
+    damage_report = models.ForeignKey('FleetAssetDamage')
 
 
 class LockDamage(Damage):
@@ -114,7 +115,7 @@ class LockInventory(Inventory):
 
 class LockMaintenance(Maintenance):
     asset = models.ForeignKey('bike.Lock')
-    damage_report = models.ForeignKey('LockDamage', null=True, blank=True)
+    damage_report = models.ForeignKey('LockDamage')
 
 
 class StopDamage(Damage):
@@ -127,7 +128,7 @@ class StopInventory(Inventory):
 
 class StopMaintenance(Maintenance):
     asset = models.ForeignKey('stop.Stop')
-    damage_report = models.ForeignKey('StopDamage', null=True, blank=True)
+    damage_report = models.ForeignKey('StopDamage')
 
 
 class VehicleDamage(Damage):
@@ -140,4 +141,4 @@ class VehicleInventory(Inventory):
 
 class VehicleMaintenance(Maintenance):
     asset = models.ForeignKey('vehicle.Vehicle')
-    damage_report = models.ForeignKey('VehicleDamage', null=True, blank=True)
+    damage_report = models.ForeignKey('VehicleDamage')

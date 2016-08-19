@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@q$3h+_b1f2nl$xw2#l^ldc#np(nm0mf6qg^!-#mx!ll1lk7c@'
+SECRET_KEY = 'b^27qh)h3bwt!cpn16)vw=&e@tb%a0$qx=*%)@iketlfqraxt7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -102,6 +102,11 @@ DATABASES = {
     'default': dj_database_url.config()
 }
 DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
+DATABASES['default']['NAME'] = 'go_django'
+DATABASES['default']['USER'] = 'postgres'
+DATABASES['default']['PASSWORD'] = '1234'
+DATABASES['default']['HOST'] = 'localhost'
+DATABASES['default']['PORT'] = '5432'
 
 
 # Password validation
