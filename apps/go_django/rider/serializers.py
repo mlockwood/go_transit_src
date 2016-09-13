@@ -4,6 +4,8 @@ from . import models
 
 
 class MetadataSerializer(serializers.ModelSerializer):
+    entries = serializers.StringRelatedField(many=True)
+
     class Meta:
         fields = (
             'id',
@@ -13,7 +15,8 @@ class MetadataSerializer(serializers.ModelSerializer):
             'login',
             'start_mileage',
             'end_mileage',
-            'logout'
+            'logout',
+            'entries'
         )
         model = models.Metadata
 

@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from rest_framework import routers
+from rest_framework.authtoken import views
 
 from agency.views import *
 from bike.views import *
@@ -98,5 +99,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/v1/', include(router.urls, namespace='apiv1')),
+    url(r'^api-token-auth/', views.obtain_auth_token),
 ]
 

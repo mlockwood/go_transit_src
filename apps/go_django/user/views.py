@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Group, User
-from rest_framework import generics, mixins, permissions, viewsets
-from rest_framework.decorators import detail_route
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, mixins, permissions, status, viewsets
+from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
 from . import models
@@ -17,6 +18,11 @@ class IsSuperUser(permissions.BasePermission):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
+
+    @list_route(methods=['get'], url_path='username/(?P<username>\w+)')
+    def get_by_username(self, request, username):
+        user = get_object_or_404(User, username=username)
+        return Response(serializers.UserSerializer(user).data, status=status.HTTP_200_OK)
 
 
 class GroupViewSet(viewsets.ModelViewSet):

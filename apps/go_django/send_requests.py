@@ -9,7 +9,36 @@ LOCAL_ROOT = 'http://127.0.0.1:8000/api/v1'
 LOCAL_HEADER = {'Authorization': 'token fc30ff32d078e97190558b7fdaf68fb392cec32d'}
 
 ROOT = 'https://golewismcchord.herokuapp.com/api/v1'
-HEADER = {'Authorization': 'token 073a1a8db17a0b6241d95bc457f62989d71c7f88'}
+HEADER = {'Authorization': 'token a3ef1e8d6724c13e58f86bc21261e8c7847d56dc'}
+
+WIMM_ROOT = 'https://system.boomerangbike.com/api/v1/lewis_mcchord'
+WIMM_HEADER = {'Authorization': 'token 015a10a2bb5a4c483b97137d30ddfb4e',
+               'password': 'jblm'}
+
+
+res = requests.get('{}/trips'.format(WIMM_ROOT), headers=WIMM_HEADER)
+# print(res)
+
+
+def print_res(res, name, obj=None):
+    if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
+            not re.search('unique set', str(res.json()))):
+        print(name, res.json(), obj)
+
+
+def get_data(name, json_file):
+    data = []
+    # Get the entry list to all results
+    res = requests.get('{}/{}/'.format(ROOT, name), headers=HEADER)
+    # Copy results from each page to data
+    while res:
+        data += res.json()['results']
+        res = requests.get(res.json()['next'], headers=HEADER) if res.json()['next'] else None
+
+    # Export data to json_file
+    with open(json_file, 'w') as outfile:
+        json.dump(data, outfile, indent=4, sort_keys=True)
+    return True
 
 
 class DatabaseLoader(object):
@@ -31,8 +60,8 @@ class DatabaseLoader(object):
     def process(cls):
         for obj in cls.models:
             cls(obj, cls.models[obj])
-        cls.delete()
-        # cls.post()
+        # cls.delete()
+        cls.post()
         cls.objects = {}
         return True
 
@@ -57,9 +86,7 @@ class DatabaseLoader(object):
                     while not answer:
                         answer = input('Server connection has been interrupted. Reset dynos. (Press anything)')
                     res = requests.post('{}/{}/'.format(ROOT, name), data=item, headers=HEADER)
-                if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
-                        not re.search('unique set', str(res.json()))):
-                    print(name, res.json(), item)
+                print_res(res, name, item)
         return True
 
 
@@ -84,31 +111,34 @@ class UserLoader(object):
             data = json.load(infile)
 
             # For each user
-            for end_user in data:
+            for user in data:
 
                 # Set the user
-                user = {
-                    'username': end_user['username'],
-                    'email': end_user['email'],
-                    'password': end_user['password'],
-                    'groups': [int(i) + 6 for i in end_user['groups']],
-                    'first_name': end_user['first_name'],
-                    'last_name': end_user['last_name'],
-                    'is_active': end_user['is_active'],
-                    'is_staff': end_user['is_staff']
+                user_json = {
+                    'username': user['id'],
+                    'password': user['last_name'].lower(),
+                    'email': user['id'],
+                    'groups': [int(i) for i in user['groups']],
+                    'first_name': user['first_name'],
+                    'last_name': user['last_name'],
+                    'is_active': user['is_active'],
+                    'is_staff': user['is_staff']
                 }
-                res = requests.post('{}/user/'.format(ROOT), data=user, headers=HEADER)
+                res = requests.post('{}/user/'.format(ROOT), data=user_json, headers=HEADER)
+                print_res(res, 'user', user_json)
 
-                if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
-                        not re.search('unique set', str(res.json()))):
-                    print('user', res.json(), user)
+            # After all users have been loaded set their password and end_user id
+            res = requests.get('{}/user/'.format(ROOT), headers=HEADER)
+            while res:
+                for item in res.json()['results']:
+                    user = requests.get('{}/user/{}'.format(ROOT, item['id']), headers=HEADER).json()
 
-                # Set end_user portion of the attributes
-                # res = requests.post('{}/end_user/'.format(ROOT), data={'id': end_user['id'],
-                #                     'user': end_user['username']}, headers=HEADER)
-                # if (re.search('4\d\d', str(res.status_code)) and not re.search('already exists', str(res.json())) and
-                #         not re.search('unique set', str(res.json()))):
-                #     print('end_user', res.json(), user)
+                    # Set user portion of the attributes
+                    end_res = requests.post('{}/end_user/'.format(ROOT), data={'id': user['username'],
+                                                                               'user': user['id']}, headers=HEADER)
+                    print_res(end_res, 'end_user', user['username'])
+
+                res = requests.get(res.json()['next'], headers=HEADER) if res.json()['next'] else None
 
         return True
 
@@ -116,9 +146,10 @@ class UserLoader(object):
 class FirstLoader(DatabaseLoader):
 
     models = {
+        'agency': '{}/agency/agency.json'.format(DATA_PATH),
         'fleet': '{}/fleet/fleet.json'.format(DATA_PATH),
-        'service': '{}/route/service.json'.format(DATA_PATH),
-        'holiday': '{}/route/holiday.json'.format(DATA_PATH),
+        # 'service': '{}/route/service.json'.format(DATA_PATH),
+        # 'holiday': '{}/route/holiday.json'.format(DATA_PATH),
         'geography': '{}/stop/geography.json'.format(DATA_PATH),
         'vehicle': '{}/vehicle/vehicle.json'.format(DATA_PATH),
     }
@@ -128,11 +159,11 @@ class FirstLoader(DatabaseLoader):
 class SecondLoader(DatabaseLoader):
 
     models = {
-        # 'bike': '{}/bike/bike.json'.format(DATA_PATH),
-        # 'asset': '{}/fleet/asset.json'.format(DATA_PATH),
-        'metadata': '{}/rider/metadata.json'.format(DATA_PATH),
+        'bike': '{}/bike/bike.json'.format(DATA_PATH),
+        'asset': '{}/fleet/asset.json'.format(DATA_PATH),
+        # 'metadata': '{}/rider/metadata.json'.format(DATA_PATH),
         # 'joint': '{}/route/joint.json'.format(DATA_PATH),
-        # 'stop': '{}/stop/stop.json'.format(DATA_PATH),
+        'stop': '{}/stop/stop.json'.format(DATA_PATH),
     }
     objects = {}
 
@@ -140,13 +171,14 @@ class SecondLoader(DatabaseLoader):
 class ThirdLoader(DatabaseLoader):
 
     models = {
-        # 'bike_gps': '{}/bike/bike_gps.json'.format(DATA_PATH),
-        # 'lock': '{}/bike/lock.json'.format(DATA_PATH),
+        'bike_gps': '{}/bike/bike_gps.json'.format(DATA_PATH),
+        'lock': '{}/bike/lock.json'.format(DATA_PATH),
         # 'checkinout': '{}/checkinout.json'.format(DATA_PATH),
-        'entry': '{}/rider/entry.json'.format(DATA_PATH),
+        # 'entry': '{}/rider/entry.json'.format(DATA_PATH),
         # 'schedule': '{}/route/schedule.json'.format(DATA_PATH),
         # 'direction': '{}/route/direction.json'.format(DATA_PATH),
         # 'stop_seq': '{}/route/stop_seq.json'.format(DATA_PATH),
+        # 'transfer': '{}/route/transfer.json'.format(DATA_PATH),
     }
     objects = {}
 
@@ -179,7 +211,10 @@ if __name__ == "__main__":
     # UserLoader.process()
     # FirstLoader.process()
     # SecondLoader.process()
-    ThirdLoader.process()
+    # ThirdLoader.process()
     # FourthLoader.process()
     # FifthLoader.process()
     # SixthLoader.process()
+    get_data('metadata', '{}/rider/get_metadata.json'.format(DATA_PATH))
+    get_data('entry', '{}/rider/get_entry.json'.format(DATA_PATH))
+    print('Done')

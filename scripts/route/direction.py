@@ -5,12 +5,12 @@
 from src.scripts.utils.classes import DataModelTemplate
 
 # Import variables from src
-from src.scripts.constants import PATH
+from src.scripts.constants import *
 
 
 class Direction(DataModelTemplate):
 
-    json_path = '{}/data/direction.json'.format(PATH)
+    json_path = '{}/route/direction.json'.format(DATA_PATH)
     objects = {}
 
     def __repr__(self):

@@ -9,12 +9,12 @@ from src.scripts.route.errors import *
 from src.scripts.utils.classes import DataModelTemplate
 
 # Import variables from src
-from src.scripts.constants import PATH
+from src.scripts.constants import *
 
 
 class Service(DataModelTemplate):
 
-    json_path = '{}/data/service.json'.format(PATH)
+    json_path = '{}/route/service.json'.format(DATA_PATH)
     objects = {}
 
     def set_object_attrs(self):
@@ -62,7 +62,7 @@ class Service(DataModelTemplate):
 
 class Holiday(DataModelTemplate):
 
-    json_path = '{}/data/holiday.json'.format(PATH)
+    json_path = '{}/route/holiday.json'.format(DATA_PATH)
     objects = {}
 
     @classmethod

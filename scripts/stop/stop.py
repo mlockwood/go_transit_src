@@ -1,10 +1,10 @@
 from src.scripts.utils.classes import DataModelTemplate
-from src.scripts.constants import PATH
+from src.scripts.constants import *
 
 
 class Stop(DataModelTemplate):
 
-    json_path = '{}/data/stop.json'.format(PATH)
+    json_path = '{}/stop/stop.json'.format(DATA_PATH)
     locations = {}
 
     def __repr__(self):
@@ -18,20 +18,9 @@ class Stop(DataModelTemplate):
 
 class Geography(DataModelTemplate):
 
-    json_path = '{}/data/geography.json'.format(PATH)
+    json_path = '{}/stop/geography.json'.format(DATA_PATH)
 
     def __repr__(self):
         return '<Geography {}>'.format(self.id)
 
-
-class Inventory(DataModelTemplate):
-
-    json_path = '{}/data/inventory.json'.format(PATH)
-    objects = {}
-
-    def __repr__(self):
-        return '<Inventory {}>'.format(self.timestamp, self.stop)
-
-    def set_objects(self):
-        Inventory.objects[(self.timestamp, self.stop)] = self
 

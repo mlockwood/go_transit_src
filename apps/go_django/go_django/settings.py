@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'simple_history',
     'gunicorn',
+    # 'corsheaders',
     # 'debug_toolbar',
     'agency',
     'bike',
@@ -58,6 +59,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -101,12 +103,12 @@ WSGI_APPLICATION = 'go_django.wsgi.application'
 DATABASES = {
     'default': dj_database_url.config()
 }
-DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
-DATABASES['default']['NAME'] = 'go_django'
-DATABASES['default']['USER'] = 'postgres'
-DATABASES['default']['PASSWORD'] = '1234'
-DATABASES['default']['HOST'] = 'localhost'
-DATABASES['default']['PORT'] = '5432'
+# DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
+# DATABASES['default']['NAME'] = 'go_django'
+# DATABASES['default']['USER'] = 'postgres'
+# DATABASES['default']['PASSWORD'] = '1234'
+# DATABASES['default']['HOST'] = 'localhost'
+# DATABASES['default']['PORT'] = '5432'
 
 
 # Password validation
@@ -174,3 +176,7 @@ REST_FRAMEWORK = {
         'user': '1000000000/minute'
     }
 }
+
+# CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = ()
+# CORS_ORIGIN_REGEX_WHITELIST = ()

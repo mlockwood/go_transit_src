@@ -6,7 +6,7 @@ import os
 import xlsxwriter
 
 # Entire scripts from src
-from src.scripts.route.route import DateRange
+import src.scripts.route.route as route
 from src.scripts.stop.stop import Stop
 from src.scripts.route.constants import *
 
@@ -18,7 +18,7 @@ def build_master_table(date):
     master_table = {}
 
     # Build master_table
-    for stoptime in DateRange.get_feed_by_date(date)[1]:
+    for stoptime in route.load(date)[1]:
 
         # If the point is a timepoint, add to the table
         if int(stoptime.timepoint) == 1:
@@ -26,7 +26,7 @@ def build_master_table(date):
             if stoptime.trip.driver not in master_table:
                 master_table[stoptime.trip.driver] = []
             master_table[stoptime.trip.driver] = master_table.get(stoptime.trip.driver) + [
-                [stoptime.stop, Stop.objects[stoptime.stop].name, 'TO {}'.format(stoptime.trip.direction),
+                [stoptime.stop, Stop.objects[stoptime.stop].name, 'TO {}'.format(stoptime.trip.direction.name),
                  stoptime.depart]]
 
     return master_table
@@ -88,4 +88,4 @@ def publish(date):
 
 
 if __name__ == "__main__":
-    publish(datetime.datetime(2015, 8, 31))
+    publish(datetime.datetime.today())

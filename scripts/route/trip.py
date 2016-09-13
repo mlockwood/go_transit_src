@@ -16,7 +16,7 @@ Direction.load()
 class Trip(DataModelTemplate):
 
     feed = {}
-    json_path = '{}/data/trip.json'.format(PATH)
+    json_path = '{}/route/trip.json'.format(DATA_PATH)
     objects = {}
 
     def __repr__(self):
@@ -75,7 +75,7 @@ class Trip(DataModelTemplate):
 class StopTime(DataModelTemplate):
 
     feed = {}
-    json_path = '{}/data/stop_time.json'.format(PATH)
+    json_path = '{}/route/stop_time.json'.format(DATA_PATH)
     objects = {}
 
     # Expect these __init__ args => id, trip.id

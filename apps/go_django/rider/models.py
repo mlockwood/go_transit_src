@@ -17,11 +17,11 @@ class Metadata(models.Model):
     logout = models.DateTimeField(editable=True)
 
     def __str__(self):
-        return 'Metadata {} S{}'.format(self.date, self.sheet)
+        return 'Metadata {} S{}'.format(self.login, self.schedule)
 
 
 class Entry(models.Model):
-    metadata = models.ForeignKey('Metadata')
+    metadata = models.ForeignKey('Metadata', related_name='entries')
     on = models.ForeignKey('stop.Stop', related_name='on_stop')
     time = models.TimeField()
     count = models.IntegerField()
@@ -32,3 +32,4 @@ class Entry(models.Model):
 
     class Meta:
         unique_together = ('metadata', 'time', 'on', 'off')
+        ordering = ['time', 'off']

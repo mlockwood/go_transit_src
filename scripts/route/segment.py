@@ -10,7 +10,7 @@ from src.scripts.route.direction import Direction
 from src.scripts.route.errors import *
 
 # Import variables from src
-from src.scripts.constants import PATH
+from src.scripts.constants import *
 
 
 Direction.load()
@@ -19,7 +19,7 @@ Direction.load()
 class Segment(DataModelTemplate):
 
     id_generator = 1
-    json_path = '{}/data/segment.json'.format(PATH)
+    json_path = '{}/route/segment.json'.format(DATA_PATH)
     objects = {}
     schedule_query = {}
 
@@ -147,7 +147,7 @@ class Segment(DataModelTemplate):
 
 class StopSeq(DataModelTemplate):
 
-    json_path = '{}/data/stop_seq.json'.format(PATH)
+    json_path = '{}/route/stop_seq.json'.format(DATA_PATH)
     objects = {}
     segment_query = {}
 

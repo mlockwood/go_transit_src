@@ -100,7 +100,7 @@ class Route:
 class Joint(DataModelTemplate):
 
     objects = {}
-    json_path = '{}/joint.json'.format(DATA_PATH)
+    json_path = '{}/route/joint.json'.format(DATA_PATH)
     locations = {}
 
     def set_object_attrs(self):
@@ -141,7 +141,7 @@ class Joint(DataModelTemplate):
 class Schedule(DataModelTemplate):
 
     objects = {}
-    json_path = '{}/schedule.json'.format(DATA_PATH)
+    json_path = '{}/route/schedule.json'.format(DATA_PATH)
 
     def set_object_attrs(self):
         self.joint = Joint.objects[self.joint]
@@ -390,7 +390,7 @@ class Schedule(DataModelTemplate):
 
 class DateRange(DataModelTemplate):
 
-    json_path = '{}/date_range.json'.format(DATA_PATH)
+    json_path = '{}/route/date_range.json'.format(DATA_PATH)
     objects = {}
 
     def set_object_attrs(self):
@@ -490,7 +490,7 @@ class DateRange(DataModelTemplate):
 
 class Driver(DataModelTemplate):
 
-    json_path = '{}/route_driver.json'.format(DATA_PATH)
+    json_path = '{}/route/route_driver.json'.format(DATA_PATH)
     objects = {}
 
     @classmethod
@@ -511,12 +511,12 @@ class Driver(DataModelTemplate):
         return True
 
 
-def process():
+def process(date=datetime.datetime.today()):
     Joint.load()
     Schedule.load()
     Joint.process()
     Route.set_route_query()
-    feed = DateRange.get_feed_by_date(datetime.datetime.today())
+    feed = DateRange.get_feed_by_date(date)
     StopTime.publish_matrix()
     Schedule.export()
     DateRange.export()
@@ -526,7 +526,7 @@ def process():
     return feed
 
 
-def load():
+def load(date=datetime.datetime.today()):
     Joint.load()
     Schedule.load()
     DateRange.load()
@@ -535,11 +535,11 @@ def load():
     StopTime.load()
     Driver.reconstruct_object_links()
     Route.set_route_query()
-    feed = DateRange.get_feed_by_date(datetime.datetime.today())
+    feed = DateRange.get_feed_by_date(date)
     StopTime.publish_matrix()
     return feed
+
 
 if __name__ == "__main__":
     # feed = process()
     feed = load()
-    print(len(feed[0]), len(feed[1]))
