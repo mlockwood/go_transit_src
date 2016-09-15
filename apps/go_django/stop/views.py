@@ -21,3 +21,13 @@ class StopViewSet(viewsets.ModelViewSet):
 class GeographyViewSet(viewsets.ModelViewSet):
     queryset = models.Geography.objects.all()
     serializer_class = serializers.GeographySerializer
+
+
+class ShelterViewSet(viewsets.ModelViewSet):
+    queryset = models.Shelter.objects.all()
+    serializer_class = serializers.ShelterSerializer
+
+
+class SignViewSet(viewsets.ModelViewSet):
+    queryset = models.Sign.objects.all()
+    serializer_class = serializers.SignSerializer

@@ -37,11 +37,12 @@ class EndUser(models.Model):
     )
     id = models.CharField(max_length=80, primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # first_name = models.CharField(max_length=80)
-    # last_name = models.CharField(max_length=80)
-    # rank = models.CharField(max_length=4, blank=True)
-    # phone = PhoneNumberField()
-    # email = models.EmailField()
+    title_or_rank = models.CharField(max_length=80, blank=True, null=True)
+    organization = models.ForeignKey('Organization')
+    office_phone = PhoneNumberField(default='+12539663939')
+    cell_phone = PhoneNumberField(blank=True, null=True)
+    mailing_address = models.CharField(max_length=255, blank=True, null=True)
+    role_description = models.TextField(blank=True, null=True)
     waiver = models.CharField(max_length=1, choices=WAIVER_CHOICES, default='N')
     waiver_time = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='N')
@@ -50,3 +51,11 @@ class EndUser(models.Model):
 
     def __str__(self):
         return self.id
+
+
+class Organization(models.Model):
+    name = models.CharField(max_length=255, primary_key=True)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.name, self.description)

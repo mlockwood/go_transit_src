@@ -33,3 +33,8 @@ class GroupViewSet(viewsets.ModelViewSet):
 class EndUserViewSet(viewsets.ModelViewSet):
     queryset = models.EndUser.objects.all()
     serializer_class = serializers.EndUserSerializer
+
+
+class OrganizationViewSet(viewsets.ModelViewSet):
+    queryset = models.Organization.objects.all()
+    serializer_class = serializers.OrganizationSerializer

@@ -19,3 +19,4 @@ class EndUserAdmin(admin.ModelAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, EndUserAdmin)
+admin.site.register(models.Organization)

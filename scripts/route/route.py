@@ -17,7 +17,7 @@ from src.scripts.route.errors import *
 from src.scripts.constants import *
 from src.scripts.utils.classes import DataModelTemplate
 
-from src.scripts.route.segment import Segment, StopSeq, Direction
+from src.scripts.route import segment
 from src.scripts.route.service import Service
 from src.scripts.route.trip import Trip, StopTime
 
@@ -26,10 +26,7 @@ from src.scripts.utils.functions import stitch_dicts
 
 # Load dependent data
 Stop.load()
-Direction.load()
-Segment.load()
-StopSeq.load()
-Segment.set_segments()
+segment.load()
 Service.load()
 
 
@@ -147,6 +144,7 @@ class Schedule(DataModelTemplate):
         self.joint = Joint.objects[self.joint]
         self.start_str = self.start
         self.end_str = self.end
+        self.segments = SegmentOrder.lookup[self.id]
 
         # Set times
         self.start = copy.deepcopy(self.joint.service.start_date).replace(hour=int(self.start[:2]),
@@ -161,7 +159,6 @@ class Schedule(DataModelTemplate):
             self.drivers = {}
 
         self.prev = None
-        self.segments = self.get_segments()
         self.roundtrip = self.get_roundtrip()
         self.order = self.get_order()
         self.joint.schedules[self] = True
@@ -204,9 +201,6 @@ class Schedule(DataModelTemplate):
             'drivers': dict((driver, self.drivers[driver].id) for driver in self.drivers)
         }
 
-    def get_segments(self):
-        return dict((segment.dir_order, segment) for segment in Segment.schedule_query[self.id])
-
     def check_prev(self, prev):
         if prev:
             # If the number of driver shifts between this and the previous schedule do not match
@@ -248,12 +242,12 @@ class Schedule(DataModelTemplate):
         # If the origin is a StopSeq subtract the departure time from the trip_length
         if re.search('stopseq', str(a.__class__).lower()):
             trip_length -= a.depart
-            a = Segment.objects[(self.joint.id, self.id, a.segment)]
+            a = a.segment
 
         # If the destination is a StopSeq add the departure time to the trip_length
         if re.search('stopseq', str(b.__class__).lower()):
             trip_length += b.depart
-            b = Segment.objects[(self.joint.id, self.id, b.segment)]
+            b = b.segment
 
         # Continue traveling the order until the cur_segment and final_segment are the same
         while a != b:
@@ -354,9 +348,10 @@ class Schedule(DataModelTemplate):
 
             # Set trip
             trip = Trip(**{
-                'id': '-'.join(str(s) for s in [self.joint.id, self.id, segment.name, segment.trip_generator]),
+                'id': '-'.join(str(s) for s in [self.joint.id, self.id, segment.id, segment.trip_generator]),
                 'schedule': self.id,
-                'direction': segment.direction.id,
+                'head_sign': 'to {}'.format(segment.direction),
+                'direction': segment.dir_type_num,
                 'start_loc': start_loc,
                 'end_loc': end_loc,
                 'start_time': start.strftime('%Y-%m-%d %H:%M:%S'),
@@ -365,7 +360,7 @@ class Schedule(DataModelTemplate):
             segment.trip_generator += 1
             trip.create_stop_times(segment.query_stop_seqs(start_loc, end_loc), self.joint.service)
 
-            # Set driver start location
+            # Set driver start location -- SHOULD THIS ONLY APPLY IF START NOT EXISTING? OTHERWISE OVERWRITING?
             driver.start = segment.query_min_stop_seq(start_loc, end_loc)
 
             # Calculate next start
@@ -386,6 +381,20 @@ class Schedule(DataModelTemplate):
 
         # Take min loc from origin and add key of loc + roundtrip to create the idea of a circular graph
         self.end_locs[min(self.end_locs) + self.roundtrip] = self.end_locs[min(self.end_locs)]
+
+
+class SegmentOrder(DataModelTemplate):
+
+    objects = {}
+    json_path = '{}/route/schedule.json'.format(DATA_PATH)
+    lookup = {}
+
+    def set_object_attrs(self):
+        self.segment = segment.Segment.objects[self.segment]
+        self.segment.dir_type_num = 1 if self.dir_type == 'inbound' else 0
+        if self.schedule not in SegmentOrder.lookup:
+            SegmentOrder.lookup[self.schedule] = {}
+        SegmentOrder.lookup[self.schedule][self.order] = self.segment
 
 
 class DateRange(DataModelTemplate):
@@ -466,11 +475,17 @@ class DateRange(DataModelTemplate):
 
     def set_positions(self):
         self.joints = [Joint.objects[joint] for joint in sorted([joint.id for joint in self.joints])]
+        print('\n\n')
+        print(self.start, self.end)
+        print(self.joints)
+        print(self.lookup)
+        print('-----------')
 
         # Set driver positions and collect trips
         position = 1
         for joint in self.joints:
             for schedule in joint.schedules:
+                print(joint, schedule, schedule.drivers)
                 for driver in sorted(schedule.drivers.keys()):
                     # Set the driver's position if schedule has not been seen
                     if not schedule.prev:
@@ -493,6 +508,9 @@ class Driver(DataModelTemplate):
     json_path = '{}/route/route_driver.json'.format(DATA_PATH)
     objects = {}
 
+    def __repr__(self):
+        return '({}) {}'.format(self.position, self.id[-5:])
+
     @classmethod
     def get_drivers(cls, n):
         return dict([(x, cls(**{
@@ -513,6 +531,7 @@ class Driver(DataModelTemplate):
 
 def process(date=datetime.datetime.today()):
     Joint.load()
+    SegmentOrder.load()
     Schedule.load()
     Joint.process()
     Route.set_route_query()

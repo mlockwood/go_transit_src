@@ -4,13 +4,9 @@ import os
 
 from src.scripts.constants import *
 from src.scripts.utils.classes import DataModelTemplate
-from src.scripts.utils.IOutils import set_directory
+from src.scripts.utils.IOutils import *
 from src.scripts.utils.time import convert_to_24_plus_time
 from src.scripts.route.constants import STOP_TIME_HEADER
-from src.scripts.route.direction import Direction
-
-
-Direction.load()
 
 
 class Trip(DataModelTemplate):
@@ -45,7 +41,6 @@ class Trip(DataModelTemplate):
 
     # Expect these __init__ args => id, direction.id, start_loc, end_loc, start_time, driver.id
     def set_object_attrs(self):
-        self.direction = Direction.objects[self.direction]
         self.start_time = datetime.datetime.strptime(self.start_time, '%Y-%m-%d %H:%M:%S')  # Added +1 day if > 12:00
         self.base_time = self.start_time - datetime.timedelta(seconds=self.start_loc)
         self.end_time = self.base_time + datetime.timedelta(seconds=self.end_loc)
@@ -77,6 +72,11 @@ class StopTime(DataModelTemplate):
     feed = {}
     json_path = '{}/route/stop_time.json'.format(DATA_PATH)
     objects = {}
+    records = [['trip', 'stop', 'direction', 'arrive', 'depart', 'order', 'timepoint', 'pickup', 'dropoff', 'display',
+                'driver']]
+
+    def __str__(self):
+        return '{} {} {}'.format(self.trip, self.order, self.stop)
 
     # Expect these __init__ args => id, trip.id
     # Option A => base_time, stop_seq, service; B => all attrs except stop_seq from set_object_attrs
@@ -113,19 +113,14 @@ class StopTime(DataModelTemplate):
             StopTime.feed[self.trip.schedule] = {}
         StopTime.feed[self.trip.schedule][self] = True
 
-    def get_record(self):
-        return [self.trip.id, self.stop, self.trip.direction.name, self.arrive, self.gtfs_depart, self.order,
-                self.timepoint, self.pickup, self.dropoff, self.display, self.trip.driver.position]
-
     @staticmethod
     def publish_matrix():
-        set_directory('{}/routes'.format(REPORT_PATH))
-        writer = csv.writer(open('{}/routes/records.csv'.format(REPORT_PATH), 'w', newline=''), delimiter=',',
-                            quotechar='|')
-        writer.writerow(STOP_TIME_HEADER)
-        for stop_time in sorted(StopTime.objects):
-            writer.writerow(StopTime.objects[stop_time].get_record())
-        return True
+        for stop_time in StopTime.objects:
+            obj = StopTime.objects[stop_time]
+            StopTime.records.append([str(s) for s in [obj.trip.id, obj.stop, obj.trip.direction.name, obj.arrive,
+                                                      obj.gtfs_depart, obj.order, obj.timepoint, obj.pickup,
+                                                      obj.dropoff, obj.display, obj.trip.driver.position]])
+        txt_writer(StopTime.records, '{}/routes/records.csv'.format(REPORT_PATH))
 
     def get_json(self):
         self.trip = self.trip.id

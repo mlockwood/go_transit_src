@@ -10,24 +10,20 @@ from src.scripts.constants import *
 from src.scripts.rider.constants import BEGIN, BASELINE, INCREMENT, OUT_PATH
 from src.scripts.utils.classes import DataModelTemplate
 from src.scripts.utils.IOutils import *
+from src.scripts.utils.send_requests import DataRequest
 
 
 __author__ = 'Michael Lockwood'
 __github__ = 'mlockwood'
 
 
+DataRequest('entry', '/rider/get_entry.json').get()
+DataRequest('metadata', '/rider/get_metadata.json').get()
+
+
 class Metadata(DataModelTemplate):
 
-    json_path = '{}/rider/metadata.json'.format(DATA_PATH)
-    objects = {}
-
-    def set_object_attrs(self):
-        self.login = parser.parse(self.login).astimezone(tz.gettz('America/Los_Angeles'))
-
-
-class GetMetadata(DataModelTemplate):
-
-    json_path = '{}/rider/get_metadata.json'.format(DATA_PATH)
+    json_path = ('{}/rider/metadata.json'.format(DATA_PATH), '{}/rider/get_metadata.json'.format(DATA_PATH))
     objects = {}
 
     def set_object_attrs(self):
@@ -36,31 +32,18 @@ class GetMetadata(DataModelTemplate):
 
 class Entry(DataModelTemplate):
 
-    json_path = '{}/rider/entry.json'.format(DATA_PATH)
+    json_path = ('{}/rider/entry.json'.format(DATA_PATH), '{}/rider/get_entry.json'.format(DATA_PATH))
     objects = {}
 
     def set_object_attrs(self):
-        meta = Metadata.objects[self.metadata]
-        Record.add_entry([meta.login.year, meta.login.month, meta.login.day, meta.driver, meta.schedule, self.time,
-                          self.on, self.off, self.count])
-        Period.add_count(meta.login, self.count)
-
-
-class GetEntry(DataModelTemplate):
-
-    json_path = '{}/rider/get_entry.json'.format(DATA_PATH)
-    objects = {}
-
-    def set_object_attrs(self):
-        meta = GetMetadata.objects[self.metadata]
-        Record.add_entry([meta.login.year, meta.login.month, meta.login.day, meta.driver, meta.schedule, self.time,
-                          self.on, self.off, self.count])
+        meta, login = Metadata.objects[self.metadata], Metadata.objects[self.metadata].login
+        Record.add_entry([login.year, login.month, login.day, meta.schedule, self.time, self.on, self.off, self.count])
         Period.add_count(meta.login, self.count)
 
 
 class Record(object):
 
-    data = []
+    data = [['year', 'month', 'day', 'schedule', 'time', 'on', 'off', 'count']]
     stops = {}
     locs = {}
 
@@ -70,11 +53,7 @@ class Record(object):
 
     @staticmethod
     def publish():
-        set_directory(OUT_PATH)
-        writer = open('{}/records.csv'.format(OUT_PATH), 'w')
-        for entry in Record.data:
-            writer.write('{}\n'.format(','.join(str(s) for s in entry)))
-        writer.close()
+        txt_writer(Record.data, '{}/records.csv'.format(OUT_PATH))
 
 
 class Period(object):
@@ -142,8 +121,6 @@ class Period(object):
 
     @staticmethod
     def write_file(args):
-        obj = args[0]
-
         # Open workbook and worksheet
         workbook = xlsxwriter.Workbook(args[1])
         worksheet = workbook.add_worksheet('Ridership')
@@ -157,13 +134,11 @@ class Period(object):
 
         # Write data
         row = 2
-        for day in sorted(obj.keys()):
-            worksheet.write_row('A' + str(row),
-                [obj[day].date.strftime('%A'),
-                 obj[day].date.strftime('%d %b %Y'),
-                 obj[day].count,
-                 round(obj[day].average[0], 2),
-                 round(obj[day].straight_line, 2)])
+        for day in sorted(args[0].keys()):
+            day = args[0][day]
+            worksheet.write_row('A{}'.format(str(row)),
+                                [day.date.strftime('%A'), day.date.strftime('%d %b %Y'),
+                                 day.count, round(day.average[0], 2), round(day.straight_line, 2)])
             row += 1
 
         # Set chart series
@@ -177,15 +152,13 @@ class Period(object):
         chart.set_y_axis({'name': 'Riders'})
 
         # Insert chart into the worksheet
-        worksheet.insert_chart('A' + str(row + 2), chart, {'x_offset': 10, 'y_offset': 10})
+        worksheet.insert_chart('A{}'.format(str(row + 2)), chart, {'x_offset': 10, 'y_offset': 10})
         workbook.close()
 
 
 if __name__ == "__main__":
     Metadata.load()
     Entry.load()
-    GetMetadata.load()
-    GetEntry.load()
     Record.publish()
     Period.set_averages()
     Period.publish()

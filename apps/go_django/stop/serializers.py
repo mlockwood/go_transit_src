@@ -13,8 +13,6 @@ class StopSerializer(serializers.ModelSerializer):
             'geography',
             'lat',
             'lng',
-            'signage',
-            'shelter',
             'operating',
             'speed',
             'available'
@@ -32,3 +30,27 @@ class GeographySerializer(serializers.ModelSerializer):
         )
         model = models.Geography
 
+
+class ShelterSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'stop',
+            'design',
+            'size',
+            'color',
+            'solar_lighting',
+            'ad_panel'
+        )
+        model = models.Shelter
+
+
+class SignSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'stop',
+            'design',
+            'midi_guide'
+        )
+        model = models.Sign

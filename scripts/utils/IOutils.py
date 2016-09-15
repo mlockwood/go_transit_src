@@ -6,7 +6,6 @@ import re
 def set_directory(path):
     if not os.path.isdir(path):
         os.makedirs(path)
-    return True
 
 
 def load_json(file, cls):
@@ -43,8 +42,6 @@ def json_to_txt(json_file, txt_file, header, order=None, booleans=True):
                 row += [obj[key]] if booleans or not isinstance(obj[key], bool) else [int(obj[key])]
             writer.write('{}\n'.format(','.join(str(s) for s in row)))
 
-    return True
-
 
 def txt_to_json(txt_file, json_file):
     reader = open(txt_file, 'r')
@@ -61,13 +58,12 @@ def txt_to_json(txt_file, json_file):
     with open(json_file, 'w') as outfile:
         json.dump(data, outfile, indent=4, sort_keys=True)
 
-    return True
-
 
 def txt_writer(matrix, file):
     if not matrix or len(matrix) == 1:
         return False
 
+    set_directory(os.path.dirname(file))
     writer = open(file, 'w')
 
     # Write header

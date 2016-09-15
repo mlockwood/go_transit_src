@@ -67,10 +67,24 @@ class EndUserSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'user',
-            'fleet',
+            'title_or_rank',
+            'organization',
+            'office_phone',
+            'cell_phone',
+            'mailing_address',
+            'role_description',
             'waiver',
             'waiver_time',
             'status'
+            'fleet',
         )
         model = models.EndUser
 
+
+class OrganizationSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'name',
+            'description'
+        )
+        model = models.Organization

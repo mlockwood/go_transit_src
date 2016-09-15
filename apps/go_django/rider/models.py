@@ -9,7 +9,6 @@ DATE_INPUT_FORMATS = ('%d%m%Y',)
 
 class Metadata(models.Model):
     schedule = models.IntegerField()
-    driver = models.ForeignKey('user.EndUser')
     vehicle = models.ForeignKey('vehicle.Vehicle')
     login = models.DateTimeField(editable=True)
     start_mileage = models.IntegerField()

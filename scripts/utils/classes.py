@@ -27,7 +27,16 @@ class DataModelTemplate(object):
 
     @classmethod
     def load(cls):
-        load_json(cls.json_path, cls)
+        # If only one path was provided
+        if isinstance(cls.json_path, str):
+            load_json(cls.json_path, cls)
+        # If many paths were provided
+        elif isinstance(cls.json_path, list) or isinstance(cls.json_path, tuple):
+            for path in cls.json_path:
+                load_json(path, cls)
+        # Else raise error and alert user that load requires at least one JSON file
+        else:
+            raise ValueError('The class {} must have a file or list/tuple of files to load.'.format(str(cls)))
         cls.set_class_vars()
 
     @classmethod

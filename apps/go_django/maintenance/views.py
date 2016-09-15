@@ -73,19 +73,34 @@ class LockMaintenanceViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LockMaintenanceSerializer
 
 
-class StopDamageViewSet(viewsets.ModelViewSet):
-    queryset = models.StopDamage.objects.all()
-    serializer_class = serializers.StopDamageSerializer
+class ShelterDamageViewSet(viewsets.ModelViewSet):
+    queryset = models.ShelterDamage.objects.all()
+    serializer_class = serializers.ShelterDamageSerializer
 
 
-class StopInventoryViewSet(viewsets.ModelViewSet):
-    queryset = models.StopInventory.objects.all()
-    serializer_class = serializers.StopInventorySerializer
+class ShelterInventoryViewSet(viewsets.ModelViewSet):
+    queryset = models.ShelterInventory.objects.all()
+    serializer_class = serializers.ShelterInventorySerializer
 
 
-class StopMaintenanceViewSet(viewsets.ModelViewSet):
-    queryset = models.StopMaintenance.objects.all()
-    serializer_class = serializers.StopMaintenanceSerializer
+class ShelterMaintenanceViewSet(viewsets.ModelViewSet):
+    queryset = models.ShelterMaintenance.objects.all()
+    serializer_class = serializers.ShelterMaintenanceSerializer
+    
+
+class SignDamageViewSet(viewsets.ModelViewSet):
+    queryset = models.SignDamage.objects.all()
+    serializer_class = serializers.SignDamageSerializer
+
+
+class SignInventoryViewSet(viewsets.ModelViewSet):
+    queryset = models.SignInventory.objects.all()
+    serializer_class = serializers.SignInventorySerializer
+
+
+class SignMaintenanceViewSet(viewsets.ModelViewSet):
+    queryset = models.SignMaintenance.objects.all()
+    serializer_class = serializers.SignMaintenanceSerializer
 
 
 class VehicleDamageViewSet(viewsets.ModelViewSet):

@@ -151,7 +151,7 @@ class LockMaintenanceSerializer(serializers.ModelSerializer):
         model = models.LockMaintenance
 
 
-class StopDamageSerializer(serializers.ModelSerializer):
+class ShelterDamageSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
@@ -160,10 +160,10 @@ class StopDamageSerializer(serializers.ModelSerializer):
             'description',
             'date'
         )
-        model = models.StopDamage
+        model = models.ShelterDamage
 
 
-class StopInventorySerializer(serializers.ModelSerializer):
+class ShelterInventorySerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
@@ -172,10 +172,10 @@ class StopInventorySerializer(serializers.ModelSerializer):
             'code',
             'notes'
         )
-        model = models.StopInventory
+        model = models.ShelterInventory
 
 
-class StopMaintenanceSerializer(serializers.ModelSerializer):
+class ShelterMaintenanceSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
@@ -185,7 +185,44 @@ class StopMaintenanceSerializer(serializers.ModelSerializer):
             'cost',
             'repair_date'
         )
-        model = models.StopMaintenance
+        model = models.ShelterMaintenance
+        
+
+class SignDamageSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'asset',
+            'damage',
+            'description',
+            'date'
+        )
+        model = models.SignDamage
+
+
+class SignInventorySerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'asset',
+            'timestamp',
+            'code',
+            'notes'
+        )
+        model = models.SignInventory
+
+
+class SignMaintenanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'damage_report',
+            'repair',
+            'description',
+            'cost',
+            'repair_date'
+        )
+        model = models.SignMaintenance
 
 
 class VehicleDamageSerializer(serializers.ModelSerializer):

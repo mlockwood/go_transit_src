@@ -5,7 +5,7 @@ from simple_history.models import HistoricalRecords
 
 from bike.models import Bike, BikeGPS, Lock
 from fleet.models import FleetAsset
-from stop.models import Stop
+from stop.models import Sign, Shelter
 from vehicle.models import Vehicle
 
 
@@ -118,17 +118,30 @@ class LockMaintenance(Maintenance):
     damage_report = models.ForeignKey('LockDamage')
 
 
-class StopDamage(Damage):
-    asset = models.ForeignKey('stop.Stop')
+class ShelterDamage(Damage):
+    asset = models.ForeignKey('stop.Shelter')
 
 
-class StopInventory(Inventory):
-    asset = models.ForeignKey('stop.Stop')
+class ShelterInventory(Inventory):
+    asset = models.ForeignKey('stop.Shelter')
 
 
-class StopMaintenance(Maintenance):
-    asset = models.ForeignKey('stop.Stop')
-    damage_report = models.ForeignKey('StopDamage')
+class ShelterMaintenance(Maintenance):
+    asset = models.ForeignKey('stop.Shelter')
+    damage_report = models.ForeignKey('ShelterDamage')
+
+
+class SignDamage(Damage):
+    asset = models.ForeignKey('stop.Sign')
+
+
+class SignInventory(Inventory):
+    asset = models.ForeignKey('stop.Sign')
+
+
+class SignMaintenance(Maintenance):
+    asset = models.ForeignKey('stop.Sign')
+    damage_report = models.ForeignKey('SignDamage')
 
 
 class VehicleDamage(Damage):

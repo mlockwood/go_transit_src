@@ -10,7 +10,6 @@ class MetadataSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'schedule',
-            'driver',
             'vehicle',
             'login',
             'start_mileage',
