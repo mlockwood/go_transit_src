@@ -1,12 +1,11 @@
 from django.contrib import admin
-from dal import autocomplete
 
 from .models import Metadata, Entry
 
 
 class EntryInline(admin.TabularInline):
     model = Entry
-    extra = 5
+    extra = 1
 
 
 class MetadataAdmin(admin.ModelAdmin):

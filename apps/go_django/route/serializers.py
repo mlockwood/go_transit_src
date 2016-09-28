@@ -3,16 +3,13 @@ from rest_framework import serializers
 from . import models
 
 
-class DirectionSerializer(serializers.ModelSerializer):
+class HolidaySerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'name',
-            'description',
-            'origin',
-            'destination'
+            'holiday'
         )
-        model = models.Direction
+        model = models.Holiday
 
 
 class JointSerializer(serializers.ModelSerializer):
@@ -27,13 +24,17 @@ class JointSerializer(serializers.ModelSerializer):
         model = models.Joint
 
 
-class HolidaySerializer(serializers.ModelSerializer):
+class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'holiday'
+            'short_name',
+            'long_name',
+            'description',
+            'color',
+            'text_color'
         )
-        model = models.Holiday
+        model = models.Route
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
@@ -52,14 +53,22 @@ class SegmentSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'joint',
-            'schedule',
-            'dir_order',
             'route',
-            'name',
-            'direction'
+            'direction',
+            'description'
         )
         model = models.Segment
+
+
+class SegmentOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'schedule',
+            'order',
+            'segment',
+            'dir_type'
+        )
+        model = models.SegmentOrder
 
 
 class ServiceSerializer(serializers.ModelSerializer):
@@ -89,9 +98,6 @@ class StopSeqSerializer(serializers.ModelSerializer):
             'arrive',
             'depart',
             'timed',
-            'display',
-            'load_seq',
-            'destination'
         )
         model = models.StopSeq
 
@@ -115,18 +121,6 @@ class StopTimeSerializer(serializers.ModelSerializer):
             'display'
         )
         model = models.StopTime
-
-
-class TransferSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'id',
-            'joint',
-            'from_stop',
-            'to_stop',
-            'transfer_type'
-        )
-        model = models.Transfer
 
 
 class TripSerializer(serializers.ModelSerializer):

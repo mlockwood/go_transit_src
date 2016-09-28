@@ -1,7 +1,7 @@
 route_id,route_short_name,route_long_name,route_desc,route_type,route_color,route_text_color
-1,1,Lewis Main/Pendleton,Route 1 is the mainline route that travels from Madigan Hospital across Lewis Main and over to Lewis North.,3,D32326,FFFFFF
-10,10,Lewis Main & North,Route 10 is the express mainline route that travels from Madigan Hospital across Lewis Main and over to Lewis North on the weekends.,3,800000,FFFFFF
+1,1,Lewis Main/Pendleton,Route 1 travels from Madigan Hospital across Lewis Main and over to Lewis North.,3,D32326,FFFFFF
+10,10,Lewis Main & North,Route 10 travels from Madigan Hospital across Lewis Main and over to Lewis North on the weekends.,3,800000,FFFFFF
 2,2,Madigan/McChord Field/512 Park & Ride,Route 2 connects Lewis Main at Madigan Hospital to McChord Field.,3,223E7D,FFFFFF
-20,20,Madigan/McChord Field,Route 20 is the express route which connects Lewis Main at Madigan Hospital to McChord Field on the weekend.,3,00C5FF,FFFFFF
+20,20,Madigan/McChord Field,Route 20 connects Lewis Main at Madigan Hospital to McChord Field on the weekend.,3,00C5FF,FFFFFF
 3,3,Gray Army Airfield/Post Exchange,Route 3 connects the East Division and 1ST Brigade to stops on Lewis Main and Route 1.,3,38A700,FFFFFF
 4,4,Lewis North/Post Exchange,Route 4 serves Lewis North and connects to Lewis Main at the Post Exchange.,3,E69800,FFFFFF

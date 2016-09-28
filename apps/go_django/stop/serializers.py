@@ -9,6 +9,7 @@ class StopSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'location',
+            'location_type',
             'description',
             'geography',
             'lat',
@@ -50,6 +51,7 @@ class SignSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'stop',
+            'anchor',
             'design',
             'midi_guide'
         )

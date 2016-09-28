@@ -8,9 +8,9 @@ import shutil
 import sys
 
 # Entire scripts from src
-from src.scripts.route.route import DateRange
+from src.scripts.route.route import load
 from src.scripts.route.service import Holiday
-from src.scripts.constants import PATH
+from src.scripts.constants import *
 from src.scripts.utils.IOutils import *
 
 
@@ -24,10 +24,11 @@ __credits__ = None
 __collaborators__ = None
 
 
-DATA_PATH = '{}/data'.format(PATH)
 GTFS_PATH = '{}/reports/gtfs/files'.format(PATH)
 set_directory(GTFS_PATH)
-feed = DateRange.get_feed_by_date(datetime.datetime.today())  # Change the datetime to select a different feed
+
+# Collect feed by date. Remember to process first if there have been planning changes.
+feed = load(datetime.datetime.today())  # datetime.datetime(2016, 9, 30)
 
 
 class Feed(object):
@@ -39,16 +40,16 @@ class Feed(object):
 class ConvertFeed(Feed):
 
     booleans = True
+    file = ''
     header = []
     json_file = ''
     order = None
+    defaults = {}
 
     @classmethod
     def create_feed(cls):
-        if not cls.json_file:
-            cls.json_file = '{}/{}.json'.format(DATA_PATH, cls.file)
         json_to_txt(cls.json_file, '{}/{}.txt'.format(cls.path, cls.file), header=cls.header,
-                    order=cls.order if cls.order else cls.header, booleans=cls.booleans)
+                    order=cls.order if cls.order else cls.header, booleans=cls.booleans, defaults=cls.defaults)
 
 
 class ExportFeed(Feed):
@@ -66,18 +67,18 @@ class ExportFeed(Feed):
 class BuildAgency(ConvertFeed):
 
     file = 'agency'
+    json_file = '{}/agency/agency.json'.format(DATA_PATH)
     header = ['agency_id', 'agency_name', 'agency_url', 'agency_timezone', 'agency_lang', 'agency_phone']
+    order = ['id', 'name', 'url', 'timezone', 'lang', 'phone']
 
 
 class BuildCalendar(ConvertFeed):
 
     booleans = False
     file = 'calendar'
-    json_file = '{}/{}.json'.format(DATA_PATH, 'service')
+    json_file = '{}/route/service.json'.format(DATA_PATH)
     header = ['service_id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'start_date',
               'end_date']
-    order = ['id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'start_date',
-             'end_date']
 
 
 class BuildHolidays(ExportFeed):
@@ -95,15 +96,17 @@ class BuildHolidays(ExportFeed):
 class BuildRoutes(ConvertFeed):
 
     file = 'routes'
-    json_file = '{}/{}.json'.format(DATA_PATH, 'route')
+    json_file = '{}/route/route.json'.format(DATA_PATH)
     header = ['route_id', 'route_short_name', 'route_long_name', 'route_desc', 'route_type', 'route_color',
               'route_text_color']
+    order = ['id', 'short_name', 'long_name', 'description', 'route_type', 'color', 'text_color']
+    defaults = {'route_type': 3}
 
 
 class BuildStops(ConvertFeed):
 
     file = 'stops'
-    json_file = '{}/{}.json'.format(DATA_PATH, 'stop')
+    json_file = '{}/stop/stop.json'.format(DATA_PATH)
     header = ['stop_id', 'stop_name', 'stop_desc', 'stop_lat', 'stop_lon']
     order = ['id', 'name', 'description', 'lat', 'lng']
 
@@ -117,17 +120,9 @@ class BuildStopTimes(ExportFeed):
         stop_times = [['trip_id', 'arrival_time', 'departure_time', 'stop_id', 'stop_sequence', 'pickup_type',
                        'drop_off_type', 'timepoint']]
         for stoptime in feed[1]:
-            if len(stoptime.trip.stop_times) > 1:
-                stop_times.append([stoptime.trip.id, stoptime.arrive_24p, stoptime.gtfs_depart_24p, stoptime.stop,
-                                   stoptime.order, stoptime.pickup, stoptime.dropoff, stoptime.timepoint])
+            stop_times.append([stoptime.trip.id, stoptime.arrive_24p, stoptime.gtfs_depart_24p, stoptime.stop,
+                               stoptime.order, stoptime.pickup, stoptime.dropoff, stoptime.timepoint])
         return stop_times
-
-
-class BuildTransfers(ConvertFeed):
-
-    file = 'transfers'
-    json_file = '{}/{}.json'.format(DATA_PATH, 'transfer')
-    header = ['from_stop_id', 'to_stop_id', 'transfer_type']
 
 
 class BuildTrips(ExportFeed):
@@ -136,11 +131,9 @@ class BuildTrips(ExportFeed):
 
     @classmethod
     def get_matrix(cls):
-        trips = [['route_id', 'service_id', 'trip_id', 'direction_id', 'block_id', 'shape_id']]
+        trips = [['route_id', 'service_id', 'trip_id', 'trip_headsign', 'direction_id', 'block_id', 'shape_id']]
         for trip in feed[0]:
-            if len(trip.stop_times) > 1:
-                trips.append([trip.segment.route, trip.joint.service.id, trip.id, trip.segment.dir_type_num,
-                              trip.driver.position, trip.direction.id])
+            trips.append([trip.route, trip.service, trip.id, trip.head_sign, trip.direction, trip.driver, trip.segment])
         return trips
 
 

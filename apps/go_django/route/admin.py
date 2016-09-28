@@ -1,29 +1,43 @@
 from django.contrib import admin
+import nested_admin
 
 from . import models
 
 
-class ScheduleInline(admin.TabularInline):
+class SegmentOrderInline(nested_admin.NestedTabularInline):
+    model = models.SegmentOrder
+    ordering = ('order',)
+    extra = 0
+
+
+class ScheduleInline(nested_admin.NestedTabularInline):
     model = models.Schedule
+    inlines = [SegmentOrderInline]
+    ordering = ('id',)
+    extra = 0
 
 
-class SegmentInline(admin.TabularInline):
-    model = models.Segment
+class JointAdmin(nested_admin.NestedModelAdmin):
+    inlines = [ScheduleInline]
+    list_filter = ['routes', 'service', 'headway']
+    list_display = ['id', 'routes', 'service', 'description', 'headway']
+    list_editable = ['routes', 'description', 'headway']
 
 
-class TransferInline(admin.TabularInline):
-    model = models.Transfer
+class StopSeqInline(admin.TabularInline):
+    model = models.StopSeq
+    ordering = ('arrive', 'depart',)
+    extra = 0
 
 
-class JointAdmin(admin.ModelAdmin):
-    inlines = [ScheduleInline, SegmentInline, TransferInline]
-    # list_filter = ['fleet', 'low_step']
-    # list_display = ['id', 'fleet', 'low_step', 'serial_number']
-    # list_editable = ['low_step', 'serial_number']
+class SegmentAdmin(admin.ModelAdmin):
+    inlines = [StopSeqInline]
+    list_filter = ['route', 'direction']
+    list_display = ['id', 'route', 'direction', 'description']
 
 
-admin.site.register(models.Direction)
 admin.site.register(models.Holiday)
 admin.site.register(models.Joint, JointAdmin)
+admin.site.register(models.Route)
 admin.site.register(models.Service)
-admin.site.register(models.StopSeq)
+admin.site.register(models.Segment, SegmentAdmin)

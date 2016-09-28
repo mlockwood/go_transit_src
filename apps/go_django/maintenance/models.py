@@ -23,8 +23,8 @@ class Damage(models.Model):
         (LOSS, '(Loss) loss or theft of asset.')
     )
     asset = None  # use models.ForeignKey('class')
-    damage = models.CharField(max_length=1, choices=DAMAGE_CHOICES)
-    description = models.TextField(blank=True)
+    damage = models.CharField(max_length=1, choices=DAMAGE_CHOICES, default=MINOR)
+    description = models.TextField(blank=True, null=True, default='')
     date = models.DateField()
 
     def __str__(self):
@@ -48,8 +48,8 @@ class Inventory(models.Model):
     )
     asset = None  # use models.ForeignKey('class')
     timestamp = models.DateTimeField(auto_now_add=True)
-    code = models.CharField(max_length=1, choices=CODE_CHOICES)
-    notes = models.TextField(blank=True)
+    code = models.CharField(max_length=1, choices=CODE_CHOICES, default=PASS)
+    notes = models.TextField(blank=True, null=True, default='')
 
     def __str__(self):
         return 'Inventory of {} @ {}'.format(self.asset, self.timestamp)
@@ -58,7 +58,7 @@ class Inventory(models.Model):
 class Maintenance(models.Model):
     damage_report = None  # use models.ForeignKey('class')
     repair = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, null=True, default='')
     cost = models.DecimalField(max_digits=8, decimal_places=2)
     repair_date = models.DateField()
 

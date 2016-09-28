@@ -7,27 +7,20 @@ import datetime
 import math
 import re
 import sys
-import uuid
 
-# Entire scripts from src
+# Import GO scripts
+from src.scripts.constants import *
 from src.scripts.stop.stop import Stop
 from src.scripts.route.errors import *
-
-# Classes and variables from src
-from src.scripts.constants import *
-from src.scripts.utils.classes import DataModelTemplate
-
-from src.scripts.route import segment
+from src.scripts.route.segment import Segment, StopSeq, load_segments
 from src.scripts.route.service import Service
 from src.scripts.route.trip import Trip, StopTime
-
-# Import classes and functions from src
+from src.scripts.utils.classes import DataModelTemplate
 from src.scripts.utils.functions import stitch_dicts
+from src.scripts.utils.send_requests import DataRequest
 
-# Load dependent data
-Stop.load()
-segment.load()
-Service.load()
+
+CREATE_NEW_FEED = True  # Toggle to True if you wish to download the current route planning and produce new outputs
 
 
 class Route:
@@ -114,10 +107,10 @@ class Joint(DataModelTemplate):
             joint = Joint.objects[obj]
             # Create trips for each schedule in order
             prev = None
-            for schedule in sorted(joint.schedules.keys()):
+            for schedule in joint.sort_schedules():
                 schedule.prev = schedule.check_prev(prev)
-                schedule.drivers = Driver.get_drivers(math.ceil(schedule.roundtrip / joint.headway)
-                                                      ) if not prev else prev.drivers
+                schedule.drivers = Driver.get_drivers(math.ceil(schedule.roundtrip / joint.headway), schedule.id
+                                                      ) if not prev else Driver.add_schedule(prev.drivers, schedule.id)
                 schedule.set_trips()
                 prev = schedule
 
@@ -134,6 +127,12 @@ class Joint(DataModelTemplate):
         attrs['service'] = self.service.id
         return attrs
 
+    def sort_schedules(self):
+        sorted_schedules = {}
+        for schedule in self.schedules:
+            sorted_schedules[schedule.start] = schedule
+        return [sorted_schedules[key] for key in sorted(sorted_schedules.keys())]
+
 
 class Schedule(DataModelTemplate):
 
@@ -147,17 +146,16 @@ class Schedule(DataModelTemplate):
         self.segments = SegmentOrder.lookup[self.id]
 
         # Set times
-        self.start = copy.deepcopy(self.joint.service.start_date).replace(hour=int(self.start[:2]),
-                                                                          minute=int(self.start[-2:]))
-        self.end = copy.deepcopy(self.joint.service.start_date).replace(hour=int(self.end[:2]),
-                                                                        minute=int(self.end[-2:]))
+        hour, minute, second = [int(i) for i in re.split(':', self.start)]
+        self.start = copy.deepcopy(self.joint.service.start_date).replace(hour=hour, minute=minute, second=second)
+        hour, minute, second = [int(i) for i in re.split(':', self.end)]
+        self.end = copy.deepcopy(self.joint.service.start_date).replace(hour=hour, minute=minute, second=second)
+
         # Handle end times that are at or after midnight (24+ hour scale for GTFS) by incrementing the day
         if self.end < self.start:
             self.end = self.end + datetime.timedelta(days=1)
 
-        if 'drivers' not in self.__dict__:
-            self.drivers = {}
-
+        self.drivers = {}
         self.prev = None
         self.roundtrip = self.get_roundtrip()
         self.order = self.get_order()
@@ -191,23 +189,13 @@ class Schedule(DataModelTemplate):
     def __hash__(self):
         return hash((self.start, self.end))
 
-    def get_json(self):
-        return {
-            'id': self.id,
-            'offset': self.offset,
-            'joint': self.joint.id,
-            'start': self.start_str,
-            'end': self.end_str,
-            'drivers': dict((driver, self.drivers[driver].id) for driver in self.drivers)
-        }
-
     def check_prev(self, prev):
         if prev:
             # If the number of driver shifts between this and the previous schedule do not match
             if len(prev.drivers) != math.ceil(self.roundtrip / self.joint.headway):
                 # Raise an error because they should match
                 raise JointRouteMismatchedDriverCount('JointRoute {} has mismatched driver counts for {} and {}'.format(
-                    self.joint.id, self.prev.id, self.id))
+                    self.joint.id, prev.id, self.id))
 
         return prev
 
@@ -315,7 +303,6 @@ class Schedule(DataModelTemplate):
         stitch = stitch_dicts(self.prev.end_locs, start_locs)
 
         # Check for errors
-        # print(self.prev.end_locs, start_locs)
         if stitch == 'Sizes incongruent problem':
             raise IncongruentSchedulesError('Joint route {} has schedules that are incongruent:'.format(self.joint) +
                                             ' {} and {}'.format(self.prev.id, self.id))
@@ -347,18 +334,20 @@ class Schedule(DataModelTemplate):
                 end_loc = segment.trip_length
 
             # Set trip
-            trip = Trip(**{
+            Trip(**{
                 'id': '-'.join(str(s) for s in [self.joint.id, self.id, segment.id, segment.trip_generator]),
                 'schedule': self.id,
+                'route': segment.route,
+                'service': self.joint.service.id,
+                'segment': segment.id,
                 'head_sign': 'to {}'.format(segment.direction),
                 'direction': segment.dir_type_num,
                 'start_loc': start_loc,
                 'end_loc': end_loc,
                 'start_time': start.strftime('%Y-%m-%d %H:%M:%S'),
                 'driver': driver
-            })
+            }).create_stop_times(segment.query_stop_seqs(start_loc, end_loc), self.joint.service)
             segment.trip_generator += 1
-            trip.create_stop_times(segment.query_stop_seqs(start_loc, end_loc), self.joint.service)
 
             # Set driver start location -- SHOULD THIS ONLY APPLY IF START NOT EXISTING? OTHERWISE OVERWRITING?
             driver.start = segment.query_min_stop_seq(start_loc, end_loc)
@@ -385,16 +374,18 @@ class Schedule(DataModelTemplate):
 
 class SegmentOrder(DataModelTemplate):
 
-    objects = {}
-    json_path = '{}/route/schedule.json'.format(DATA_PATH)
+    json_path = '{}/route/segment_order.json'.format(DATA_PATH)
     lookup = {}
 
     def set_object_attrs(self):
-        self.segment = segment.Segment.objects[self.segment]
-        self.segment.dir_type_num = 1 if self.dir_type == 'inbound' else 0
+        self.segment = Segment.objects[self.segment]
+        self.segment.dir_type_num = 1 if self.dir_type == 'inbound' or self.dir_type == 'I' else 0
         if self.schedule not in SegmentOrder.lookup:
             SegmentOrder.lookup[self.schedule] = {}
         SegmentOrder.lookup[self.schedule][self.order] = self.segment
+
+    def set_objects(self):
+        pass
 
 
 class DateRange(DataModelTemplate):
@@ -406,7 +397,6 @@ class DateRange(DataModelTemplate):
         self.start = datetime.datetime.strptime(self.start, '%Y-%m-%d')
         self.end = datetime.datetime.strptime(self.end, '%Y-%m-%d')
         self.joints = [Joint.objects[joint] for joint in self.joints]
-        self.lookup = dict((sheet, Joint.objects[joint]) for sheet, joint in self.lookup)
 
     def set_objects(self):
         DateRange.objects[(self.start, self.end)] = self
@@ -436,7 +426,7 @@ class DateRange(DataModelTemplate):
                 'start': points[i].strftime('%Y-%m-%d'),
                 'end': points[i+1].strftime('%Y-%m-%d'),
                 'joints': [],
-                'lookup': []
+                'lookup': {}
             })
             i += 1
 
@@ -446,60 +436,47 @@ class DateRange(DataModelTemplate):
                 if date_range[0] <= DateRange.objects[obj].start and date_range[1] >= DateRange.objects[obj].end:
                     DateRange.objects[obj].joints += ranges[date_range]
 
-    @staticmethod
-    def get_feed_by_date(date):
-        trips = None
+        # Set position for all date ranges
         for obj in DateRange.objects:
-            date_range = DateRange.objects[obj]
-            date_range.set_positions()
-            if date_range.start <= date < date_range.end:
-                trips = date_range.get_feed()
-        return trips
-
-    def get_feed(self):
-        trips = {}
-        stop_times = {}
-
-        self.set_positions()
-
-        for joint in self.joints:
-            for schedule in joint.schedules:
-
-                # Select trips
-                trips.update(Trip.feed[schedule.id])
-
-                # Select stop_times
-                stop_times.update(StopTime.feed[schedule.id])
-
-        return trips, stop_times
+            DateRange.objects[obj].set_positions()
 
     def set_positions(self):
         self.joints = [Joint.objects[joint] for joint in sorted([joint.id for joint in self.joints])]
-        print('\n\n')
-        print(self.start, self.end)
-        print(self.joints)
-        print(self.lookup)
-        print('-----------')
 
         # Set driver positions and collect trips
         position = 1
         for joint in self.joints:
             for schedule in joint.schedules:
-                print(joint, schedule, schedule.drivers)
                 for driver in sorted(schedule.drivers.keys()):
                     # Set the driver's position if schedule has not been seen
                     if not schedule.prev:
-                        schedule.drivers[driver].position = position
-                        self.lookup[position] = joint
+                        self.lookup[schedule.drivers[driver].id] = position
                         position += 1
         return True
+
+    @staticmethod
+    def get_obj_by_date(date):
+        for obj in DateRange.objects:
+            date_range = DateRange.objects[obj]
+            if date_range.start <= date < date_range.end:
+                return date_range
+
+    def get_default_feed(self):
+        return self.get_feed(cls='Trip'), self.get_feed(cls='StopTime')
+
+    def get_feed(self, cls='Trip'):
+        container = {}
+        for joint in self.joints:
+            for schedule in joint.schedules:
+                container.update(eval('{}.feed[{}]'.format(cls, schedule.id)))
+        return container
 
     def get_json(self):
         return {
             'start': self.start.strftime('%Y-%m-%d'),
             'end': self.end.strftime('%Y-%m-%d'),
             'joints': [joint.id for joint in self.joints],
-            'lookup': [(sheet, joint.id) for sheet, joint in self.lookup.items()]
+            'lookup': self.lookup
         }
 
 
@@ -507,58 +484,74 @@ class Driver(DataModelTemplate):
 
     json_path = '{}/route/route_driver.json'.format(DATA_PATH)
     objects = {}
+    gen_unique_id = 1
 
     def __repr__(self):
-        return '({}) {}'.format(self.position, self.id[-5:])
+        return 'Driver {} for schedules {}'.format(self.id, ', '.join([str(s) for s in self.schedules]))
 
     @classmethod
-    def get_drivers(cls, n):
-        return dict([(x, cls(**{
-            'id': str(uuid.uuid4()),
+    def get_drivers(cls, n, schedule):
+        Driver.gen_unique_id += n
+        return dict([(x - (Driver.gen_unique_id - n), cls(**{
+            'id': x,
             'start': None,
-            'position': None
-        })) for x in range(n)])
+            'schedules': [schedule]
+        })) for x in range(Driver.gen_unique_id - n, Driver.gen_unique_id)])
 
     @classmethod
-    def reconstruct_object_links(cls):
-        for obj in Schedule.objects:
-            sch = Schedule.objects[obj]
-            sch.drivers = dict((driver, Driver.objects[sch.drivers[driver]]) for driver in sch.drivers)
-        for obj in Trip.objects:
-            Trip.objects[obj].driver = Driver.objects[Trip.objects[obj].driver]
-        return True
+    def add_schedule(cls, drivers, schedule):
+        for segment_order in drivers:
+            drivers[segment_order].schedules += [schedule]
+        return drivers
 
 
-def process(date=datetime.datetime.today()):
+def create(date=datetime.datetime.today()):
+    # Retrieve data from database first
+    DataRequest('agency', '/agency/agency.json').get()
+    DataRequest('holiday', '/route/holiday.json').get()
+    DataRequest('joint', '/route/joint.json').get()
+    DataRequest('route', '/route/route.json').get()
+    DataRequest('schedule', '/route/schedule.json').get()
+    DataRequest('segment', '/route/segment.json').get()
+    DataRequest('segment_order', '/route/segment_order.json').get()
+    DataRequest('service', '/route/service.json').get()
+    DataRequest('stop', '/stop/stop.json').get()
+    DataRequest('stop_seq', '/route/stop_seq.json').get()
+
+    # Load dependent data
+    Stop.load()
+    load_segments()
+    Service.load()
+
+    # Then process by loading the obtained data
     Joint.load()
     SegmentOrder.load()
     Schedule.load()
     Joint.process()
     Route.set_route_query()
-    feed = DateRange.get_feed_by_date(date)
     StopTime.publish_matrix()
-    Schedule.export()
-    DateRange.export()
     Driver.export()
     Trip.export()
     StopTime.export()
+    feed = DateRange.get_obj_by_date(date).get_default_feed()
+    DateRange.export()
     return feed
 
 
 def load(date=datetime.datetime.today()):
+    Stop.load()
+    load_segments()
+    Service.load()
     Joint.load()
+    SegmentOrder.load()
     Schedule.load()
     DateRange.load()
     Driver.load()
     Trip.load()
     StopTime.load()
-    Driver.reconstruct_object_links()
     Route.set_route_query()
-    feed = DateRange.get_feed_by_date(date)
-    StopTime.publish_matrix()
-    return feed
+    return DateRange.get_obj_by_date(date).get_default_feed()
 
 
 if __name__ == "__main__":
-    # feed = process()
-    feed = load()
+    feed = create() if CREATE_NEW_FEED else load()

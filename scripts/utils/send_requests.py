@@ -64,6 +64,7 @@ class DataRequest(object):
                     answer = input('Server connection has been interrupted. Reset dynos. (Press anything)')
                 res = requests.post('{}/{}/'.format(ROOT, self.name), data=item, headers=HEADER)
             self.print_res(res, item)
+        print('Post for {} complete'.format(self.name))
 
     def delete(self):
         res = requests.get('{}/{}/'.format(ROOT, self.name), headers=HEADER)
@@ -113,10 +114,11 @@ def bulk_post():
     # First load
     DataRequest('agency', '/agency/agency.json').post()
     DataRequest('fleet', '/fleet/fleet.json').post()
-    DataRequest('service', '/route/service.json').post()
     DataRequest('holiday', '/route/holiday.json').post()
     DataRequest('geography', '/stop/geography.json').post()
-    DataRequest('group', '/user/group.json').post()
+    # !DataRequest('group', '/user/group.json').post()!
+    DataRequest('route', '/route/route.json').post()
+    DataRequest('service', '/route/service.json').post()
     DataRequest('vehicle', '/vehicle/vehicle.json').post()
 
     # Second load
@@ -125,7 +127,7 @@ def bulk_post():
     DataRequest('metadata', '/rider/metadata.json').post()
     DataRequest('joint', '/route/joint.json').post()
     DataRequest('stop', '/stop/stop.json').post()
-    DataRequest('user', '/user/user.json').post_user()
+    # !DataRequest('user', '/user/user.json').post_user()!
 
     # Third load
     DataRequest('bike_gps', '/bike/bike_gps.json').post()
@@ -133,15 +135,13 @@ def bulk_post():
     DataRequest('checkinout', '/checkinout.json').post()
     DataRequest('entry', '/rider/entry.json').post()
     DataRequest('schedule', '/route/schedule.json').post()
-    DataRequest('direction', '/route/direction.json').post()
+    DataRequest('segment', '/route/segment.json').post()
+    DataRequest('shelter', '/stop/shelter.json').post()
+    DataRequest('sign', '/stop/sign.json').post()
     DataRequest('stop_seq', '/route/stop_seq.json').post()
-    DataRequest('transfer', '/route/transfer.json').post()
 
     # Fourth load
-    DataRequest('segment', '/route/segment.json').post()
+    DataRequest('segment_order', '/route/segment_order.json').post()
 
-    # Fifth load
-    DataRequest('trip', '/route/trip.json').post()
 
-    # Sixth load
-    DataRequest('stop_time', '/route/stop_time.json').post()
+# bulk_post()

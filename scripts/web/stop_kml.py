@@ -7,7 +7,7 @@ from lxml import etree
 from xml.sax.saxutils import unescape
 
 import src.scripts.stop.stop as st
-import src.scripts.route.schedule as sch
+import src.scripts.web.web_pages as web
 from src.scripts.constants import PATH
 
 
@@ -65,7 +65,7 @@ def add_style(doc, color, highlight):
     return doc
 
 
-table = sch.stop_schedule()
+table = web.stop_schedule()
 
 doc = KML.Document(KML.name("GO Transit Stops"))
 

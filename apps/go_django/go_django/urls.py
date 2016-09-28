@@ -75,15 +75,15 @@ router.register(r'metadata', MetadataViewSet)
 router.register(r'entry', EntryViewSet)
 
 # Route
-router.register(r'direction', DirectionViewSet)
 router.register(r'holiday', HolidayViewSet)
+router.register(r'route', RouteViewSet)
 router.register(r'joint', JointViewSet)
 router.register(r'schedule', ScheduleViewSet)
 router.register(r'segment', SegmentViewSet)
+router.register(r'segment_order', SegmentOrderViewSet)
 router.register(r'service', ServiceViewSet)
 router.register(r'stop_seq', StopSeqViewSet)
 router.register(r'stop_time', StopTimeViewSet)
-router.register(r'transfer', TransferViewSet)
 router.register(r'trip', TripViewSet)
 
 # Stop
@@ -106,5 +106,6 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/v1/', include(router.urls, namespace='apiv1')),
     url(r'^api-token-auth/', views.obtain_auth_token),
+    url(r'^nested_admin/', include('nested_admin.urls'))
 ]
 

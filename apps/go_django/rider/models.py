@@ -22,8 +22,8 @@ class Metadata(models.Model):
 class Entry(models.Model):
     metadata = models.ForeignKey('Metadata', related_name='entries')
     on = models.ForeignKey('stop.Stop', related_name='on_stop')
-    time = models.TimeField()
-    count = models.IntegerField()
+    time = models.TimeField(default='12:00:00')
+    count = models.IntegerField(default=1)
     off = models.ForeignKey('stop.Stop', related_name='off_stop')
 
     def __str__(self):

@@ -15,9 +15,9 @@ class IsSuperUser(permissions.BasePermission):
         return True
 
 
-class DirectionViewSet(viewsets.ModelViewSet):
-    queryset = models.Direction.objects.all()
-    serializer_class = serializers.DirectionSerializer
+class HolidayViewSet(viewsets.ModelViewSet):
+    queryset = models.Holiday.objects.all()
+    serializer_class = serializers.HolidaySerializer
 
 
 class JointViewSet(viewsets.ModelViewSet):
@@ -25,9 +25,9 @@ class JointViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.JointSerializer
 
 
-class HolidayViewSet(viewsets.ModelViewSet):
-    queryset = models.Holiday.objects.all()
-    serializer_class = serializers.HolidaySerializer
+class RouteViewSet(viewsets.ModelViewSet):
+    queryset = models.Route.objects.all()
+    serializer_class = serializers.RouteSerializer
 
 
 class ScheduleViewSet(viewsets.ModelViewSet):
@@ -38,6 +38,11 @@ class ScheduleViewSet(viewsets.ModelViewSet):
 class SegmentViewSet(viewsets.ModelViewSet):
     queryset = models.Segment.objects.all()
     serializer_class = serializers.SegmentSerializer
+
+
+class SegmentOrderViewSet(viewsets.ModelViewSet):
+    queryset = models.SegmentOrder.objects.all()
+    serializer_class = serializers.SegmentOrderSerializer
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
@@ -53,11 +58,6 @@ class StopSeqViewSet(viewsets.ModelViewSet):
 class StopTimeViewSet(viewsets.ModelViewSet):
     queryset = models.StopTime.objects.all()
     serializer_class = serializers.StopTimeSerializer
-
-
-class TransferViewSet(viewsets.ModelViewSet):
-    queryset = models.Transfer.objects.all()
-    serializer_class = serializers.TransferSerializer
 
 
 class TripViewSet(viewsets.ModelViewSet):

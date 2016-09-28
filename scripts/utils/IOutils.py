@@ -23,7 +23,7 @@ def export_json(file, cls):
                       sort_keys=True)
 
 
-def json_to_txt(json_file, txt_file, header, order=None, booleans=True):
+def json_to_txt(json_file, txt_file, header, order=None, booleans=True, defaults={}):
     writer = open(txt_file, 'w')
     writer.write('{}\n'.format(','.join(header)))
     with open(json_file, 'r') as infile:
@@ -34,12 +34,21 @@ def json_to_txt(json_file, txt_file, header, order=None, booleans=True):
                 order = []
                 for key in sorted(obj.keys()):
                     order.append(key)
-                writer.write('{}\n'.format(','.join(str(s) for s in order)))
+                # writer.write('{}\n'.format(','.join(str(s) for s in order)))
+
+            # Add defaults if needed
+            for key in defaults:
+                obj[key] = defaults[key]
 
             # Write row values
             row = []
             for key in order:
-                row += [obj[key]] if booleans or not isinstance(obj[key], bool) else [int(obj[key])]
+                try:
+                    row += [obj[key]] if booleans or not isinstance(obj[key], bool) else [int(obj[key])]
+                except KeyError:
+                    # Handle different naming conventions in key of 'id' field
+                    if re.search('_id', key) and 'id' in obj:
+                        row += [obj['id']]
             writer.write('{}\n'.format(','.join(str(s) for s in row)))
 
 

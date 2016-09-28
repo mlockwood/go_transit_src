@@ -138,7 +138,7 @@ class Node(object):
 
 
 def process():
-    shapes = [['shape_id', 'shape_pt_lat', 'shape_pt_lon', 'shape_pt_sequence']]
+    shapes = ['shape_id', 'shape_pt_lat', 'shape_pt_lon', 'shape_pt_sequence']
     # Open system.kml file in go/data/routes
     with open('{}/data/routes/system.kml'.format(PATH)) as file:
         doc = parser.parse(file)
@@ -159,7 +159,7 @@ def process():
 
     # Open writer
     writer = open('{}/reports/gtfs/files/shapes.txt'.format(PATH), 'w')
-    writer.write('{}\n'.format(','.join(['shape_id', 'shape_pt_lat', 'shape_pt_lon', 'shape_pt_sequence'])))
+    writer.write('{}\n'.format(','.join(shapes)))
 
     for obj in sorted(Shape.objects.keys()):
         shape = Shape.objects[obj]

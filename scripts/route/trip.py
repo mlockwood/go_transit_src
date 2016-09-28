@@ -39,7 +39,6 @@ class Trip(DataModelTemplate):
     def __hash__(self):
         return hash(self.id)
 
-    # Expect these __init__ args => id, direction.id, start_loc, end_loc, start_time, driver.id
     def set_object_attrs(self):
         self.start_time = datetime.datetime.strptime(self.start_time, '%Y-%m-%d %H:%M:%S')  # Added +1 day if > 12:00
         self.base_time = self.start_time - datetime.timedelta(seconds=self.start_loc)
@@ -57,11 +56,14 @@ class Trip(DataModelTemplate):
             'base_time': self.base_time,
             'stop_seq': stop_seq,
             'service': service
-        }), True) for stop_seq in stop_seqs)
+        }), True) for stop_seq in stop_seqs) if len(stop_seqs) > 1 else self.destruct()
+
+    def destruct(self):
+        del Trip.objects[self.id]
 
     def get_json(self):
-        attrs = dict([(k, getattr(self, k)) for k in ['id', 'schedule', 'start_loc', 'end_loc']])
-        attrs['direction'] = self.direction.id
+        attrs = dict([(k, getattr(self, k)) for k in ['id', 'schedule', 'route', 'service', 'segment', 'start_loc',
+                                                      'end_loc', 'head_sign', 'direction']])
         attrs['start_time'] = self.start_time.strftime('%Y-%m-%d %H:%M:%S')
         attrs['driver'] = self.driver.id
         return attrs
@@ -72,8 +74,8 @@ class StopTime(DataModelTemplate):
     feed = {}
     json_path = '{}/route/stop_time.json'.format(DATA_PATH)
     objects = {}
-    records = [['trip', 'stop', 'direction', 'arrive', 'depart', 'order', 'timepoint', 'pickup', 'dropoff', 'display',
-                'driver']]
+    records = [['trip', 'head_sign', 'direction', 'block', 'arrive', 'depart', 'stop', 'order', 'pickup', 'dropoff',
+                'timepoint']]
 
     def __str__(self):
         return '{} {} {}'.format(self.trip, self.order, self.stop)
@@ -90,7 +92,7 @@ class StopTime(DataModelTemplate):
             self.timepoint = self.stop_seq.timed
             self.pickup = 3 if not self.timepoint else 0
             self.dropoff = 3 if not self.timepoint else 0
-            self.display = self.stop_seq.display
+            self.destination = self.stop_seq.destination
 
             # Times for the StopTime, the first three can be made to strings with .strftime('%H:%M:%S')
             self.arrive = self.base_time + datetime.timedelta(seconds=self.stop_seq.arrive)
@@ -117,10 +119,10 @@ class StopTime(DataModelTemplate):
     def publish_matrix():
         for stop_time in StopTime.objects:
             obj = StopTime.objects[stop_time]
-            StopTime.records.append([str(s) for s in [obj.trip.id, obj.stop, obj.trip.direction.name, obj.arrive,
-                                                      obj.gtfs_depart, obj.order, obj.timepoint, obj.pickup,
-                                                      obj.dropoff, obj.display, obj.trip.driver.position]])
-        txt_writer(StopTime.records, '{}/routes/records.csv'.format(REPORT_PATH))
+            StopTime.records.append([str(s) for s in [obj.trip.id, obj.trip.head_sign, obj.trip.direction,
+                                                      obj.trip.driver.id, obj.arrive, obj.gtfs_depart, obj.stop, obj.order,
+                                                      obj.pickup, obj.dropoff, obj.timepoint]])
+        txt_writer(StopTime.records, '{}/route/records.csv'.format(REPORT_PATH))
 
     def get_json(self):
         self.trip = self.trip.id

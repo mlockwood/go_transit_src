@@ -3,15 +3,12 @@ from django.db import models
 from stop.models import Stop
 
 
-class Direction(models.Model):
+class Holiday(models.Model):
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=80)
-    description = models.TextField()
-    origin = models.ForeignKey('stop.Stop', related_name='direction_origin')
-    destination = models.ForeignKey('stop.Stop', related_name='direction_destination')
+    holiday = models.DateField()
 
     def __str__(self):
-        return self.name
+        return self.holiday.strftime('%Y-%m-%d')
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -24,10 +21,10 @@ class Joint(models.Model):
     routes = models.CharField(max_length=12)
     description = models.TextField()
     service = models.ForeignKey('Service')
-    headway = models.IntegerField()
+    headway = models.IntegerField(default=1200)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -35,12 +32,16 @@ class Joint(models.Model):
         super(self.__class__, self).save(*args, **kwargs)
 
 
-class Holiday(models.Model):
+class Route(models.Model):
     id = models.IntegerField(primary_key=True)
-    holiday = models.DateField()
+    short_name = models.CharField(max_length=12)
+    long_name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    color = models.CharField(max_length=7)
+    text_color = models.CharField(max_length=7)
 
     def __str__(self):
-        return self.holiday
+        return 'Route {}'.format(self.id)
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -51,12 +52,12 @@ class Holiday(models.Model):
 class Schedule(models.Model):
     id = models.IntegerField(primary_key=True)
     joint = models.ForeignKey('Joint')
-    start = models.TimeField()
-    end = models.TimeField()
-    offset = models.IntegerField()
+    start = models.TimeField(default='07:00:00')
+    end = models.TimeField(default='18:00:00')
+    offset = models.IntegerField(default=0)
 
     def __str__(self):
-        return 'Schedule {} for Joint {}'.format(self.id, self.joint)
+        return 'Schedule {} for Joint {}'.format(str(self.id), str(self.joint))
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -65,18 +66,36 @@ class Schedule(models.Model):
 
 
 class Segment(models.Model):
-    joint = models.ForeignKey('Joint')
-    schedule = models.ForeignKey('Schedule')
-    dir_order = models.IntegerField()
-    route = models.IntegerField()
-    name = models.CharField(max_length=12)
-    direction = models.ForeignKey('Direction')
-
-    class Meta:
-        unique_together = ('joint', 'schedule', 'name')
+    id = models.IntegerField(primary_key=True)
+    route = models.ForeignKey('Route')
+    direction = models.CharField(max_length=80)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return 'Segment {} for Schedule {} and Joint {}'.format(self.name, self.id, self.joint)
+        return 'Segment {} | Route {} to {}'.format(self.id, self.route.id, self.direction)
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            self.id = self.__class__.objects.all().order_by("-id")[0].id + 1
+        super(self.__class__, self).save(*args, **kwargs)
+
+
+class SegmentOrder(models.Model):
+    INBOUND = 'I'
+    LOOP = 'L'
+    OUTBOUND = 'O'
+    DIR_TYPE_CHOICES = (
+        (INBOUND, 'Inbound (return) trip'),
+        (LOOP, 'Loop (one-direction) trip that returns to trip origin'),
+        (OUTBOUND, 'Outbound (originating) trip')
+    )
+    schedule = models.ForeignKey('Schedule')
+    order = models.IntegerField(default=0)
+    segment = models.ForeignKey('Segment')
+    dir_type = models.CharField(max_length=1, choices=DIR_TYPE_CHOICES, default=OUTBOUND)
+
+    class Meta:
+        unique_together = ('schedule', 'order')
 
 
 class Service(models.Model):
@@ -93,7 +112,7 @@ class Service(models.Model):
     text = models.TextField()
 
     def __str__(self):
-        return '{} from {} to {} for {}'.format(self.id, self.start_date, self.end_date, self.text)
+        return '{} to {}; {}'.format(self.start_date, self.end_date, self.text)
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -102,20 +121,23 @@ class Service(models.Model):
 
 
 class StopSeq(models.Model):
-    segment = models.CharField(max_length=12)
+    NON_TIMED = 0
+    TIMED = 1
+    TIMEPOINT_CHOICES = (
+        (NON_TIMED, 'Times are considered approximate.'),
+        (TIMED, 'Times are considered exact.')
+    )
+    segment = models.ForeignKey('Segment')
     stop = models.ForeignKey('stop.Stop')
     arrive = models.IntegerField(default=0)
     depart = models.IntegerField(default=0)
-    timed = models.IntegerField()
-    display = models.IntegerField()
-    load_seq = models.IntegerField()
-    destination = models.BooleanField()
+    timed = models.IntegerField(choices=TIMEPOINT_CHOICES, default=NON_TIMED)
 
     class Meta:
-        unique_together = ('segment', 'load_seq')
+        unique_together = ('segment', 'arrive')
 
     def __str__(self):
-        return '{} -- {}'.format(self.segment, self.load_seq)
+        return '{} -- {} @ {}'.format(self.segment.id, self.stop, self.arrive)
 
 
 class StopTime(models.Model):
@@ -135,20 +157,9 @@ class StopTime(models.Model):
     display = models.IntegerField()
 
 
-class Transfer(models.Model):
-    joint = models.ForeignKey('Joint')
-    from_stop = models.ForeignKey('stop.Stop', related_name='from_stop')
-    to_stop = models.ForeignKey('stop.Stop', related_name='to_stop')
-    transfer_type = models.IntegerField()
-
-    def __str__(self):
-        return 'Joint {} from {} to {}'.format(self.joint, self.from_stop, self.to_stop)
-
-
 class Trip(models.Model):
     id = models.CharField(max_length=255, primary_key=True)
     schedule = models.ForeignKey('Schedule')
-    direction = models.ForeignKey('Direction')
     start_loc = models.IntegerField()
     end_loc = models.IntegerField()
     start_time = models.DateTimeField()

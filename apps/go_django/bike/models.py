@@ -10,7 +10,7 @@ from fleet.models import Fleet
 class Bike(models.Model):
     id = models.CharField(max_length=12, primary_key=True)
     serial_number = models.CharField(max_length=40)
-    low_step = models.BooleanField()
+    low_step = models.BooleanField(default=False)
     fleet = models.ForeignKey('fleet.Fleet')
     history = HistoricalRecords()
 
@@ -41,8 +41,8 @@ class CheckInOut(models.Model):
     fleet = models.ForeignKey('fleet.Fleet')
     bike = models.ForeignKey('Bike')
     duration = models.CharField(max_length=1, choices=CHECK_OUT_CHOICES)
-    check_out = models.DateTimeField(auto_now_add=True)
-    check_in = models.DateTimeField()
+    check_out = models.DateTimeField()
+    check_in = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return '{} from {} @ {}({})'.format(self.bike, self.fleet, self.check_out, self.duration)

@@ -12,7 +12,7 @@ class EndUserInline(admin.StackedInline):
 
 class EndUserAdmin(admin.ModelAdmin):
     inlines = (EndUserInline,)
-    search_fields = ['groups', 'username', 'first_name', 'last_name', 'staff_status', 'is_active', 'id']
+    search_fields = ['username', 'first_name', 'last_name']
     list_filter = ['is_active']
     list_display = ['username', 'first_name', 'last_name', 'id', 'is_active']
 

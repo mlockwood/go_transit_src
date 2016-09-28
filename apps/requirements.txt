@@ -28,6 +28,7 @@ dj-database-url==0.4.1
 dj-static==0.0.6
 Django==1.10
 django-debug-toolbar==1.4
+django-nested-admin==3.0.10
 django-phonenumber-field==1.1.0
 django-simple-history==1.8.1
 django-toolbelt==0.0.1

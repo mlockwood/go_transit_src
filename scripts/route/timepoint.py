@@ -2,52 +2,60 @@
 # -*- coding: utf-8 -*-
 
 # Python libraries and packages
-import os
+import shutil
 import xlsxwriter
 
 # Entire scripts from src
-import src.scripts.route.route as route
+from src.scripts.route.route import *
 from src.scripts.stop.stop import Stop
 from src.scripts.route.constants import *
 
 # Classes and variables from src
-from src.scripts.constants import PATH
+from src.scripts.constants import *
+from src.scripts.utils.IOutils import *
 
 
 def build_master_table(date):
     master_table = {}
 
     # Build master_table
-    for stoptime in route.load(date)[1]:
+    for stoptime in load(date)[1]:
 
         # If the point is a timepoint, add to the table
         if int(stoptime.timepoint) == 1:
-
-            if stoptime.trip.driver not in master_table:
-                master_table[stoptime.trip.driver] = []
-            master_table[stoptime.trip.driver] = master_table.get(stoptime.trip.driver) + [
-                [stoptime.stop, Stop.objects[stoptime.stop].name, 'TO {}'.format(stoptime.trip.direction.name),
-                 stoptime.depart]]
+            driver = stoptime.trip.driver
+            if driver not in master_table:
+                master_table[driver] = []
+            master_table[driver] = master_table.get(driver) + [[stoptime.stop, Stop.objects[stoptime.stop].name,
+                                                                stoptime.trip.head_sign, stoptime.depart]]
 
     return master_table
 
 
 def publish(date):
-    # Establish report directory for schedules
-    if not os.path.exists(PATH + '/reports/routes/timepoints/'):
-        os.makedirs(PATH + '/reports/routes/timepoints/')
+    # Delete existing timepoints before creating new ones
+    try:
+        shutil.rmtree('{}/route/timepoints/'.format(PATH))
+    except OSError:
+        pass
+    finally:
+        set_directory('{}/route/timepoints/'.format(REPORT_PATH))
 
-    # Build the master table
     master = build_master_table(date)
+    date_range = DateRange.get_obj_by_date(date)
+
     # Iterate through each joint_route
     for driver in master:
+        position = date_range.lookup[str(driver)]
+        start = Driver.objects[driver].start
+
         # Open workbook and worksheet
-        workbook = xlsxwriter.Workbook(PATH + '/reports/routes/timepoints/timepoints_{}.xlsx'.format(driver.position))
-        worksheet = workbook.add_worksheet('Timepoints {}'.format(driver.position))
+        workbook = xlsxwriter.Workbook('{}/route/timepoints/timepoints_{}.xlsx'.format(REPORT_PATH, position))
+        worksheet = workbook.add_worksheet('Timepoints {}'.format(position))
 
         # Set column widths
         worksheet.set_column('A:A', 8)
-        worksheet.set_column('B:B', 24)
+        worksheet.set_column('B:B', 30)
         worksheet.set_column('C:C', 30)
         worksheet.set_column('D:D', 12)
 
@@ -66,10 +74,8 @@ def publish(date):
                                            })
 
         # Write header
-        start = driver.start
-        worksheet.merge_range('A1:D1', 'Timepoints for Driver Position {}'.format(driver.position), merge_format)
-        worksheet.merge_range('A2:D2', 'Starting Location: {} {}'.format(start, Stop.objects[start].name),
-                              start_format)
+        worksheet.merge_range('A1:D1', 'Timepoints for Driver Position {}'.format(position), merge_format)
+        worksheet.merge_range('A2:D2', 'Starting Location: {} {}'.format(start, Stop.objects[start].name), start_format)
         worksheet.write_row('A3', ['Stop ID', 'Stop Name', 'Direction', 'Departure'], bold_format)
 
         # Write data
