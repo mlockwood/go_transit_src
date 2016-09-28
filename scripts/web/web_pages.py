@@ -1,5 +1,6 @@
 from src.scripts.route.route import *
 from src.scripts.stop.stop import Stop
+from src.scripts.web.stop_kml import publish_stop_kml
 from src.scripts.web.web_schedule import publish_schedules
 from src.scripts.web.web_timetable import publish_time_tables
 from src.scripts.utils.functions import stack
@@ -9,6 +10,7 @@ from src.scripts.utils.time import *
 def build_tables(date):
     web_schedule = {}
     time_table = {}
+    stop_table = {}
 
     # Add StopTime object values to the correct DS
     for stoptime in load(date)[1]:
@@ -32,8 +34,9 @@ def build_tables(date):
         time = stoptime.depart_24p
         stop_key = (stop, Stop.objects[stop].name)
         route_key = (route, segment_order)
+        extra_key = (service_text, start, end, route)
 
-        # Web schedule DS
+        # Web schedule DS ----------------------------------------------------------------------------------------------
         if route not in web_schedule:
             web_schedule[route] = {}
 
@@ -77,7 +80,7 @@ def build_tables(date):
             web_schedule[route][joint]['segments'][segment_order][stop].get('times') + [time]
         )
 
-        # Time table DS
+        # Time table DS ------------------------------------------------------------------------------------------------
         if stop_key not in time_table:
             time_table[stop_key] = {}
         if route_key not in time_table[stop_key]:
@@ -89,10 +92,32 @@ def build_tables(date):
             time_table[stop_key][route_key][service_text] = []
         time_table[stop_key][route_key][service_text] = time_table[stop_key][route_key].get(service_text) + [time]
 
+
     web_schedule = convert_schedule(web_schedule)
     time_table = convert_time_table(time_table)
 
-    return web_schedule, time_table
+    # Stop table DS ------------------------------------------------------------------------------------------------
+    # Iterate through web schedule and pass over objects to new format
+    for route in web_schedule:
+        for joint in web_schedule[route]:
+            service_text = web_schedule[route][joint]['service_text']
+            start = web_schedule[route][joint]['start']
+            end = web_schedule[route][joint]['end']
+            for segment in web_schedule[route][joint]['segments']:
+                directions = ', '.join(web_schedule[route][joint]['segments'][segment]['directions'])
+                for load_seq in web_schedule[route][joint]['segments'][segment]:
+                    if load_seq == 'origins' or load_seq == 'directions':
+                        continue
+                    stop = web_schedule[route][joint]['segments'][segment][load_seq]
+                    new_stop_key = (stop['id'], stop['name'], Stop.objects[stop['id']].lat,
+                                    Stop.objects[stop['id']].lng)
+
+                    # Load into stop_table
+                    if new_stop_key not in stop_table:
+                        stop_table[new_stop_key] = {}
+                    stop_table[new_stop_key][(route, service_text, start, end, directions)] = stop['times']
+
+    return web_schedule, time_table, stop_table
 
 
 def convert_schedule(web_schedule):
@@ -192,51 +217,8 @@ def convert_to_xx(times):
     return sorted(new_times.keys())
 
 
-
-
-def stop_schedule():
-    table = {}
-
-    # Process if not __name__ == "__main__"
-    if __name__ != "__main__":
-        process()
-
-    prev = None
-    # Add StopTime object values to the correct DS
-    for point in Stop.objects_sorted():
-
-        # Define terms
-        stop = point.stop
-        gps_ref = point.gps_ref
-        schedule = point.schedule
-        route = point.route
-
-        if (stop, gps_ref, schedule) == prev:
-            table[(stop, gps_ref)] = table.get((stop, gps_ref), '') + (
-                '<h5>Route {D} to {E}</h5>{F}<hr>'.format(
-                    D=route.id,
-                    E=', '.join(schedule.dirnames),
-                    F=', '.join(Stop.objects[(schedule, stop, gps_ref)].times)
-                )
-            )
-
-        else:
-            table[(stop, gps_ref)] = table.get((stop, gps_ref), '') + (
-                '<h4>{A} | {B}-{C}</h4><h5>Route {D} to {E}</h5>{F}<hr>'.format(
-                    A=schedule.joint.schedule_text,
-                    B=schedule.joint.start_time.strftime('%H:%M'),
-                    C=schedule.joint.end_time.strftime('%H:%M'),
-                    D=route.id,
-                    E=', '.join(schedule.dirnames),
-                    F=', '.join(Stop.objects[(schedule, stop, gps_ref)].times)
-                )
-            )
-
-        prev = (stop, gps_ref, schedule)
-
-    return table
-
 if __name__ == "__main__":
-    web_schedule, time_table = build_tables(datetime.datetime.today())
+    web_schedule, time_table, stop_table = build_tables(datetime.datetime.today())
     publish_schedules(web_schedule)
     publish_time_tables(time_table)
+    publish_stop_kml(stop_table)

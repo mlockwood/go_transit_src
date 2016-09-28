@@ -1,14 +1,16 @@
-import copy
 import re
-import sys
-
-from pykml.factory import KML_ElementMaker as KML
 from lxml import etree
 from xml.sax.saxutils import unescape
+from pykml.factory import KML_ElementMaker as KML
 
-import src.scripts.stop.stop as st
-import src.scripts.web.web_pages as web
-from src.scripts.constants import PATH
+from src.scripts.constants import *
+from src.scripts.utils.IOutils import *
+
+
+def get_cdata_html(route, service_text, start, end, directions, times):
+    return '<h4>{} | {}-{}</h4><h5>Route {} to {}</h5>{}<hr>'.format(service_text, start.strftime('%H:%M'),
+                                                                     end.strftime('%H:%M'), route, directions,
+                                                                     ', '.join(times))
 
 
 # Function to add style maps for changing the color of the buttons
@@ -65,51 +67,47 @@ def add_style(doc, color, highlight):
     return doc
 
 
-table = web.stop_schedule()
+def publish_stop_kml(stop_table):
+    doc = KML.Document(KML.name("GO Transit Stops"))
 
-doc = KML.Document(KML.name("GO Transit Stops"))
+    # For each unique point of (stop, gps_ref)
+    for stop in stop_table:
 
-# For each unique point of (stop, gps_ref)
-for obj in st.Point.objects:
-    stop = st.Point.objects[obj]
-    # If the stop is available and has valid gps coordinates
-    if st.convert_gps_dms_to_dd(stop.gps_n) and st.convert_gps_dms_to_dd(stop.gps_w) and stop.available == '1':
+        cdata = '<![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/{}.html</p>'.format(stop[0])
+        for key in sorted(stop_table[stop].keys()):
+            cdata += get_cdata_html(*key, stop_table[stop][key])
 
         # Add a placemark in the KML file
         doc.append(KML.Placemark(
-            KML.name('({}{}) {}'.format(stop.stop_id, stop.gps_ref, stop.name)),
-            KML.description('<![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/{}{}.html</p>{}]]>'.format(
-                stop.stop_id, stop.gps_ref, table[(stop.stop_id, stop.gps_ref)])),
+            KML.name('({}) {}'.format(stop[0], stop[1])),
+            KML.description('{}]]>'.format(cdata)),
             KML.styleUrl('#icon-503-ff777777'),
             KML.Point(
-                KML.coordinates('{},{},0'.format(st.convert_gps_dms_to_dd(stop.gps_w),
-                                                 st.convert_gps_dms_to_dd(stop.gps_n)))
+                KML.coordinates('{},{},0'.format(stop[3], stop[2]))  # lng, lat here
             )
         ))
 
-doc = add_style(doc, 'ff777777', 'ff555555')
-doc = add_style(doc, 'ffA9445A', 'fff2dede')
+    doc = add_style(doc, 'ff777777', 'ff555555')
+    doc = add_style(doc, 'ffA9445A', 'fff2dede')
 
-# Send KML file to string and replace spurious \
-kml = KML.kml(doc)
-kml = etree.tostring(kml, pretty_print=True).decode('utf-8', errors='strict').replace('\\', '')
+    # Send KML file to string and replace spurious \
+    kml = KML.kml(doc)
+    kml = etree.tostring(kml, pretty_print=True).decode('utf-8', errors='strict').replace('\\', '')
 
-# Add encoding line
-final = ["<?xml version='1.0' encoding='UTF-8'?>"]
+    # Add encoding line
+    final = ["<?xml version='1.0' encoding='UTF-8'?>"]
 
-# Unescape the CDATA description HTML
-for line in re.split('\n', kml):
-    if re.search('\<description\>', line):
-        final.append(unescape(line))
-    else:
-        final.append(line)
+    # Unescape the CDATA description HTML
+    for line in re.split('\n', kml):
+        if re.search('\<description\>', line):
+            final.append(unescape(line))
+        else:
+            final.append(line)
 
-# Write the file
-writer = open('{}/reports/stops/stops.kml'.format(PATH), 'w')
-writer.write('\n'.join(final))
-
-writer = open('{}/src/static/kml/stops.kml'.format(PATH), 'w')
-writer.write('\n'.join(final))
+    # Write the file
+    set_directory('{}/static/kml'.format(SRC_PATH))
+    writer = open('{}/static/kml/stops.kml'.format(SRC_PATH), 'w')
+    writer.write('\n'.join(final))
 
 
 
