@@ -124,9 +124,12 @@ class BuildStopTimes(ExportFeed):
     def get_matrix(cls):
         stop_times = [['trip_id', 'arrival_time', 'departure_time', 'stop_id', 'stop_sequence', 'pickup_type',
                        'drop_off_type', 'timepoint']]
+        temp = {}
         for stoptime in cls.feed:
-            stop_times.append([stoptime.trip.id, stoptime.arrive_24p, stoptime.gtfs_depart_24p, stoptime.stop,
-                               stoptime.order, stoptime.pickup, stoptime.dropoff, stoptime.timepoint])
+            temp[stoptime.id] = [stoptime.trip.id, stoptime.arrive_24p, stoptime.gtfs_depart_24p, stoptime.stop,
+                                 stoptime.order, stoptime.pickup, stoptime.dropoff, stoptime.timepoint]
+        for stoptime in temp:
+            stop_times.append(temp[stoptime])
         return stop_times
 
 

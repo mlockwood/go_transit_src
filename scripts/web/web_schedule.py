@@ -12,7 +12,7 @@ def add_schedule_body(route, joints):
     tree = etree.Element('body')
     tree.append(add_route_logo(route))
     tree.append(add_route_map(route))
-    i = 1
+    i = 2
     for joint in joints:
         # Add joint
         tree.append(add_schedule_header(joints[joint]['service_text'], joints[joint]['start'], joints[joint]['end']))
