@@ -3,6 +3,7 @@
 
 # Python libraries and packages
 import datetime
+import re
 
 # Import scripts from src
 from src.scripts.route.errors import *
@@ -76,5 +77,5 @@ class Holiday(DataModelTemplate):
                 service = Service.objects[obj]
                 # Check if the holiday applies to the given service dates
                 if service.start_date <= datetime.datetime.strptime(holiday.holiday, '%Y-%m-%d') <= service.end_date:
-                    holidays.append([service.id, holiday.holiday, 2])
+                    holidays.append([service.id, re.sub('-', '', holiday.holiday), 2])
         return holidays

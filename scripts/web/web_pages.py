@@ -92,7 +92,6 @@ def build_tables(date):
             time_table[stop_key][route_key][service_text] = []
         time_table[stop_key][route_key][service_text] = time_table[stop_key][route_key].get(service_text) + [time]
 
-
     web_schedule = convert_schedule(web_schedule)
     time_table = convert_time_table(time_table)
 
@@ -217,8 +216,12 @@ def convert_to_xx(times):
     return sorted(new_times.keys())
 
 
-if __name__ == "__main__":
-    web_schedule, time_table, stop_table = build_tables(datetime.datetime.today())
+def publish(date=datetime.datetime.today()):
+    web_schedule, time_table, stop_table = build_tables(date)
     publish_schedules(web_schedule)
     publish_time_tables(time_table)
     publish_stop_kml(stop_table)
+
+
+if __name__ == "__main__":
+    publish()

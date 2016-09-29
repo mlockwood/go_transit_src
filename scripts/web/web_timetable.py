@@ -38,10 +38,10 @@ def add_route_columns(route, directions, cols, obj):
     tree[1].text = 'to {}'.format(', '.join(directions))
 
     # Add column tables for each service text
-    for service_text in obj:
-        if service_text == 'directions':
+    for service_text in sorted(obj.items(), key=lambda i:ORDER.index(i[0])):
+        if service_text[0] == 'directions':
             continue
-        tree.append(add_column_table(service_text, obj[service_text]))
+        tree.append(add_column_table(*service_text))
     return tree
 
 

@@ -17,10 +17,6 @@ __author__ = 'Michael Lockwood'
 __github__ = 'mlockwood'
 
 
-DataRequest('entry', '/rider/get_entry.json').get()
-DataRequest('metadata', '/rider/get_metadata.json').get()
-
-
 class Metadata(DataModelTemplate):
 
     json_path = ('{}/rider/metadata.json'.format(DATA_PATH), '{}/rider/get_metadata.json'.format(DATA_PATH))
@@ -156,9 +152,15 @@ class Period(object):
         workbook.close()
 
 
-if __name__ == "__main__":
+def process():
+    DataRequest('entry', '/rider/get_entry.json').get()
+    DataRequest('metadata', '/rider/get_metadata.json').get()
     Metadata.load()
     Entry.load()
     Record.publish()
     Period.set_averages()
     Period.publish()
+
+
+if __name__ == "__main__":
+    process()

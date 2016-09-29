@@ -77,6 +77,7 @@ class Segment(DataModelTemplate):
         self.seq_order = order
         self.trip_length = temp[-1].depart  # Trip length is the depart value of the last StopSeq
         temp[-1].destination = True  # Destination is True for the last StopSeq
+        self.destination = temp[-1].stop
 
         # Return through all StopSeq objects to handle their GTFS depart
         for order in self.seq_order:

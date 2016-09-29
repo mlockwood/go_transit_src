@@ -2,19 +2,23 @@ import copy
 import math
 import re
 import sys
-
 from pykml import parser
 
-import src.scripts.stop.stop as st
-from src.scripts.constants import PATH
+from src.scripts.route.route import *
+from src.scripts.stop.stop import Stop
+from src.scripts.constants import *
+
+
+load()  # Load routes
 
 
 class Shape(object):
 
     objects = {}
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, id):
+        self.id = id
+        self.segment = Segment.objects[id]
         self.paths = {}
         self.nodes = {}
         self.distances = {}
@@ -22,14 +26,12 @@ class Shape(object):
         self.order = []
         self.final_node = None
         self.index = 0
-        self.origin = self.set_shape_node(st.Point.objects[(rt.Direction.objects[name].origin[:3],
-                                                            rt.Direction.objects[name].origin[3:])])
-        self.destination = self.set_shape_node(st.Point.objects[(rt.Direction.objects[name].destination[:3],
-                                                                 rt.Direction.objects[name].destination[3:])])
-        Shape.objects[name] = self
+        self.origin = self.set_shape_node(self.segment.seq_order[0].stop)
+        self.destination = self.set_shape_node(self.segment.destination)
+        Shape.objects[id] = self
 
     def set_shape_node(self, node):
-        new_node = Node(self, '', st.convert_gps_dms_to_dd(node.gps_n), st.convert_gps_dms_to_dd(node.gps_w))
+        new_node = Node(self, '', Stop.objects[node].lat, Stop.objects[node].lng)
         self.nodes[new_node] = True
         return new_node
 
@@ -62,9 +64,6 @@ class Shape(object):
                 self.distances[node][to_node] = Shape.haversine(node.coords, to_node.coords)
 
         self.select_best_order(self.paths, self.origin, [], [])
-        print(self.order)
-        print('Shape {} had a final distance from the destination of {}\n\n'.format(self.name, Shape.haversine(
-            self.final_node.coords, self.destination.coords)))
         return True
 
     def select_best_order(self, unseen, prev, order, reverse, distance=0):
@@ -77,7 +76,6 @@ class Shape(object):
                     self.best = distance + self.distances[prev][node]
                     self.final_node = node.contra
                     self.order = [x for x in zip(order+[path], reverse+[node.reverse])]
-
 
                 # Otherwise use tiebreaking
                 elif distance + self.distances[prev][node] == self.best:
@@ -100,7 +98,6 @@ class Path(object):
     def __init__(self, shape, points):
         self.shape = shape
         self.points = points
-        print(shape.name, len(points))
         self.nodes = (Node(shape, self, points[0][1], points[0][0]),
                       Node(shape, self, points[-1][1], points[-1][0], reverse=True))
         self.nodes[0].contra = self.nodes[1]
@@ -137,28 +134,42 @@ class Node(object):
         return {'lat': math.radians(float(self.lat)), 'lng': math.radians(float(self.lng))}
 
 
+def parse_cdata(cdata):
+    cdata = cdata.split()
+    i = 0
+    while i < len(cdata):
+        if re.search('shape_id', cdata[i].lower()):
+            try:
+                return int(cdata[i+1])
+            except ValueError:
+                raise ValueError('{} is not a valid shape ID.'.format(cdata[i+1]))
+        i += 1
+
+
 def process():
     shapes = ['shape_id', 'shape_pt_lat', 'shape_pt_lon', 'shape_pt_sequence']
     # Open system.kml file in go/data/routes
-    with open('{}/data/routes/system.kml'.format(PATH)) as file:
+    with open('{}/route/kml/shapes.kml'.format(DATA_PATH)) as file:
         doc = parser.parse(file)
         shape = None
         for t in doc.getiterator():
 
-            # If the tag is a name, set name equal to the text contents of the name tag
-            if re.sub('\{.*\}', '', t.tag).lower() == 'name':
-                if t.text in rt.Direction.objects:
-                    shape = Shape(t.text) if t.text not in Shape.objects else Shape.objects[t.text]
+            # If the tag is a description, find the shape_id in the CDATA
+            if re.sub('\{.*\}', '', t.tag).lower() == 'description':
+                shape = int(parse_cdata(t.text))
+                if shape in Segment.objects:
+                    shape = Shape(shape) if shape not in Shape.objects else Shape.objects[shape]
                 else:
-                    print('Shape {} did not process'.format(t.text))
+                    print('Shape {} does not have a matching segment.'.format(shape))
+                    shape = None
 
             # Save coordinates
-            if re.sub('\{.*\}', '', t.tag).lower() == 'coordinates':
+            if re.sub('\{.*\}', '', t.tag).lower() == 'coordinates' and shape:
                 # A new Path must be created for the discovered coordinates
                 shape.add_path([re.split(',', x) for x in re.split('\s', t.text) if len(re.split(',', x)) == 3])
 
     # Open writer
-    writer = open('{}/reports/gtfs/files/shapes.txt'.format(PATH), 'w')
+    writer = open('{}/gtfs/files/shapes.txt'.format(REPORT_PATH), 'w')
     writer.write('{}\n'.format(','.join(shapes)))
 
     for obj in sorted(Shape.objects.keys()):
@@ -167,8 +178,9 @@ def process():
 
         for path, reverse in shape.order:
             for point in path.get_points(reverse):
-                writer.write('{}\n'.format(','.join([str(s) for s in [shape.name, point[1], point[0], shape.index]])))
+                writer.write('{}\n'.format(','.join([str(s) for s in [shape.id, point[1], point[0], shape.index]])))
                 shape.index += 1
+
 
 if __name__ == "__main__":
     process()

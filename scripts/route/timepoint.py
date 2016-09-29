@@ -32,7 +32,7 @@ def build_master_table(date):
     return master_table
 
 
-def publish(date):
+def publish_timepoints(date):
     # Delete existing timepoints before creating new ones
     try:
         shutil.rmtree('{}/route/timepoints/'.format(PATH))
@@ -94,4 +94,4 @@ def publish(date):
 
 
 if __name__ == "__main__":
-    publish(datetime.datetime.today())
+    publish_timepoints(datetime.datetime.today())

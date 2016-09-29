@@ -7,7 +7,8 @@ import inspect
 import shutil
 import sys
 
-# Entire scripts from src
+import src.scripts.gtfs.shape_kml as shape_kml
+import src.scripts.gtfs.validate_shape_kml as validate_shape_kml
 from src.scripts.route.route import load
 from src.scripts.route.service import Holiday
 from src.scripts.constants import *
@@ -27,9 +28,6 @@ __collaborators__ = None
 GTFS_PATH = '{}/reports/gtfs/files'.format(PATH)
 set_directory(GTFS_PATH)
 
-# Collect feed by date. Remember to process first if there have been planning changes.
-feed = load(datetime.datetime.today())  # datetime.datetime(2016, 9, 30)
-
 
 class Feed(object):
 
@@ -40,7 +38,9 @@ class Feed(object):
 class ConvertFeed(Feed):
 
     booleans = True
+    conversions = {}
     file = ''
+    filtered = {}
     header = []
     json_file = ''
     order = None
@@ -49,10 +49,13 @@ class ConvertFeed(Feed):
     @classmethod
     def create_feed(cls):
         json_to_txt(cls.json_file, '{}/{}.txt'.format(cls.path, cls.file), header=cls.header,
-                    order=cls.order if cls.order else cls.header, booleans=cls.booleans, defaults=cls.defaults)
+                    order=cls.order if cls.order else cls.header, booleans=cls.booleans, defaults=cls.defaults,
+                    conversions=cls.conversions, filtered=cls.filtered)
 
 
 class ExportFeed(Feed):
+
+    feed = None
 
     @classmethod
     def create_feed(cls):
@@ -79,6 +82,7 @@ class BuildCalendar(ConvertFeed):
     json_file = '{}/route/service.json'.format(DATA_PATH)
     header = ['service_id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'start_date',
               'end_date']
+    conversions = {'start_date': ['-', ''], 'end_date': ['-', '']}
 
 
 class BuildHolidays(ExportFeed):
@@ -109,6 +113,7 @@ class BuildStops(ConvertFeed):
     json_file = '{}/stop/stop.json'.format(DATA_PATH)
     header = ['stop_id', 'stop_name', 'stop_desc', 'stop_lat', 'stop_lon']
     order = ['id', 'name', 'description', 'lat', 'lng']
+    filtered = {'available': {1: True}}
 
 
 class BuildStopTimes(ExportFeed):
@@ -119,7 +124,7 @@ class BuildStopTimes(ExportFeed):
     def get_matrix(cls):
         stop_times = [['trip_id', 'arrival_time', 'departure_time', 'stop_id', 'stop_sequence', 'pickup_type',
                        'drop_off_type', 'timepoint']]
-        for stoptime in feed[1]:
+        for stoptime in cls.feed:
             stop_times.append([stoptime.trip.id, stoptime.arrive_24p, stoptime.gtfs_depart_24p, stoptime.stop,
                                stoptime.order, stoptime.pickup, stoptime.dropoff, stoptime.timepoint])
         return stop_times
@@ -132,23 +137,20 @@ class BuildTrips(ExportFeed):
     @classmethod
     def get_matrix(cls):
         trips = [['route_id', 'service_id', 'trip_id', 'trip_headsign', 'direction_id', 'block_id', 'shape_id']]
-        for trip in feed[0]:
+        for trip in cls.feed:
             trips.append([trip.route, trip.service, trip.id, trip.head_sign, trip.direction, trip.driver, trip.segment])
         return trips
 
 
-def create_gtfs():
+def create_gtfs(date=datetime.datetime.today()):
+    BuildTrips.feed, BuildStopTimes.feed = load(date)
     clsmembers = inspect.getmembers(sys.modules[__name__], inspect.isclass)
     for cls in clsmembers:
         if re.search('Build', cls[0]) and re.search('__main__', str(cls[1])):
             cls[1].create_feed()
+    shape_kml.process()
+    validate_shape_kml.validate()
 
 
 if __name__ == "__main__":
     create_gtfs()
-    try:
-        shutil.rmtree('{}/src/gtfs'.format(PATH))
-    except OSError:
-        pass
-    finally:
-        shutil.copytree(GTFS_PATH, '{}/src/gtfs'.format(PATH))

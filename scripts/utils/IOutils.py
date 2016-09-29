@@ -23,11 +23,12 @@ def export_json(file, cls):
                       sort_keys=True)
 
 
-def json_to_txt(json_file, txt_file, header, order=None, booleans=True, defaults={}):
+def json_to_txt(json_file, txt_file, header, order=None, booleans=True, defaults={}, conversions={}, filtered={}):
     writer = open(txt_file, 'w')
     writer.write('{}\n'.format(','.join(header)))
     with open(json_file, 'r') as infile:
         for obj in json.load(infile):
+            accept = True
 
             # If no order was provided use alphabetical key order
             if not order:
@@ -39,6 +40,18 @@ def json_to_txt(json_file, txt_file, header, order=None, booleans=True, defaults
             # Add defaults if needed
             for key in defaults:
                 obj[key] = defaults[key]
+
+            # Make conversions if needed
+            for key in conversions:
+                obj[key] = re.sub(conversions[key][0], conversions[key][1], obj[key])
+
+            # Use filter
+            for key in filtered:
+                if obj[key] not in filtered[key]:
+                    accept = False
+
+            if not accept:
+                continue
 
             # Write row values
             row = []
