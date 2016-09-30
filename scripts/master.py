@@ -6,7 +6,7 @@ RIDERSHIP = False  # toggle to run ridership and produce reports...download is V
 ROUTES = True  # toggle to run updated route planning (GTFS, website, and timepoints)
 
 
-# Ridership
+# Ridership; once ALL data is in final database remember to modify rider/ridership.py and use rider/bulk_upload.py
 if RIDERSHIP:
     from src.scripts.rider.ridership import process
     process()

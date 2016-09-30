@@ -4,6 +4,7 @@ from lxml import etree
 # Import scripts from src
 from src.scripts.constants import *
 from src.scripts.route.route import *
+from src.scripts.web.constants import ROUTE_SCRIPT
 from src.scripts.web.tree_functions import *
 from src.scripts.utils.IOutils import *
 
@@ -11,7 +12,8 @@ from src.scripts.utils.IOutils import *
 def add_schedule_body(route, joints):
     tree = etree.Element('body')
     tree.append(add_route_logo(route))
-    tree.append(add_route_map(route))
+    tree.append(add_div(class_name="col-md-12"))
+    tree[1].append(add_div(id_name="map"))
     i = 2
     for joint in joints:
         # Add joint
@@ -30,6 +32,12 @@ def add_schedule_body(route, joints):
                     continue
                 tree[i].append(add_stop_entry(**obj[stop]))
             i += 1
+
+    # Add map scripts
+    tree.append(etree.Element('script', src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"))
+    tree.append(add_map_scripts(route))
+    tree.append(etree.Element('script',
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgsmKLx0UBD6zwRT0P4WGuimjZ1KR5eR8&callback=initialize"))
     return tree
 
 
@@ -59,6 +67,12 @@ def add_stop_entry(id, loc, gps_ref, name, times):
     tree[1][0].text = '{} ({})'.format(name, gps_ref)
     tree.append(add_div(class_name="col-md-7 stopInfo"))
     tree[2].text = ', '.join(times)
+    return tree
+
+
+def add_map_scripts(route):
+    tree = etree.Element('script')
+    tree.text = ROUTE_SCRIPT.format(route)
     return tree
 
 

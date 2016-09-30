@@ -69,15 +69,13 @@ def build_tables(date):
         if stop not in web_schedule[route][joint]['segments'][segment_order]:
             web_schedule[route][joint]['segments'][segment_order][stop] = {
                 'load_seq': load_seq,
-                'times': []
+                'times': {}
             }
         elif load_seq > web_schedule[route][joint]['segments'][segment_order][stop]['load_seq']:
             web_schedule[route][joint]['segments'][segment_order][stop]['load_seq'] = load_seq
 
         # Add time
-        web_schedule[route][joint]['segments'][segment_order][stop]['times'] = (
-            web_schedule[route][joint]['segments'][segment_order][stop].get('times') + [time]
-        )
+        web_schedule[route][joint]['segments'][segment_order][stop]['times'][time] = True
 
         # Time table DS ------------------------------------------------------------------------------------------------
         if stop_key not in time_table:
@@ -88,8 +86,8 @@ def build_tables(date):
             }
         time_table[stop_key][route_key]['directions'][direction] = True
         if service_text not in time_table[stop_key][route_key]:
-            time_table[stop_key][route_key][service_text] = []
-        time_table[stop_key][route_key][service_text] = time_table[stop_key][route_key].get(service_text) + [time]
+            time_table[stop_key][route_key][service_text] = {}
+        time_table[stop_key][route_key][service_text][time] = True
 
     web_schedule = convert_schedule(web_schedule)
     time_table = convert_time_table(time_table)
@@ -190,13 +188,13 @@ def convert_many_to_list(obj):
 
 
 def convert_to_list(times):
-    return [convert_to_24_time(time, seconds=False) for time in sorted(times)]
+    return [convert_to_24_time(time, seconds=False) for time in sorted(times.keys())]
 
 
 def test_timing_headways(times, headway):
     # Collect stop times and set the first one to the prev key
     test = True
-    times = sorted(times)
+    times = sorted(times.keys())
     prev = datetime.datetime.strptime(times[0], '%H:%M:%S')
 
     # Iterate through the keys and check that each progression is exactly a headway apart

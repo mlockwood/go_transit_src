@@ -46,8 +46,8 @@ def add_type(element, type_name=None):
     return element
 
 
-def add_div(class_name=None):
-    return add_class(element=etree.Element('div'), class_name=class_name)
+def add_div(class_name=None, id_name=None):
+    return add_id(add_class(element=etree.Element('div'), class_name=class_name), id_name=id_name)
 
 
 def add_image(src, class_name=None, id_name=None):

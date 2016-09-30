@@ -19,6 +19,7 @@ __github__ = 'mlockwood'
 
 class Metadata(DataModelTemplate):
 
+    # REMOVE second entry in this tuple once full database upload complete----------------------------------------------
     json_path = ('{}/rider/metadata.json'.format(DATA_PATH), '{}/rider/get_metadata.json'.format(DATA_PATH))
     objects = {}
 
@@ -28,6 +29,7 @@ class Metadata(DataModelTemplate):
 
 class Entry(DataModelTemplate):
 
+    # REMOVE second entry in this tuple once full database upload complete----------------------------------------------
     json_path = ('{}/rider/entry.json'.format(DATA_PATH), '{}/rider/get_entry.json'.format(DATA_PATH))
     objects = {}
 
@@ -153,8 +155,8 @@ class Period(object):
 
 
 def process():
-    DataRequest('entry', '/rider/get_entry.json').get()
-    DataRequest('metadata', '/rider/get_metadata.json').get()
+    DataRequest('entry', '/rider/get_entry.json').get()  # Once full database upload complete remove 'get_'-------------
+    DataRequest('metadata', '/rider/get_metadata.json').get()  # Once full database upload complete remove 'get_'-------
     Metadata.load()
     Entry.load()
     Record.publish()

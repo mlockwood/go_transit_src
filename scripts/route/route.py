@@ -507,16 +507,16 @@ class Driver(DataModelTemplate):
 
 def create(date=datetime.datetime.today()):
     # Retrieve data from database first
-    # DataRequest('agency', '/agency/agency.json').get()
-    # DataRequest('holiday', '/route/holiday.json').get()
-    # DataRequest('joint', '/route/joint.json').get()
-    # DataRequest('route', '/route/route.json').get()
-    # DataRequest('schedule', '/route/schedule.json').get()
-    # DataRequest('segment', '/route/segment.json').get()
-    # DataRequest('segment_order', '/route/segment_order.json').get()
-    # DataRequest('service', '/route/service.json').get()
-    # DataRequest('stop', '/stop/stop.json').get()
-    # DataRequest('stop_seq', '/route/stop_seq.json').get()
+    DataRequest('agency', '/agency/agency.json').get()
+    DataRequest('holiday', '/route/holiday.json').get()
+    DataRequest('joint', '/route/joint.json').get()
+    DataRequest('route', '/route/route.json').get()
+    DataRequest('schedule', '/route/schedule.json').get()
+    DataRequest('segment', '/route/segment.json').get()
+    DataRequest('segment_order', '/route/segment_order.json').get()
+    DataRequest('service', '/route/service.json').get()
+    DataRequest('stop', '/stop/stop.json').get()
+    DataRequest('stop_seq', '/route/stop_seq.json').get()
 
     # Load dependent data
     Stop.load()
