@@ -46,6 +46,8 @@ def publish_timepoints(date):
 
     # Iterate through each joint_route
     for driver in master:
+        if isinstance(driver, Driver):
+            driver = driver.id
         position = date_range.lookup[str(driver)]
         start = Driver.objects[driver].start
 

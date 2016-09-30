@@ -34,7 +34,6 @@ def build_tables(date):
         time = stoptime.depart_24p
         stop_key = (stop, Stop.objects[stop].name)
         route_key = (route, segment_order)
-        extra_key = (service_text, start, end, route)
 
         # Web schedule DS ----------------------------------------------------------------------------------------------
         if route not in web_schedule:

@@ -18,6 +18,7 @@ class ScheduleInline(nested_admin.NestedTabularInline):
 
 
 class JointAdmin(nested_admin.NestedModelAdmin):
+    save_as = True
     inlines = [ScheduleInline]
     list_filter = ['routes', 'service', 'headway']
     list_display = ['id', 'routes', 'service', 'description', 'headway']
@@ -31,6 +32,7 @@ class StopSeqInline(admin.TabularInline):
 
 
 class SegmentAdmin(admin.ModelAdmin):
+    save_as = True
     inlines = [StopSeqInline]
     list_filter = ['route', 'direction']
     list_display = ['id', 'route', 'direction', 'description']

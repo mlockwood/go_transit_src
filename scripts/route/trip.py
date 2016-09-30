@@ -126,5 +126,7 @@ class StopTime(DataModelTemplate):
 
     def get_json(self):
         self.trip = self.trip.id
-        return dict((k, getattr(self, k)) for k in self.__dict__)
+        attrs = dict((k, getattr(self, k)) for k in self.__dict__)
+        self.trip = Trip.objects[self.trip]
+        return attrs
 
