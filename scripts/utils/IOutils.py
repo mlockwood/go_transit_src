@@ -8,6 +8,11 @@ def set_directory(path):
         os.makedirs(path)
 
 
+def set_file_directory(file):
+    if not os.path.isdir(os.path.dirname(os.path.realpath(file))):
+        os.makedirs(os.path.dirname(os.path.realpath(file)))
+
+
 def load_json(file, cls):
     with open(file, 'r') as infile:
         [cls(**obj) for obj in json.load(infile)]

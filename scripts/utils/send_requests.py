@@ -3,6 +3,7 @@ import re
 import requests
 
 from src.scripts.constants import *
+from src.scripts.utils.IOutils import set_file_directory
 
 
 LOCAL_ROOT = 'http://127.0.0.1:8000/api/v1'
@@ -23,8 +24,10 @@ class DataRequest(object):
 
     def __init__(self, name, json_file, use_data_path=True):
         self.name = name
+
         if use_data_path and DataRequest.data_path:
             json_file = '{}{}'.format(DataRequest.data_path, json_file)
+        set_file_directory(json_file)
         self.json_file = json_file
         self.data = None
         DataRequest.objects[name] = self
