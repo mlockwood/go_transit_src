@@ -4,9 +4,7 @@ import xlsxwriter
 import multiprocessing as mp
 
 from src.scripts.constants import *
-from src.scripts.rider.constants import BEGIN, BASELINE, INCREMENT, OUT_PATH
 from src.scripts.utils.classes import DataModelTemplate
-from src.scripts.utils.IOutils import *
 from src.scripts.utils.send_requests import DataRequest
 
 
