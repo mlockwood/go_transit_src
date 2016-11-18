@@ -20,17 +20,18 @@ __github__ = 'mlockwood'
 class Metadata(DataModelTemplate):
 
     # REMOVE second entry in this tuple once full database upload complete----------------------------------------------
-    json_path = ('{}/rider/metadata.json'.format(DATA_PATH), '{}/rider/get_metadata.json'.format(DATA_PATH))
+    json_path = ('{}/rider/metadata.json'.format(DATA_PATH))#, '{}/rider/get_metadata.json'.format(DATA_PATH))
     objects = {}
 
     def set_object_attrs(self):
         self.login = parser.parse(self.login).astimezone(tz.gettz('America/Los_Angeles'))
 
 
+
 class Entry(DataModelTemplate):
 
     # REMOVE second entry in this tuple once full database upload complete----------------------------------------------
-    json_path = ('{}/rider/entry.json'.format(DATA_PATH), '{}/rider/get_entry.json'.format(DATA_PATH))
+    json_path = ('{}/rider/entry.json'.format(DATA_PATH))#, '{}/rider/get_entry.json'.format(DATA_PATH))
     objects = {}
 
     def set_object_attrs(self):
@@ -155,8 +156,8 @@ class Period(object):
 
 
 def process():
-    DataRequest('entry', '/rider/get_entry.json').get()  # Once full database upload complete remove 'get_'-------------
-    DataRequest('metadata', '/rider/get_metadata.json').get()  # Once full database upload complete remove 'get_'-------
+    DataRequest('entry', '/rider/entry.json').get()  # Once full database upload complete remove 'get_'-------------
+    DataRequest('metadata', '/rider/metadata.json').get()  # Once full database upload complete remove 'get_'-------
     Metadata.load()
     Entry.load()
     Record.publish()

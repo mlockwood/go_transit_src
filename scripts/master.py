@@ -2,6 +2,7 @@ import datetime
 
 
 DATE = datetime.datetime.today() # (year, month, day) -> this should be the first day of the GTFS you wish to publish
+#DATE = datetime.datetime(2016, 10, 10) # (year, month, day) -> this should be the first day of the GTFS you wish to publish
 RIDERSHIP = False  # toggle to run ridership and produce reports...download is VERY slow
 ROUTES = True  # toggle to run updated route planning (GTFS, website, and timepoints)
 
