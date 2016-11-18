@@ -48,7 +48,13 @@ class DataRequest(object):
         # Copy results from each page to data
         while res:
             data += res.json()['results']
-            res = requests.get(res.json()['next'], headers=HEADER) if res.json()['next'] else None
+            done = None
+            while not done:
+                try:
+                    res = requests.get(res.json()['next'], headers=HEADER) if res.json()['next'] else None
+                    done = True
+                except:
+                    print('Get request had an interruption but is continuing.')
 
         # Export data to json_file
         with open(self.json_file, 'w') as outfile:
