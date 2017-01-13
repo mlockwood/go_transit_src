@@ -29,10 +29,12 @@ GTFS_PATH = '{}/reports/gtfs/files'.format(PATH)
 set_directory(GTFS_PATH)
 
 
+
 class Feed(object):
 
     file = ''
     path = GTFS_PATH
+
 
 
 class ConvertFeed(Feed):
@@ -67,12 +69,14 @@ class ExportFeed(Feed):
         pass
 
 
+
 class BuildAgency(ConvertFeed):
 
     file = 'agency'
     json_file = '{}/agency/agency.json'.format(DATA_PATH)
     header = ['agency_id', 'agency_name', 'agency_url', 'agency_timezone', 'agency_lang', 'agency_phone']
     order = ['id', 'name', 'url', 'timezone', 'lang', 'phone']
+
 
 
 class BuildCalendar(ConvertFeed):
@@ -83,6 +87,7 @@ class BuildCalendar(ConvertFeed):
     header = ['service_id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'start_date',
               'end_date']
     conversions = {'start_date': ['-', ''], 'end_date': ['-', '']}
+
 
 
 class BuildHolidays(ExportFeed):

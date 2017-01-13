@@ -32,6 +32,9 @@ class CheckInOutSerializer(serializers.ModelSerializer):
             'fleet',
             'bike',
             'duration',
+            'name'
+            'phone'
+            'email'
             'check_out',
             'check_in'
         )

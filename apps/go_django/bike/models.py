@@ -41,6 +41,9 @@ class CheckInOut(models.Model):
     fleet = models.ForeignKey('fleet.Fleet')
     bike = models.ForeignKey('Bike')
     duration = models.CharField(max_length=1, choices=CHECK_OUT_CHOICES)
+    name = models.CharField(max_length=40)
+    phone = models.CharField(max_length=14)
+    email = models.CharField(max_length=40)
     check_out = models.DateTimeField()
     check_in = models.DateTimeField(blank=True, null=True)
 

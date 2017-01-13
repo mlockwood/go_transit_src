@@ -17,12 +17,17 @@ if RIDERSHIP:
 if ROUTES:
     from src.scripts.route.route import create, load
     create(DATE)
+    print('Finished creating routes.')
     load(DATE)
+    print('Finished loading routes for current date.')
 
     from src.scripts.gtfs.gtfs import create_gtfs
     from src.scripts.route.timepoint import publish_timepoints
     from src.scripts.web.web_pages import publish
 
-    create_gtfs(DATE)
-    publish(DATE)
-    publish_timepoints(DATE)
+    create_gtfs(DATE)  #src/scripts/gtfs/gtfs.py
+    print('GTFS created.')
+    publish(DATE)  #src/scripts/web/web_pages.py
+    print('Web pages created.')
+    publish_timepoints(DATE)    #src/scripts/route/timepoint.py
+    print('Timepoints created.')
