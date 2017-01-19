@@ -83,14 +83,6 @@
       </Point>
     </Placemark>
     <Placemark>
-      <name>(811b) Bridgeport &amp; San Fransisco</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/811b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 7 to Carter Lake ES</h5>xx:09, xx:29, xx:49<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.504060,47.142140,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
       <name>(201b) National Guard</name>
       <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/201b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 1 to Madigan</h5>xx:13, xx:33, xx:53<hr><h4>Monday - Friday | 08:00-18:00</h4><h5>Route 3 to Army Airfield Loop</h5>xx:11, xx:31, xx:51<hr>]]></description>
       <styleUrl>#icon-503-ff777777</styleUrl>
@@ -235,14 +227,6 @@
       </Point>
     </Placemark>
     <Placemark>
-      <name>(819a) Lakewood Town Center</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/819a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 7 to Carter Lake ES</h5>xx:00, xx:20, xx:40<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.512870,47.165270,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
       <name>(782b) North Gate Internal</name>
       <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/782b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 2 to Madigan</h5>07:01, 07:21, 07:41, 16:01, 16:21, 16:41, 17:01, 17:21, 17:41<hr>]]></description>
       <styleUrl>#icon-503-ff777777</styleUrl>
@@ -299,14 +283,6 @@
       </Point>
     </Placemark>
     <Placemark>
-      <name>(654b) WADS/Whispering Firs GC</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/654b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 7 to Carter Lake ES</h5>xx:14, xx:34, xx:54<hr><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 7 to Lakewood Town Center</h5>xx:02, xx:22, xx:42<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.505440,47.122600,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
       <name>(777a) Flight Simulator</name>
       <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/777a.html</p><h4>Monday - Friday | 06:25-07:00</h4><h5>Route 2 to Lakewood, McChord Dining</h5>06:55<hr><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 2 to Lakewood, McChord Field</h5>xx:11, xx:31, xx:51<hr>]]></description>
       <styleUrl>#icon-503-ff777777</styleUrl>
@@ -328,14 +304,6 @@
       <styleUrl>#icon-503-ff777777</styleUrl>
       <Point>
         <coordinates>-122.489303,47.136208,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(700c) Lincoln &amp; Barnes</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/700c.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 7 to Carter Lake ES</h5>xx:13, xx:33, xx:53<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.494440,47.122860,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -368,14 +336,6 @@
       <styleUrl>#icon-503-ff777777</styleUrl>
       <Point>
         <coordinates>-122.494114,47.122489,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(814a) Lakewood Station</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/814a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 7 to Carter Lake ES</h5>xx:06, xx:26, xx:46<hr><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 7 to Lakewood Town Center</h5>xx:10, xx:30, xx:50<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.498480,47.152600,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -480,14 +440,6 @@
       <styleUrl>#icon-503-ff777777</styleUrl>
       <Point>
         <coordinates>-122.570292,47.084942,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(650a) Carter Lake ES</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/650a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 7 to Lakewood Town Center</h5>xx:00, xx:20, xx:40<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.523060,47.127170,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -616,14 +568,6 @@
       <styleUrl>#icon-503-ff777777</styleUrl>
       <Point>
         <coordinates>-122.592586,47.089956,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(811a) Bridgeport &amp; San Fransisco</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/811a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 7 to Lakewood Town Center</h5>xx:07, xx:27, xx:47<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.503980,47.142520,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
