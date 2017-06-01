@@ -67,14 +67,12 @@ class ExportFeed(Feed):
         pass
 
 
-
 class BuildAgency(ConvertFeed):
 
     file = 'agency'
     json_file = '{}/agency/agency.json'.format(DATA_PATH)
     header = ['agency_id', 'agency_name', 'agency_url', 'agency_timezone', 'agency_lang', 'agency_phone']
     order = ['id', 'name', 'url', 'timezone', 'lang', 'phone']
-
 
 
 class BuildCalendar(ConvertFeed):
@@ -143,16 +141,20 @@ class BuildTrips(ExportFeed):
     def get_matrix(cls):
         trips = [['route_id', 'service_id', 'trip_id', 'trip_headsign', 'direction_id', 'block_id', 'shape_id']]
         for trip in cls.feed:
-            trips.append([trip.route, trip.service, trip.id, trip.head_sign, trip.direction, trip.driver, trip.segment])
+            try:
+                trips.append([trip.route, trip.service, trip.id, trip.head_sign, trip.direction, trip.driver.id,
+                              trip.segment])
+            except AttributeError:
+                trips.append([trip.route, trip.service, trip.id, trip.head_sign, trip.direction, trip.driver,
+                              trip.segment])
         return trips
 
 
 def create_gtfs(date=datetime.datetime.today()):
     BuildTrips.feed, BuildStopTimes.feed = load(date)
-    clsmembers = inspect.getmembers(sys.modules[__name__], inspect.isclass)
-    for cls in clsmembers:
-        if re.search('Build', cls[0]) and re.search('__main__', str(cls[1])):
-            cls[1].create_feed()
+    classes = ['Agency', 'Calendar', 'Holidays', 'Routes', 'Stops', 'StopTimes', 'Trips']
+    for cls in classes:
+        exec('Build{}.create_feed()'.format(cls))
     shape_kml.process()
     validate_shape_kml.validate()
 
