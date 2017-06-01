@@ -155,7 +155,7 @@ def process():
         for t in doc.getiterator():
 
             # If the tag is a description, find the shape_id in the CDATA
-            if re.sub('\{.*\}', '', t.tag).lower() == 'description':
+            if re.sub('\{.*\}', '', t.tag).lower() == 'description' and t.text:
                 shape = int(parse_cdata(t.text))
                 if shape in Segment.objects:
                     shape = Shape(shape) if shape not in Shape.objects else Shape.objects[shape]

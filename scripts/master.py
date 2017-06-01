@@ -16,7 +16,7 @@ if RIDERSHIP:
 # properly represented.
 if ROUTES:
     from src.scripts.route.route import create
-    create(DATE)
+    # create(DATE)
     print('Finished creating routes.')
 
     from src.scripts.gtfs.gtfs import create_gtfs
