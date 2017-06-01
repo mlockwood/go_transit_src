@@ -1,8 +1,4 @@
-import datetime
-from lxml import etree
-
 # Import scripts from src
-from src.scripts.constants import *
 from src.scripts.route.route import *
 from src.scripts.web.constants import ROUTE_SCRIPT
 from src.scripts.web.tree_functions import *
@@ -21,15 +17,15 @@ def add_schedule_body(route, joints):
         i += 1
 
         # Add each segment
-        for order in joints[joint]['segments']:
+        for order in sorted(joints[joint]['segments'].keys()):
             obj = joints[joint]['segments'][order]
             tree.append(add_segment_header(route, obj['origins'], obj['directions'],
-                                              dirs=len(joints[joint]['segments'])))
+                                           dirs=len(joints[joint]['segments'])))
 
             # Add stops for each segment
-            for stop in obj:
-                if stop == 'origins' or stop == 'directions':
-                    continue
+            del obj['origins']
+            del obj['directions']
+            for stop in sorted(obj.keys()):
                 tree[i].append(add_stop_entry(**obj[stop]))
             i += 1
 

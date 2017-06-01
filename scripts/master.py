@@ -1,8 +1,8 @@
 import datetime
 
-
-DATE = datetime.datetime.today() # (year, month, day) -> this should be the first day of the GTFS you wish to publish
-#DATE = datetime.datetime(2016, 10, 10) # (year, month, day) -> this should be the first day of the GTFS you wish to publish
+# DATE should be the first day of the GTFS you wish to publish and is today by default
+DATE = datetime.datetime.today()
+# DATE = datetime.datetime(2016, 10, 10) # (year, month, day)
 RIDERSHIP = False  # toggle to run ridership and produce reports...download is VERY slow
 ROUTES = True  # toggle to run updated route planning (GTFS, website, and timepoints)
 
@@ -13,21 +13,19 @@ if RIDERSHIP:
     process()
 
 # Route planning; remember to put the current shapes.kml file in data/route/kml before running to ensure shapes are
-# properly represented. After running validate shapes conversion by viewing the report/gtfs/test folder
+# properly represented.
 if ROUTES:
-    from src.scripts.route.route import create, load
+    from src.scripts.route.route import create
     create(DATE)
     print('Finished creating routes.')
-    load(DATE)
-    print('Finished loading routes for current date.')
 
     from src.scripts.gtfs.gtfs import create_gtfs
     from src.scripts.route.timepoint import publish_timepoints
     from src.scripts.web.web_pages import publish
 
-    create_gtfs(DATE)  #src/scripts/gtfs/gtfs.py
-    print('GTFS created.')
-    publish(DATE)  #src/scripts/web/web_pages.py
+    create_gtfs(DATE)  # src/scripts/gtfs/gtfs.py
+    print('GTFS created. Verify shape orderings in Google my maps using outputs in /reports/gtfs/test/')
+    publish(DATE)  # src/scripts/web/web_pages.py
     print('Web pages created.')
-    publish_timepoints(DATE)    #src/scripts/route/timepoint.py
+    publish_timepoints(DATE)    # src/scripts/route/timepoint.py
     print('Timepoints created.')

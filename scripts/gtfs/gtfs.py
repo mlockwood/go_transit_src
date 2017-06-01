@@ -4,7 +4,6 @@
 # Python libraries and packages
 import datetime
 import inspect
-import shutil
 import sys
 
 import src.scripts.gtfs.shape_kml as shape_kml
@@ -27,7 +26,6 @@ __collaborators__ = None
 
 GTFS_PATH = '{}/reports/gtfs/files'.format(PATH)
 set_directory(GTFS_PATH)
-
 
 
 class Feed(object):
@@ -87,7 +85,6 @@ class BuildCalendar(ConvertFeed):
     header = ['service_id', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'start_date',
               'end_date']
     conversions = {'start_date': ['-', ''], 'end_date': ['-', '']}
-
 
 
 class BuildHolidays(ExportFeed):

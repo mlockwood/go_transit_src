@@ -1,6 +1,3 @@
-import re
-import os
-
 from pykml.factory import KML_ElementMaker as KML
 from lxml import etree
 from xml.sax.saxutils import unescape
