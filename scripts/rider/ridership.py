@@ -17,6 +17,9 @@ __author__ = 'Michael Lockwood'
 __github__ = 'mlockwood'
 
 
+DOWNLOAD = True
+
+
 class Metadata(DataModelTemplate):
 
     # REMOVE second entry in this tuple once full database upload complete----------------------------------------------
@@ -25,7 +28,6 @@ class Metadata(DataModelTemplate):
 
     def set_object_attrs(self):
         self.login = parser.parse(self.login).astimezone(tz.gettz('America/Los_Angeles'))
-
 
 
 class Entry(DataModelTemplate):
@@ -156,8 +158,9 @@ class Period(object):
 
 
 def process():
-    DataRequest('entry', '/rider/entry.json').get()  # Once full database upload complete remove 'get_'-------------
-    DataRequest('metadata', '/rider/metadata.json').get()  # Once full database upload complete remove 'get_'-------
+    if DOWNLOAD:
+        DataRequest('entry', '/rider/entry.json').get()  # Once full database upload complete remove 'get_'-------------
+        DataRequest('metadata', '/rider/metadata.json').get()  # Once full database upload complete remove 'get_'-------
     Metadata.load()
     Entry.load()
     Record.publish()

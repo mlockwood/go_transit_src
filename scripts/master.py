@@ -3,7 +3,7 @@ import datetime
 # DATE should be the first day of the GTFS you wish to publish and is today by default
 DATE = datetime.datetime.today()
 # DATE = datetime.datetime(2016, 10, 10) # (year, month, day)
-RIDERSHIP = False    # toggle to run ridership and produce reports...download is VERY slow
+RIDERSHIP = False  # toggle to run ridership and produce reports...download is VERY slow
 ROUTES = True  # toggle to run updated route planning (GTFS, website, and timepoints)
 
 
@@ -11,6 +11,7 @@ ROUTES = True  # toggle to run updated route planning (GTFS, website, and timepo
 if RIDERSHIP:
     from src.scripts.rider.ridership import process
     process()
+    print('Finished creating ridership reports.')
 
 # Route planning; remember to put the current shapes.kml file in data/route/kml before running to ensure shapes are
 # properly represented.
