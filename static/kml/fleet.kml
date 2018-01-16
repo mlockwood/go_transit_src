@@ -34,6 +34,14 @@
         <coordinates>-122.55301058292389,47.10562415071745,0</coordinates>
       </Point>
     </Placemark>
+<Placemark>
+      <name>62nd Aerial Port Squadron Warehouse</name>
+      <description><![CDATA[<h5>BLDG 1422</h5><hr><p>24 hour check-out 7 days a week</p>]]></description>
+      <styleUrl>#icon-503-ff777777</styleUrl>
+      <Point>
+        <coordinates>-122.153658,47.482432,0</coordinates>
+      </Point>
+    </Placemark>
 	
     <Style id="icon-503-ff777777-normal">
       <IconStyle>
