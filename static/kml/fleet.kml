@@ -45,6 +45,7 @@
 	<Placemark>
       <name>Northwest Adventure Center</name>
       <description><![CDATA[<h5>BLDG 1422</h5><hr><p>Saturday - Sunday from 1000 until 1600</p>]]></description>
+	  <description><![CDATA[<hr><p>Phone: 253-967-7744</p>]]></description>
       <styleUrl>#icon-503-ff777777</styleUrl>
       <Point>
         <coordinates>-122.583986,47.108632,0</coordinates>
