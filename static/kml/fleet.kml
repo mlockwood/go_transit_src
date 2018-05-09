@@ -50,7 +50,14 @@
         <coordinates>-122.583986,47.108632,0</coordinates>
       </Point>
     </Placemark>
-	
+	<Placemark>
+      <name>Adventures Unlimited</name>
+      <description><![CDATA[<hr><p>Monday - Sunday from 0930 until 1800</p><p>Phone: 253-982-2206</p>]]></description>
+      <styleUrl>#icon-503-ff777777</styleUrl>
+      <Point>
+        <coordinates>-122.491473,47.137033,0</coordinates>
+      </Point>
+    </Placemark>
 	
     <Style id="icon-503-ff777777-normal">
       <IconStyle>
