@@ -147,22 +147,6 @@
       </Point>
     </Placemark>
     <Placemark>
-      <name>(780b) Passenger Terminal</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/780b.html</p><h4>Monday - Friday | 06:25-07:00</h4><h5>Route 2 to McChord Dining, Lakewood</h5>06:56<hr><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 2 to Lakewood, McChord Field</h5>07:12, 07:32, 15:52, 16:12, 16:32, 16:52, 17:12, 17:32<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.484786,47.152058,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(782b) North Gate Internal</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/782b.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 2 to Madigan</h5>07:01, 07:21, 07:41, 16:01, 16:21, 16:41, 17:01, 17:21, 17:41<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.483625,47.154111,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
       <name>(309a) Reception Center</name>
       <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/309a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 1 to Madigan</h5>xx:06, xx:26, xx:46<hr>]]></description>
       <styleUrl>#icon-503-ff777777</styleUrl>
@@ -232,14 +216,6 @@
       <styleUrl>#icon-503-ff777777</styleUrl>
       <Point>
         <coordinates>-122.616972,47.091350,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(780c) Passenger Terminal</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/780c.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 2 to Madigan</h5>07:01, 07:21, 07:41, 16:01, 16:21, 16:41, 17:01, 17:21, 17:41<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.485219,47.152181,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -536,14 +512,6 @@
       <styleUrl>#icon-503-ff777777</styleUrl>
       <Point>
         <coordinates>-122.614575,47.092461,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(782a) North Gate Internal</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/782a.html</p><h4>Monday - Friday | 06:25-07:00</h4><h5>Route 2 to McChord Dining, Lakewood</h5>06:57<hr><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 2 to Lakewood, McChord Field</h5>07:13, 07:33, 15:53, 16:13, 16:33, 16:53, 17:13, 17:33<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.483453,47.154281,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -952,14 +920,6 @@
       <styleUrl>#icon-503-ff777777</styleUrl>
       <Point>
         <coordinates>-122.595778,47.090006,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>(801a) 512 Park &amp; Ride</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/801a.html</p><h4>Monday - Friday | 07:00-18:00</h4><h5>Route 2 to Madigan</h5>07:00, 07:20, 07:40, 16:00, 16:20, 16:40, 17:00, 17:20, 17:40<hr>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.483183,47.160831,0</coordinates>
       </Point>
     </Placemark>
     <Style id="icon-503-ff777777-normal">
