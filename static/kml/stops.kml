@@ -316,7 +316,7 @@
     </Placemark>
      <Placemark>
       <name>(780a) Passenger Terminal</name>
-      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/780a.html</p><h4>Saturday & Sunday | 10:00-18:00</h4><h5>Route 20 to Madigan</h5>12:45:00, 14:30:00, 12:00:00, 17:30:00, 16:45:00, 10:30:00, 11:15:00, 16:00:00, 15:15:00<hr>]]></description>
+      <description><![CDATA[<p>http://jblmmwr.com/golewismcchord/transit/stops/780a.html</p><h4>Monday - Friday | 0700-1800</h4><h5>Route 2 to Madigan</h5>xx:00, xx:20, xx:40<hr><h4>Sunday - Thursday | 1800-0000</h4><h5>Route 20 to Madigan</h5>1830, 1950, 2110, 2230<hr><h4>Friday & Saturday | 1800-0200</h4><h5>Route 20 to Madigan</h5>1830, 1950, 2110, 2310, 0030<hr><h4>Saturday & Sunday | 1000-1800</h4><h5>Route 20 to Madigan</h5>1030, 1115, 1200, 1245, 1400, 1445, 1530, 1615, 1700, 1745<hr>]]></description>
       <styleUrl>#icon-503-ff777777</styleUrl>
       <Point>
         <coordinates>-122.485039,47.150342,0</coordinates>
