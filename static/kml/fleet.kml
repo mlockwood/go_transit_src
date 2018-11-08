@@ -11,14 +11,6 @@
       </Point>
     </Placemark>
     <Placemark>
-      <name>4-23 Infantry Barracks</name>
-      <description><![CDATA[<h5>BLDG 11664</h5><hr><p>24 hour check-out 7 days a week</p>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.6033878326416,47.1243957504529,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
       <name>373rd Training Detachment Squadron</name>
       <description><![CDATA[<h5>BLDG 1315</h5><hr><p>Monday - Friday from 0800 until 1600</p>]]></description>
       <styleUrl>#icon-503-ff777777</styleUrl>
