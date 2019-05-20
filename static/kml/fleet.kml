@@ -26,14 +26,6 @@
         <coordinates>-122.552976,47.106078,0</coordinates>
       </Point>
     </Placemark>
-<Placemark>
-      <name>62nd Aerial Port Squadron Warehouse</name>
-      <description><![CDATA[<h5>BLDG 1422</h5><hr><p>24 hour check-out 7 days a week</p>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.482289,47.153795,0</coordinates>
-      </Point>
-    </Placemark>
 	<Placemark>
       <name>Northwest Adventure Center</name>
       <description><![CDATA[<hr><p>Monday - Sunday from 0900 until 1730</p><p>Phone: 253-967-7744</p>]]></description>
@@ -58,15 +50,7 @@
         <coordinates>-122.604918,47.089270,0</coordinates>
       </Point>
     </Placemark>
-	<Placemark>
-      <name>Madigan Annex</name>
-      <description><![CDATA[<h5>BLDG 9909, Practical Nurses Course</h5><hr><p>Monday - Friday from 0730 until 1600</p><p>Phone: 253-968-4227</p>]]></description>
-      <styleUrl>#icon-503-ff777777</styleUrl>
-      <Point>
-        <coordinates>-122.541667,47.101853,0</coordinates>
-      </Point>
-    </Placemark>
-		<Placemark>
+			<Placemark>
       <name>Schwab Army Reserve Center</name>
       <description><![CDATA[<h5>BLDG 09700, Room 1004</h5><hr><p>Monday - Friday from 0800 until 1600, excluding DONSAS & Holidays</p><p>Phone: 253-477-3297</p>]]></description>
       <styleUrl>#icon-503-ff777777</styleUrl>
