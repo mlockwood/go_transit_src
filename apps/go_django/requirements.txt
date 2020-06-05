@@ -19,7 +19,7 @@ Cython==0.23.4
 cytoolz==0.7.4
 datashape==0.4.7
 decorator==4.0.6
-Django==1.10
+Django==1.11.29
 django-debug-toolbar==1.4
 django-nested-admin==3.0.10
 django-phonenumber-field==1.1.0
