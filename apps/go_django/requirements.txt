@@ -20,7 +20,7 @@ cytoolz==0.7.4
 datashape==0.4.7
 decorator==4.0.6
 Django==1.10
-django-debug-toolbar==1.4
+django-debug-toolbar==1.11.1
 django-nested-admin==3.0.10
 django-phonenumber-field==1.1.0
 django-simple-history==1.8.1
